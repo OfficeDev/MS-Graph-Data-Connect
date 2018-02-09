@@ -1,3 +1,6 @@
+# Welcome to the Project Euclid Sample App GitHub Repo! 
+
+To get started with the Project Euclid on-boarding, please review the ISV Euclid Dev Doc. It provides an overview of an Azure Managed App on Office 365 data. 
 
 # Contributing
 
@@ -12,3 +15,5 @@ provided by the bot. You will only need to do this once across all repos using o
 This project has adopted the [Microsoft Open Source Code of Conduct](https://opensource.microsoft.com/codeofconduct/).
 For more information see the [Code of Conduct FAQ](https://opensource.microsoft.com/codeofconduct/faq/) or
 contact [opencode@microsoft.com](mailto:opencode@microsoft.com) with any additional questions or comments.
+
+
