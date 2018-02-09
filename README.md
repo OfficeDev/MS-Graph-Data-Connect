@@ -1,5 +1,4 @@
-
-#Welcome to the Project Euclid Sample App GitHub Repo! 
+# #Welcome to the Project Euclid Sample App GitHub Repo! 
 
 To get started with the Project Euclid on-boarding, please review the ISV Euclid Dev Doc. It provides an overview of an Azure Managed App on Office 365 data. 
 
