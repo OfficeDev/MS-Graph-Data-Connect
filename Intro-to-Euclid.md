@@ -1,13 +1,13 @@
-Overview: Euclid - Office 365 - Developers
+# Overview: Euclid - Office 365 - Developers
 ======================
 
-Using Azure analytics with Office 365 data to build thousands of intelligent applications
+*Using Azure analytics with Office 365 data to build thousands of intelligent applications*
 
-**Introduction**
+## Introduction
 
 Euclid brings Office 365 data and Azure resources to developers through
 a core data pipeline. This enables them to easily build intelligent
-applications with Microsoft’s most valuable data and best development
+applications with Microsoft's most valuable data and best development
 tools, all within the Microsoft secure cloud.
 
 Productivity is the one topic that all businesses are interested in
@@ -16,19 +16,19 @@ $250B spent per year on business applications, there is tremendous
 opportunity building and selling products to make knowledge workers more
 productive.
 
-**Value**
+### Value
 
 Office 365 contains the richest data in the world about workers and
 their workplace. It contains information on how people work, how they
 communicate, collaborate and manage their time. Bringing this data to
-Azure means that developers have many of the world’s best development
+Azure means that developers have many of the world's best development
 and hosting tools to work with this data. This enables customers to gain
 innovative or industry-specific applications that enhance their
 productivity while keeping full control over their Office 365 data.
 Microsoft is bringing along the secured control that customers expect
 and solving the liability of developers holding on to the data.
 
-**O365 Data**
+### O365 data
 
 Euclid offers curated datasets from Office 365 entities accessed through
 Outlook, Teams and OneDrive. The initial set of data types include
@@ -40,25 +40,20 @@ and end-customers' applications will have access to data incrementally
 and historically (13 months prior). For all daily incremental pipelines,
 Microsoft will support up to 15TB of data per day.
 
-**Application Devlopment Experience**
+## Application devlopment experience
 
-*Defining Data Pipeline*
+### Defining the data pipeline
 
 During construction of the data pipeline in Azure Data Factory (ADF),
 each application will have to define their own custom pipeline
 definitions, which allows them to specify each of the following:
 
--   O365 Dataset
+- O365 Dataset
+- Date Range: Filter against the sent time property
+- Data Freshness Requirements: Schedule data updates
+- Privacy Rules: What scrubbing or other transformations must be run before the data set is made available to the application (e.g. removing all Attorney-Client privileged mails)
 
--   Date Range: Filter against the sent time property
-
--   Data Freshness Requirements: Schedule data updates
-
--   Privacy Rules: What scrubbing or other transformations must be run
-    before the data set is made available to the application (e.g.
-    removing all Attorney-Client privileged mails?)
-    
-*Data Pipeline Construction*
+### Data pipeline construction
 
 There is a simple, easy-to-use model in ADF via both Azure Resource
 Manager (ARM) templates and the UX, which allows a developer to easily
@@ -71,23 +66,23 @@ Data Warehouse. Once stored, developers will have access to the many
 capabilities of Azure Services to develop and integrate their
 application.
 
-*Managed Application*
+### Managed Application
 
 The developer must specify in the package templates what standing access
-they will have to the application. There are two options: the “governed”
+they will have to the application. There are two options: the "governed"
 application where the data and application are deployed into the
 customer's subscription and neither the developer nor the customer has
-standing access to the application and the “ungoverned” application
+standing access to the application, and the "ungoverned" application
 where the developer has full access to the application. When publishing
 the application, the developer must indicate whether the application
-sends any data outside of the customer’s subscription. The developer
+sends any data outside of the customer's subscription. The developer
 also specifies the rest of the Managed Application package, including
 the ARM templates, SKU options, and price to charge.
 
-*Example Application: Who Knows Who*
+### Sample application: Who Knows Who
 
 Microsoft has built a sample application called Who Knows Who (WKW)
-which uses the tenant’s own social network to find connections to people
+which uses the tenant's own social network to find connections to people
 and businesses, similar to what LinkedIn offers individuals. WKW
 provides a working example of the pipeline workflow. The application
 provides a useful set of scripts that partners can run within their
@@ -97,12 +92,12 @@ partner can get started with our sample data and use variations of our
 scripts or the actual Office clients to create datasets required for
 their unique application needs.
 
-**Customer Marketplace Experience**
+## Customer Marketplace Experience
 
-*Marketplace*
+### Marketplace
 
 Euclid leverages the existing integration of Managed Applications with
-the AppSource marketplace at <https://appsource.microsoft.com>*.*
+the [AppSource marketplace](https://appsource.microsoft.com).
 Microsoft AppSource helps enterprise users find and gauge
 line-of-business (LoB) and software-as-a-service (SaaS) apps from
 Microsoft and its partners. AppSource apps are built on top of a variety
@@ -110,7 +105,7 @@ of Microsoft products and includes all their existing apps add-ins and
 content packages. All applications leveraging Euclid resources can be
 purchased in the AppSource marketplace.
 
-*Application Installation*
+### Application Installation
 
 A customer purchaser that has resource creation rights on an Azure
 subscription, such as a mid-level manager or IT department, installs
