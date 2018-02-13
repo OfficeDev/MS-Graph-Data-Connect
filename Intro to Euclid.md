@@ -1,5 +1,6 @@
-***Overview: Euclid - Office 365 - Developers Using Azure analytics with
-Office 365 data to build thousands of intelligent applications***
+***Overview: Euclid - Office 365 - Developers***
+
+Using Azure analytics with Office 365 data to build thousands of intelligent applications
 
 **Introduction**
 
