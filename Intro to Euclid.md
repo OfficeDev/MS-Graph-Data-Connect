@@ -1,5 +1,5 @@
-Overview: Euclid - Office 365 - Developers Using Azure analytics with
-Office 365 data to build thousands of intelligent applications
+***Overview: Euclid - Office 365 - Developers Using Azure analytics with
+Office 365 data to build thousands of intelligent applications***
 
 **Introduction**
 
@@ -26,7 +26,7 @@ productivity while keeping full control over their Office 365 data.
 Microsoft is bringing along the secured control that customers expect
 and solving the liability of developers holding on to the data.
 
-**O365 Data **
+**O365 Data**
 
 Euclid offers curated datasets from Office 365 entities accessed through
 Outlook, Teams and OneDrive. The initial set of data types include
@@ -38,9 +38,9 @@ and end-customers' applications will have access to data incrementally
 and historically (13 months prior). For all daily incremental pipelines,
 Microsoft will support up to 15TB of data per day.
 
-**Application Devlopment Experience **
+**Application Devlopment Experience**
 
-**Defining Data Pipeline**
+*Defining Data Pipeline*
 
 During construction of the data pipeline in Azure Data Factory (ADF),
 each application will have to define their own custom pipeline
@@ -55,8 +55,8 @@ definitions, which allows them to specify each of the following:
 -   Privacy Rules: What scrubbing or other transformations must be run
     before the data set is made available to the application (e.g.
     removing all Attorney-Client privileged mails?)
-
-**Data Pipeline Construction **
+    
+*Data Pipeline Construction*
 
 There is a simple, easy-to-use model in ADF via both Azure Resource
 Manager (ARM) templates and the UX, which allows a developer to easily
@@ -69,7 +69,7 @@ Data Warehouse. Once stored, developers will have access to the many
 capabilities of Azure Services to develop and integrate their
 application.
 
-**Managed Application**
+*Managed Application*
 
 The developer must specify in the package templates what standing access
 they will have to the application. There are two options: the “governed”
@@ -82,7 +82,7 @@ sends any data outside of the customer’s subscription. The developer
 also specifies the rest of the Managed Application package, including
 the ARM templates, SKU options, and price to charge.
 
-**Example Application: Who Knows Who **
+*Example Application: Who Knows Who*
 
 Microsoft has built a sample application called Who Knows Who (WKW)
 which uses the tenant’s own social network to find connections to people
@@ -97,7 +97,7 @@ their unique application needs.
 
 **Customer Marketplace Experience**
 
-**Marketplace**
+*Marketplace*
 
 Euclid leverages the existing integration of Managed Applications with
 the AppSource marketplace at <https://appsource.microsoft.com>*.*
@@ -108,7 +108,7 @@ of Microsoft products and includes all their existing apps add-ins and
 content packages. All applications leveraging Euclid resources can be
 purchased in the AppSource marketplace.
 
-**Application Installation**
+*Application Installation*
 
 A customer purchaser that has resource creation rights on an Azure
 subscription, such as a mid-level manager or IT department, installs
