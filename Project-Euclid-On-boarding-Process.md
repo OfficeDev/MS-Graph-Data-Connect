@@ -44,7 +44,7 @@ Next, you'll need access to the [Project Euclid GitHub repository](https://githu
 
 ### Sample managed application
 
-Once you're setup, you're ready to get started with our sample application. Start with the "ISV Dev Doc", then move on to the step-by-step instructions to run the sample managed application from end-to-end. The three primary steps of the managed application are:
+Once you're setup, you're ready to get started with our sample application. Start with the [ISV Dev Doc](ISV-Dev-Dov.md), then move on to the step-by-step instructions to run the sample managed application from end-to-end. The three primary steps of the managed application are:
 
 - Data Ingestion from Euclid/Office365
 - Data processing
