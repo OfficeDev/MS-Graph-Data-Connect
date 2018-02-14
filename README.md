@@ -16,7 +16,7 @@ Overview of Euclid Deck
 
 [ARM Templates](ARMTemplates/README.md)
 
-[Managed App](EuclidSampleAppExternal/ManagedApp/)
+[Managed App](ManagedApp/)
 
 [Set Up](SetUp/README.md)
 
