@@ -4,17 +4,15 @@
 
 ## Introduction 
 
-To get started with the Project Euclid on-boarding, please review the ISV Euclid Dev Doc. It provides an overview of an Azure Managed App on Office 365 data. 
 
+## Table of Contents
+Overview of Euclid Deck
 
-## Table of Contents  
 [Intro to Euclid](Intro-to-Euclid.md)
 
 [Onboarding Process](Project-Euclid-On-boarding-Process.md)
 
 [Euclid Dev Doc](ISV-Dev-Doc.md)
-
-Overview of Euclid Deck
 
 [ARM Templates](EuclidSampleAppExternal/ARMTemplates/README.md)
 
