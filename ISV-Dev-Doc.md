@@ -1,7 +1,7 @@
 Project Euclid Dev Doc
 ======================
 
-Prerequisites & Intro to Azure Managed Applications 
+Prerequisites 
 ====================================================
 
 Before, we begin exploring the sample application, here are a few
@@ -25,6 +25,8 @@ resources to get you started with the involved technologies:
 > - \[Azure Managed App Samples\](
 > <https://github.com/Azure/azure-managedapp-samples/tree/master/samples>)
 
+Azure Managed Applications
+====================================================
 The Azure Managed App on Office 365 can be broken down into 3
 components:
 
@@ -52,7 +54,7 @@ You can take a look at this doc for reference
 <https://docs.microsoft.com/en-us/azure/managed-applications/publish-service-catalog-app>
 
 Step 0:
-=======
+-------
 
 ### Bash
 
