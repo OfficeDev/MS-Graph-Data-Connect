@@ -11,7 +11,7 @@ Project Euclid brings Office 365 data and Azure resources to independent softwar
 ## How to Get Started 
 To get started, read through the documentation below starting with the onboarding process. 
 
-> **Note:** If you would like to review the Project Euclid Overview Deck, that was pitched to you during our introduction meeting, it can be found in the table of contents below. The deck contains key information around the architecture and data schemas of Project Euclid.
+> **Note:** If you would like to review the Project Euclid Overview Deck that was pitched to you during our introduction meeting, it can be found in the table of contents below. The deck contains key information around the architecture and data schemas of Project Euclid.
 
 ## Table of Contents
 
