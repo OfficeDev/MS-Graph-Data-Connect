@@ -282,7 +282,9 @@ below.
 
 -   The Create app window appears as below where you can specify the
     values for the parameters (discussed in Step
-    1)<img src="media/image1.png" width="617" height="624" />
+    1)
+    
+    ![](doc-images/create-euclid-app.png)
 
 The deployment of the app starts and once it completes you will be able
 to see it in the dashboard.
@@ -391,4 +393,4 @@ To run the pipeline on a scheduled basis-
 Web App Sample UX
 =================
 
-<img src="media/image2.png" width="624" height="223" />
+![](doc-images/web-app-sample-ux.png)
