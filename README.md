@@ -1,12 +1,16 @@
 
-# Welcome to the Project Euclid Sample App GitHub Repo! 
+#Project Euclid
 
 
 ## Introduction 
 
 
+## How to Get Started 
+
+
+
 ## Table of Contents
-Overview of Euclid Deck
+[Overview of Euclid Deck](Project Euclid - Overview Deck.pptx)
 
 [Intro to Euclid](Intro-to-Euclid.md)
 
@@ -14,11 +18,13 @@ Overview of Euclid Deck
 
 [Euclid Dev Doc](ISV-Dev-Doc.md)
 
+[Set Up](SetUp/README.md)
+
 [ARM Templates](ARMTemplates/README.md)
 
 [Managed App](ManagedApp/)
 
-[Set Up](SetUp/README.md)
+
 
 
 
