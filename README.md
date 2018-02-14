@@ -1,20 +1,26 @@
- 
+  
 # Project Euclid
-
+#### Using Office 365 data with Azure analytics to build intelligent applications 
 
 ## Introduction 
 
+Project Euclid brings Office 365 data and Azure resources to independent software vendors (ISVs). Project Euclid will enable ISVs to build intelligent applications with Microsoft’s most valuable data, and best development tools. Office 365 Customers will gain innovative or industry-specific applications that enhance their productivity while keeping full control over their data. 
+
+
 
 ## How to Get Started 
+To get started, read through the documentation below starting with the onboarding process. 
 
-
+> **Note:** If you would like to review the Project Euclid Overview Deck, that was pitched to you during our introduction meeting, it can be found in the table of contents below. The deck contains key information around the architecture and data schemas of Project Euclid.
 
 ## Table of Contents
+
+
 [Project Euclid Overview Deck](ProjectEuclidOverviewDeck.pptx)
 
-[Intro to Euclid](Intro-to-Euclid.md)
-
 [Onboarding Process](Project-Euclid-On-boarding-Process.md)
+
+[Intro to Euclid](Intro-to-Euclid.md)
 
 [Euclid Dev Doc](ISV-Dev-Doc.md)
 
