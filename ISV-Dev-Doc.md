@@ -12,6 +12,8 @@ resources to get you started with the involved technologies:
 
 ## Overview
 
+Azure Managed Applications
+====================================================
 The Azure Managed App on Office 365 can be broken down into 3
 components:
 
