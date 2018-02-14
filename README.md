@@ -14,11 +14,11 @@ Overview of Euclid Deck
 
 [Euclid Dev Doc](ISV-Dev-Doc.md)
 
-[ARM Templates](EuclidSampleAppExternal/ARMTemplates/README.md)
+[ARM Templates](ARMTemplates/README.md)
 
 [Managed App](EuclidSampleAppExternal/ManagedApp/)
 
-[Set Up](EuclidSampleAppExternal/SetUp/README.md)
+[Set Up](SetUp/README.md)
 
 
 
