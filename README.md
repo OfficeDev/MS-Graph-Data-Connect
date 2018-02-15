@@ -26,7 +26,7 @@ To get started, read through the documentation below starting with the onboardin
 
 [Set Up](SetUp/README.md)
 
-[ARM Templates](ARMTemplates/README.md)
+[ARM Templates](ARMTemplates/)
 
 [Managed App](ManagedApp/)
 
