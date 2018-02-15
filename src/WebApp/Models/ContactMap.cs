@@ -297,7 +297,7 @@ namespace WhoKnowWho.Models
 
             if (fileStatusProperties.Type == FileType.DIRECTORY)
             {
-                FileStatusesResult fileStatusesResult = client.FileSystem.ListFileStatus("oddstest", fullPath);
+                FileStatusesResult fileStatusesResult = client.FileSystem.ListFileStatus(accountName, fullPath);
 
                 foreach (FileStatusProperties fsProp in fileStatusesResult.FileStatuses.FileStatus)
                 {
