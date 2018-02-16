@@ -39,7 +39,7 @@ and end-customers' applications will have access to data incrementally
 and historically (13 months prior). For all daily incremental pipelines,
 Microsoft will support up to 15TB of data per day.
 
-## Application devlopment experience
+## Application development experience
 
 ### Defining the data pipeline
 
