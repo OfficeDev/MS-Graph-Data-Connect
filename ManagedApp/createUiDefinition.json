@@ -65,24 +65,6 @@
                         "constraints": {
                             "required": true
                         }
-                    },
-                    {
-                        "name": "servicePrincipalId",
-                        "type": "Microsoft.Common.TextBox",
-                        "label": "Source O365 service principal Id",
-                        "toolTip": "The app Id of the service principal that has access to the source O365",
-                        "constraints": {
-                            "required": true
-                        }
-                    },
-                    {
-                        "name": "servicePrincipalKey",
-                        "type": "Microsoft.Common.TextBox",
-                        "label": "Source O365 service principal key",
-                        "toolTip": "The app secret of the service principal that has access to the source O365",
-                        "constraints": {
-                            "required": true
-                        }
                     }
                 ]
             }
@@ -92,8 +74,6 @@
             "destinationServicePrincipalId": "[steps('adfSettings').destinationServicePrincipalId]",
             "destinationServicePrincipalKey": "[steps('adfSettings').destinationServicePrincipalKey]",
             "office365TenantId": "[steps('adfSettings').office365TenantId]",
-            "servicePrincipalId": "[steps('adfSettings').servicePrincipalId]",
-            "servicePrincipalKey": "[steps('adfSettings').servicePrincipalKey]",
             "webSiteName": "[steps('webAppSettings').webSiteName]"
         }
     }
