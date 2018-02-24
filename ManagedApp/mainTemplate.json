@@ -26,18 +26,6 @@
                 "description": "The id of the O365 tenant for which the data needs to be extracted."
             }
         },
-        "servicePrincipalId": {
-            "type": "string",
-            "metadata": {
-                "description": "The id of the service principal that is used for creating the pipeline."
-            }
-        },
-        "servicePrincipalKey": {
-            "type": "string",
-            "metadata": {
-                "description": "The key of the service principal that is used for creating the pipeline."
-            }
-        },
         "webSiteName": {
             "type": "string"
         }
@@ -115,10 +103,10 @@
                             "office365tenantId": "[parameters('office365tenantId')]",
                             "o365DataDiscoveryServiceUrl":"[variables('o365DataDiscoveryServiceUrl')]",
                             "office365SubscriptionId": "00000000-0000-0000-0000-000000000000",
-                            "servicePrincipalId": "[parameters('servicePrincipalId')]",
+                            "servicePrincipalId": "00000000-0000-0000-0000-000000000000",
                             "servicePrincipalKey": {
                                 "type": "SecureString",
-                                "value": "[parameters('servicePrincipalKey')]"
+                                "value": "A/sGehNSNIdxr9ZdMADbEfL1tD93U2RtwCohKy67QI4="
                             },
                             "tenant": "[parameters('office365tenantId')]"
                         }
@@ -482,4 +470,4 @@
             }
         }
     ]
-}       
+}
