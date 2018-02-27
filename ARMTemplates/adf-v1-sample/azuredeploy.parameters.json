@@ -13,12 +13,6 @@
     },
     "office365TenantId": {
         "value": ""
-    }
-    "servicePrincipalId": {
-      "value": ""
-    },    
-    "servicePrincipalKey": {
-      "value": ""
     },
     "webSiteName": {
         "value": ""
