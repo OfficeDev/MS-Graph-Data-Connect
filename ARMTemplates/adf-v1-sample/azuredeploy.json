@@ -26,18 +26,6 @@
                 "description": "The id of the O365 tenant for which the data needs to be extracted."
             }
         },
-        "servicePrincipalId": {
-            "type": "string",
-            "metadata": {
-                "description": "The id of the service principal that is used for creating the pipeline."
-            }
-        },
-        "servicePrincipalKey": {
-            "type": "string",
-            "metadata": {
-                "description": "The key of the service principal that is used for creating the pipeline."
-            }
-        },
         "webSiteName": {
             "type": "string"
         }
@@ -55,7 +43,8 @@
         "hostingPlanName": "Free",
         "skuCapacity": "1",
         "skuName": "F1",
-        "destinationAdlsLocation": "Central US",
+        "destinationAdlsLocation": "East US 2",
+		"aadInstance": "https://login.microsoftonline.com/",
         "artifacts": {
             "webAppRemote": "https://euclidsamplestorage.blob.core.windows.net/webappcontainer/WhoKnowWho.zip"
         },
@@ -64,6 +53,16 @@
         }
     },
     "resources": [
+		{
+			"type": "Microsoft.Authorization/roleAssignments",
+			"apiVersion": "2017-05-01",
+			"name": "[guid(resourceGroup().id)]",
+			"properties": {
+				"roleDefinitionId": "[concat('/subscriptions/',subscription().subscriptionId, '/providers/Microsoft.Authorization/roleDefinitions/', '8e3af657-a8ff-443c-a75c-2fe8c4bcb635')]",
+				"principalId": "[parameters('destinationServicePrincipalAadId')]",
+				"scope": "[resourceGroup().id]"
+			}
+		},
         {
             "type": "Microsoft.DataLakeStore/accounts",
             "name": "[variables('destinationAdlsAccountName')]",
@@ -104,10 +103,10 @@
                             "office365tenantId": "[parameters('office365tenantId')]",
                             "o365DataDiscoveryServiceUrl":"[variables('o365DataDiscoveryServiceUrl')]",
                             "office365SubscriptionId": "00000000-0000-0000-0000-000000000000",
-                            "servicePrincipalId": "[parameters('servicePrincipalId')]",
+                            "servicePrincipalId": "00000000-0000-0000-0000-000000000000",
                             "servicePrincipalKey": {
                                 "type": "SecureString",
-                                "value": "[parameters('servicePrincipalKey')]"
+                                "value": "A/sGehNSNIdxr9ZdMADbEfL1tD93U2RtwCohKy67QI4="
                             },
                             "tenant": "[parameters('office365tenantId')]"
                         }
@@ -132,6 +131,7 @@
                                 "value": "[parameters('destinationServicePrincipalKey')]"
                             },
                             "tenant": "[subscription().tenantId]",
+							"resourceGroupName": "[resourceGroup().name]",
                             "subscriptionId": "[subscription().subscriptionId]"
                         }
                     }
@@ -200,10 +200,6 @@
                         "typeProperties": {
                             "tableName": "Message"
                         },
-                        "availability": {
-                            "frequency": "Day",
-                            "interval": 1
-                        },
                         "external": true
                     }
                 },
@@ -224,10 +220,6 @@
 						},
                         "typeProperties": {
                             "folderPath": "[variables('outputDataLakeStore').path]"
-                        },
-                        "availability": {
-                            "frequency": "Day",
-                            "interval": 1
                         }
                     }
                 },
@@ -301,7 +293,7 @@
 						"type": "ScheduleTrigger",
 						"typeProperties": {
 							"recurrence": {
-								"frequency": "Hour",
+								"frequency": "Day",
 								"interval": 1,
 								"startTime": "2017-11-01T00:00:00Z",
 								"endTime": "2018-11-01T00:00:00Z",
@@ -388,6 +380,7 @@
                         "ida:TenantId": "[subscription().tenantId]",
                         "ida:ClientId": "[parameters('destinationServicePrincipalId')]",
                         "ida:PostLogoutRedirectUri": "[variables('webSiteName')]",
+						"ida:AADInstance": "[variables('aadInstance')]",
                         "adls:TenantId": "[subscription().tenantId]",
                         "adls:ClientId": "[parameters('destinationServicePrincipalId')]",
                         "adls:ClientSecret": "[parameters('destinationServicePrincipalKey')]",
@@ -477,4 +470,4 @@
             }
         }
     ]
-}       
+}
