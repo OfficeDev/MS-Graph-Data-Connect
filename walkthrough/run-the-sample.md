@@ -53,13 +53,13 @@ Now we can deploy the application definition into your test organization. This w
     .\DeployManagedApp.ps1 -ResourceGroupLocation "East US" -ResourceGroupName wkwmanagedapp -PackageFileUri "URL to app.zip in blob storage"
     ```
 
-You will be prompted to login twice. Use an admin account for your test tenant in both logins.
+You will be prompted to login twice. Use the same account from your test tenant in both logins.
 
 ## Install the managed application
 
-The next step is to insall the managed application. This will provision all of the resources specified in the resource template, including the Euclid data pipeline and the sample web application.
+The next step is to install the managed application. This will provision all of the resources specified in the resource template, including the Euclid data pipeline and the sample web application.
 
-1. Run the **GetAppInstallationParameters.ps1** script with no parameters. You will be prompted to login, use an admin account for your test tenant. This will create an application service principal for the sample and output information. Save these values to use during the installation of the managed app.
+1. Run the **GetAppInstallationParameters.ps1** script with no parameters. This will create an application service principal for the sample and output information. Save these values to use during the installation of the managed app.
 1. Logon to the Azure portal.
 1. In the search bar, enter `Managed applications` and select **Managed applications** under **Services**.
 
@@ -102,7 +102,7 @@ Now that we've verified that the data pipeline is working, we can try the sample
 ## Using the sample web app
 
 1. Open your browser and browse to `https://<websitename>.azurewebsites.net`, where `<websitename>` is the value of **Website name** you provided during the installation of the managed application.
-1. If prompted to login, use your tenant admin account.
+1. If prompted to login, use an account from your test tenant.
 1. Accept the prompt advising that the app would like to sign you in and read your profile.
 1. At the bottom of the page, enter one of your user's email address and click the search button.
 
