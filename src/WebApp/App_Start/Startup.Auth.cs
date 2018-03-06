@@ -17,10 +17,10 @@ namespace WhoKnowWho
 {
     public partial class Startup
     {
-        private static string clientId = ConfigurationManager.AppSettings["ida:ClientId"];
-        private static string aadInstance = ConfigurationManager.AppSettings["ida:AADInstance"];
-        private static string tenantId = ConfigurationManager.AppSettings["ida:TenantId"];
-        private static string postLogoutRedirectUri = ConfigurationManager.AppSettings["ida:PostLogoutRedirectUri"];
+        private static string clientId = ConfigurationManager.AppSettings["arm:ClientId"];
+        private static string aadInstance = ConfigurationManager.AppSettings["arm:AADInstance"];
+        private static string tenantId = ConfigurationManager.AppSettings["arm:TenantId"];
+        private static string postLogoutRedirectUri = ConfigurationManager.AppSettings["arm:PostLogoutRedirectUri"];
 
         public static readonly string Authority = aadInstance + tenantId;
 

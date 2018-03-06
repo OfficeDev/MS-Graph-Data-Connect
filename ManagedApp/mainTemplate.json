@@ -20,10 +20,10 @@
                 "description": "The key of the service principal that has access to the destination Data Lake store."
             }
         },
-        "office365TenantId": {
+		"userId": {
             "type": "string",
             "metadata": {
-                "description": "The id of the O365 tenant for which the data needs to be extracted."
+                "description": "The Object Id of the user installing the app."
             }
         },
         "webSiteName": {
@@ -100,7 +100,7 @@
                         "type": "Office365",
                         "description": "Source O365 linked service",
                         "typeProperties": {
-                            "office365tenantId": "[parameters('office365tenantId')]",
+                            "office365tenantId": "[subscription().tenantId]",
                             "o365DataDiscoveryServiceUrl":"[variables('o365DataDiscoveryServiceUrl')]",
                             "office365SubscriptionId": "00000000-0000-0000-0000-000000000000",
                             "servicePrincipalId": "00000000-0000-0000-0000-000000000000",
@@ -108,7 +108,8 @@
                                 "type": "SecureString",
                                 "value": "A/sGehNSNIdxr9ZdMADbEfL1tD93U2RtwCohKy67QI4="
                             },
-                            "tenant": "[parameters('office365tenantId')]"
+							"userId": "[parameters('userId')]",
+                            "tenant": "[subscription().tenantId]"
                         }
                     }
                 },
@@ -377,15 +378,17 @@
                         "displayName": "AppSettingsConfiguration"
                     },
                     "properties": {
-                        "ida:TenantId": "[subscription().tenantId]",
-                        "ida:ClientId": "[parameters('destinationServicePrincipalId')]",
-                        "ida:PostLogoutRedirectUri": "[variables('webSiteName')]",
-						"ida:AADInstance": "[variables('aadInstance')]",
-                        "adls:TenantId": "[subscription().tenantId]",
-                        "adls:ClientId": "[parameters('destinationServicePrincipalId')]",
-                        "adls:ClientSecret": "[parameters('destinationServicePrincipalKey')]",
-                        "adls:AccountName": "[variables('destinationAdlsAccountName')]",
-                        "adls:Path": "[variables('outputDataLakeStore').path]"
+                        "arm:TenantId": "[subscription().tenantId]",
+                        "arm:ClientId": "[parameters('destinationServicePrincipalId')]",
+                        "arm:PostLogoutRedirectUri": "[variables('webSiteName')]",
+						"arm:AADInstance": "[variables('aadInstance')]",
+						"arm:SubscriptionId": "[subscription().subscriptionId]",
+						"arm:ManagedResourceGroupName": "[resourceGroup().name]",
+						"arm:DataFactoryName": "[variables('dataFactoryName')]",
+						"arm:PipelineName": "[variables('pipelineName')]",
+                        "arm:ClientSecret": "[parameters('destinationServicePrincipalKey')]",
+                        "arm:AccountName": "[variables('destinationAdlsAccountName')]",
+                        "arm:Path": "[variables('outputDataLakeStore').path]"
                     }
                 }
             ]

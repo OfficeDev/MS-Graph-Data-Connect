@@ -58,10 +58,10 @@
                         }
                     },
                     {
-                        "name": "office365TenantId",
+                        "name": "userId",
                         "type": "Microsoft.Common.TextBox",
-                        "label": "Office 365 tenant id",
-                        "toolTip": "The O365 tenant for which data needs to be extracted",
+                        "label": "User id",
+                        "toolTip": "The Object Id of the user installing the app",
                         "constraints": {
                             "required": true
                         }
@@ -73,7 +73,7 @@
             "destinationServicePrincipalAadId": "[steps('adfSettings').destinationServicePrincipalAadId]",
             "destinationServicePrincipalId": "[steps('adfSettings').destinationServicePrincipalId]",
             "destinationServicePrincipalKey": "[steps('adfSettings').destinationServicePrincipalKey]",
-            "office365TenantId": "[steps('adfSettings').office365TenantId]",
+			"userId": "[steps('adfSettings').userId]",
             "webSiteName": "[steps('webAppSettings').webSiteName]"
         }
     }

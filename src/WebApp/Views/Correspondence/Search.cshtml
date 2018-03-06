@@ -8,9 +8,19 @@
     ViewBag.Title = "Search";
 }
 
+<style>
+    img {
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+        height: 50%;
+        width: 50%;
+    }
+</style>
+
 <div>
     <br />
-    <img src="~/Images/SocialGraph.png" style="width:100%" />
+    <img src="~/Images/SocialGraph.png"/>
 </div>
 
 <div class="text-center">
@@ -29,7 +39,7 @@
 
     <div class="search-windows text-center">
         <div>
-            @Html.EditorFor(model => model.Email, new { htmlAttributes = new { @class = "search-windows", placeholder = @ViewBag.SearchSuggestions }})
+            @Html.EditorFor(model => model.Email, new { htmlAttributes = new { @class = "search-windows", placeholder = @ViewBag.SearchSuggestions, value="@(ViewBag.SampleUser ?? String.Empty)"} })
             <button type="submit" class="search-windows" />
         </div>
         <div>
