@@ -24,9 +24,6 @@ namespace WhoKnowWho
 
         public static readonly string Authority = aadInstance + tenantId;
 
-        // This is the resource ID of the AAD Graph API.  We'll need this to request a token to call the Graph API.
-        string graphResourceId = "https://graph.windows.net";
-
         public void ConfigureAuth(IAppBuilder app)
         {
             app.SetDefaultSignInAsAuthenticationType(CookieAuthenticationDefaults.AuthenticationType);
@@ -39,6 +36,7 @@ namespace WhoKnowWho
                     ClientId = clientId,
                     Authority = Authority,
                     PostLogoutRedirectUri = postLogoutRedirectUri,
+                    RedirectUri = postLogoutRedirectUri,
 
                     Notifications = new OpenIdConnectAuthenticationNotifications()
                     {
