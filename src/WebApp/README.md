@@ -14,7 +14,7 @@ In order to get WKW runs locally:
 		
 	3. Customize WhoKnowsWho\Web.config with service principal created:
 	    <add key="Domain" value="[Domain name for the users of your company.  Example: microsoft.com]" />
-		<add key="arm:ClientId" value="[client id of the service principal created]" />
+	    <add key="arm:ClientId" value="[client id of the service principal created]" />
 	    <add key="arm:AADInstance" value="[your aad instance.  Example: https://login.microsoftonline.com/]" />
 	    <add key="arm:TenantId" value="[Your tenant ID]" />
 	    <add key="arm:PostLogoutRedirectUri" value="Your post logout redirect URI" />

@@ -44,7 +44,7 @@
         "skuCapacity": "1",
         "skuName": "F1",
         "destinationAdlsLocation": "East US 2",
-		"aadInstance": "https://login.microsoftonline.com/",
+        "aadInstance": "https://login.microsoftonline.com/",
         "artifacts": {
             "webAppRemote": "https://euclidsamplestorage.blob.core.windows.net/webappcontainer/WhoKnowWho.zip"
         },

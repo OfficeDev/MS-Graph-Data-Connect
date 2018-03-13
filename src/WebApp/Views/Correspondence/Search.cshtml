@@ -39,7 +39,7 @@
 
     <div class="search-windows text-center">
         <div>
-            @Html.EditorFor(model => model.Email, new { htmlAttributes = new { @class = "search-windows", placeholder = @ViewBag.SearchSuggestions, value="@(ViewBag.SampleUser ?? String.Empty)"} })
+            @Html.EditorFor(model => model.Email, new { htmlAttributes = new { @class = "search-windows", placeholder = @ViewBag.SearchSuggestions, value = "@(ViewBag.SampleUser ?? String.Empty)" } })
             <button type="submit" class="search-windows" />
         </div>
         <div>
