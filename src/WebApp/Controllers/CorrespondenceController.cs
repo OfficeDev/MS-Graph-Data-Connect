@@ -32,15 +32,16 @@ namespace WhoKnowWho.Controllers
         {
             IEnumerable<string> samples = await ContactMap.GetSampleUsers();
 
-            if (samples.Count() > 0)
+            if (samples != null && samples.Count() > 0)
             {
                 string sample = samples.ElementAt((int) (DateTimeOffset.Now.Ticks % samples.Count()));
                 ViewBag.SearchSuggestions += string.Format("Try {0}", sample);
+                ViewBag.SampleUser = sample;
             }
-
             else
             {
-                ViewBag.SearchSuggestions = "Search a user";
+                ViewBag.SearchSuggestions = "Data extraction pipeline is running... Please wait!";
+                ViewBag.SampleUser = null ;
             }
 
             return View();
@@ -79,6 +80,11 @@ namespace WhoKnowWho.Controllers
         protected async Task<IEnumerable<Correspondence>> GetResults(string eMail)
         {
             Dictionary<string, List<UserScore>> map = await ContactMap.GetMap();
+
+            if(map == null)
+            {
+                return null;
+            }
 
             List<UserScore> userScoreList = null;
             map.TryGetValue(eMail, out userScoreList);

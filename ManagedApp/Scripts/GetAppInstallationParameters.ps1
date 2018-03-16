@@ -20,7 +20,15 @@ Param (
  [String] $ApplicationDisplayName
 )
 
-$login = Login-AzureRmAccount
+$creds = Get-Credential
+
+if ([string]::IsNullOrEmpty($(Get-AzureRmContext).Account)) { 
+	$login = Login-AzureRmAccount -Credential $creds
+}
+
+$adConnection = Connect-AzureAD -Credential $creds
+$user = Get-AzureADUser -SearchString $adConnection.Account
+
 Import-Module AzureRM.Resources
 
 if ($SubscriptionId -eq "") 
@@ -87,4 +95,4 @@ Write-Host "`t Destination ADLS service principal Id : " $ServicePrincipal.AppId
 
 Write-Host "`t Destination ADLS service principal key : " $DestPassword.Value
 
-Write-Host "`t The O365 tenant for which data needs to be extracted : " $tenant.Id
+Write-Host "`t The Object Id of the user installing the app: " $user.ObjectId
