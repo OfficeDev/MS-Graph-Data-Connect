@@ -192,10 +192,6 @@
 							{
 								"name": "ConversationId",
 								"type": "string"
-							},
-							{
-								"name": "ReceivedDateTime",
-								"type": "DateTime"
 							}
 						],
                         "typeProperties": {
@@ -381,11 +377,11 @@
                         "arm:TenantId": "[subscription().tenantId]",
                         "arm:ClientId": "[parameters('destinationServicePrincipalId')]",
                         "arm:PostLogoutRedirectUri": "[variables('webSiteName')]",
-						"arm:AADInstance": "[variables('aadInstance')]",
-						"arm:SubscriptionId": "[subscription().subscriptionId]",
-						"arm:ManagedResourceGroupName": "[resourceGroup().name]",
-						"arm:DataFactoryName": "[variables('dataFactoryName')]",
-						"arm:PipelineName": "[variables('pipelineName')]",
+                        "arm:AADInstance": "[variables('aadInstance')]",
+                        "arm:SubscriptionId": "[subscription().subscriptionId]",
+                        "arm:ManagedResourceGroupName": "[resourceGroup().name]",
+                        "arm:DataFactoryName": "[variables('dataFactoryName')]",
+                        "arm:PipelineName": "[variables('pipelineName')]",
                         "arm:ClientSecret": "[parameters('destinationServicePrincipalKey')]",
                         "arm:AccountName": "[variables('destinationAdlsAccountName')]",
                         "arm:Path": "[variables('outputDataLakeStore').path]"
