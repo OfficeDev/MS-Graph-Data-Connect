@@ -28,7 +28,8 @@ Param(
 	[string] $PackageFileUri
 )
 
-$login = Login-AzureRmAccount
+$creds = Get-Credential
+$login = Login-AzureRmAccount -Credential $creds
 $registration = Register-AzureRmResourceProvider -ProviderNamespace Microsoft.Solutions
 
 if($PackageFileUri -eq "" -And $ArtifactStagingDirectory -ne ""){
@@ -84,7 +85,7 @@ if($PackageFileUri -eq "") {
 }
 
 if($GroupId -eq "") {
-	$user = Connect-AzureAD
+	$user = Connect-AzureAD -Credential $creds
 	$GroupId = (Get-AzureADUser -ObjectId $user.Account).ObjectId
 }
 
@@ -101,7 +102,7 @@ Write-Host "Publishing the managed application definition..." -foregroundcolor "
 New-AzureRmManagedApplicationDefinition -Name "EuclidSampleApp" `
 										-Location $ResourceGroupLocation `
 										-ResourceGroupName $ResourceGroupName `
-										-LockLevel ReadOnly `
+										-LockLevel None `
 										-DisplayName "Euclid Who Knows Whom Sample App" `
 										-Description "Who Knows Whom in your company!" `
 										-Authorization "$($GroupId):$($ownerID)" `

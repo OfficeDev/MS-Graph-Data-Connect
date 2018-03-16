@@ -1,6 +1,6 @@
 ﻿Introduction:
 The WhoKnowsWho App reads an user interaction statistics file produced by
-the MARS analytics from ADSL and store the content in a memory cache.
+the MARS analytics from ADLS and store the content in a memory cache.
 It uses the data to serve interactive user queries of who in your company
 has the most interactions with a particular outside party.
 
@@ -14,15 +14,15 @@ In order to get WKW runs locally:
 		
 	3. Customize WhoKnowsWho\Web.config with service principal created:
 	    <add key="Domain" value="[Domain name for the users of your company.  Example: microsoft.com]" />
-		<add key="ida:ClientId" value="[client id of the service principal created]" />
-	    <add key="ida:AADInstance" value="[your aad instance.  Example: https://login.microsoftonline.com/]" />
-	    <add key="ida:TenantId" value="[Your tenant ID]" />
-	    <add key="ida:PostLogoutRedirectUri" value="Your post logout redirect URI" />
-	    <add key="adsl:ClientId" value="[client id of the service principal created]" />
-	    <add key="adsl:ClientSecret" value="[client secret of the service principal created]" />
-	    <add key="adsl:TenantId" value="[Your tenant ID]" />
-	    <add key="adsl:AccountName" value="[the name of the ADSL account where the activity file is in]" />
-	    <add key="adsl:Path" value="[agreed upon path for the activity file.]" />
+	    <add key="arm:ClientId" value="[client id of the service principal created]" />
+	    <add key="arm:AADInstance" value="[your aad instance.  Example: https://login.microsoftonline.com/]" />
+	    <add key="arm:TenantId" value="[Your tenant ID]" />
+	    <add key="arm:PostLogoutRedirectUri" value="Your post logout redirect URI" />
+	    <add key="arm:ClientId" value="[client id of the service principal created]" />
+	    <add key="arm:ClientSecret" value="[client secret of the service principal created]" />
+	    <add key="arm:TenantId" value="[Your tenant ID]" />
+	    <add key="arm:AccountName" value="[the name of the ADLS account where the activity file is in]" />
+	    <add key="arm:Path" value="[agreed upon path for the activity file.]" />
 	4. Build the App.
 	5. If you see package reference errors, try to customize NuGet path.
 		a. https://docs.microsoft.com/en-us/nuget/schema/nuget-config-file

@@ -7,6 +7,8 @@ using System.Web;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Rest;
+using Microsoft.Azure.Management.DataFactory;
+using Microsoft.Azure.Management.DataFactory.Models;
 using Microsoft.Azure.Management.DataLake.Store;
 using Microsoft.Azure.Management.DataLake.Store.Models;
 using Microsoft.Rest.Azure.Authentication;
@@ -51,14 +53,20 @@ namespace WhoKnowWho.Models
         // Lock to protect consistency of the data
         static private SemaphoreSlim myLock = new SemaphoreSlim(1, 1);
 
+        // Parameters for establishing a ADF connection
+        static private readonly string subscriptionId = ConfigurationManager.AppSettings["arm:SubscriptionId"];
+        static private readonly string resourceGroupName = ConfigurationManager.AppSettings["arm:ManagedResourceGroupName"];
+        static private readonly string dataFactoryName = ConfigurationManager.AppSettings["arm:DataFactoryName"];
+        static private readonly string pipelineName = ConfigurationManager.AppSettings["arm:PipelineName"];
+
         // Parameters for establishing a ADLS connection
-        static private readonly string clientId = ConfigurationManager.AppSettings["adls:ClientId"];
-        static private readonly string clientSecret = ConfigurationManager.AppSettings["adls:ClientSecret"];
-        static private readonly string tenantId = ConfigurationManager.AppSettings["adls:TenantId"];
-        static private readonly string accountName = ConfigurationManager.AppSettings["adls:AccountName"];
+        static private readonly string clientId = ConfigurationManager.AppSettings["arm:ClientId"];
+        static private readonly string clientSecret = ConfigurationManager.AppSettings["arm:ClientSecret"];
+        static private readonly string tenantId = ConfigurationManager.AppSettings["arm:TenantId"];
+        static private readonly string accountName = ConfigurationManager.AppSettings["arm:AccountName"];
 
         // Path to the actual data
-        static private readonly string msgPath = ConfigurationManager.AppSettings["adls:Path"];
+        static private readonly string msgPath = ConfigurationManager.AppSettings["arm:Path"];
 
         // Schedule definition
         static private readonly int startHour = int.Parse(ConfigurationManager.AppSettings["cache:RefreshHourOfDayUtc"]);
@@ -112,6 +120,18 @@ namespace WhoKnowWho.Models
             Dictionary<string, List<UserScore>> wkwScores = new Dictionary<string, List<UserScore>>();
 
             messagesList = ContactMap.GetMessages();
+            if(messagesList == null || messagesList.Count == 0)
+            {
+                ServiceClientCredentials creds = ApplicationTokenProvider.LoginSilentAsync(tenantId, clientId, clientSecret).Result;
+                DataFactoryManagementClient adfClient = new DataFactoryManagementClient(creds) { SubscriptionId = subscriptionId };
+
+                // In the actual use case we might want to schedule the ADF pipeline trigger to start.
+                // Because this is a sample app we are just kickstarting the pipeline once.
+                CreateRunResponse runResponse = adfClient.Pipelines.CreateRunWithHttpMessagesAsync(resourceGroupName, dataFactoryName, pipelineName).Result.Body;
+
+                return;
+            }
+
             userComboPlusScore = ContactMap.ComputeUserComboScore(messagesList);
             wkwScores = ContactMap.WhoKnowsWhoScoreMap(userComboPlusScore);
 
@@ -324,7 +344,20 @@ namespace WhoKnowWho.Models
             ServiceClientCredentials creds = ApplicationTokenProvider.LoginSilentAsync(tenantId, clientId, clientSecret).Result;
 
             DataLakeStoreFileSystemManagementClient client = new DataLakeStoreFileSystemManagementClient(creds);
+
+            bool pathExists = client.FileSystem.PathExists(accountName, msgPath);
+
+            if(!pathExists)
+            {
+                return null;
+            }
+
             FileStatusesResult fileStatusesResult = client.FileSystem.ListFileStatus(accountName, msgPath);
+
+            if(fileStatusesResult == null || fileStatusesResult.FileStatuses == null || fileStatusesResult.FileStatuses.FileStatus == null)
+            {
+                return null;
+            }
 
             List<string> finalFilePathList = new List<string>();
 
