@@ -4,7 +4,7 @@
   "parameters": {
     "destinationServicePrincipalAadId": {
       "value": ""
-    },    
+    },
     "destinationServicePrincipalId": {
       "value": ""
     },
@@ -12,9 +12,6 @@
         "value": ""
     },
     "office365TenantId": {
-        "value": ""
-    },
-    "webSiteName": {
         "value": ""
     }
   }
