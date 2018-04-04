@@ -58,16 +58,6 @@
   },
   "resources": [
     {
-      "type": "Microsoft.Authorization/roleAssignments",
-      "apiVersion": "2017-05-01",
-      "name": "[guid(resourceGroup().id)]",
-      "properties": {
-        "roleDefinitionId": "[concat('/subscriptions/',subscription().subscriptionId, '/providers/Microsoft.Authorization/roleDefinitions/', '8e3af657-a8ff-443c-a75c-2fe8c4bcb635')]",
-        "principalId": "[parameters('destinationServicePrincipalAadId')]",
-        "scope": "[resourceGroup().id]"
-      }
-    },
-    {
       "type": "Microsoft.DataLakeStore/accounts",
       "name": "[variables('destinationAdlsAccountName')]",
       "comments": "Creates the destination Data Lake store in the customer's subscription used in the ADF pipeline for the data output.",
