@@ -31,18 +31,6 @@
       "metadata": {
         "description": "The Object Id of the user installing the app."
       }
-    },
-    "sqlAdminLogin": {
-      "type": "string",
-      "metadata": {
-        "description": "The admin login of the sql db."
-      }
-    },
-    "sqlAdminPassword": {
-      "type": "string",
-      "metadata": {
-        "description": "The admin password of the sql db."
-      }
     }
   },
   "variables": {
@@ -50,6 +38,8 @@
     "destinationAdlsAccountName": "[concat('destaccount', uniqueString(resourceGroup().id))]",
     "destinationSqlServerName": "[concat('destsqlserver', uniqueString(resourceGroup().id))]",
     "destinationSqlDbName": "[concat('destsqldb', uniqueString(resourceGroup().id))]",
+    "sqlAdminLogin": "[concat('sqladmin', uniqueString(resourceGroup().id))]",
+    "sqlAdminPassword": "[concat('Sq!Pwd', uniqueString(resourceGroup().id))]",
     "source1LinkedServiceName": "SourceO365LinkedService",
     "destination1LinkedServiceName": "DestinationADLSLinkedService",
     "input1MessageDatasetName": "O365InputMessageDataset",
@@ -96,8 +86,8 @@
       "type": "Microsoft.Sql/servers",
       "location": "[resourceGroup().location]",
       "properties": {
-        "administratorLogin": "[parameters('sqlAdminLogin')]",
-        "administratorLoginPassword": "[parameters('sqlAdminPassword')]"
+        "administratorLogin": "[variables('sqlAdminLogin')]",
+        "administratorLoginPassword": "[variables('sqlAdminPassword')]"
       },
       "tags": {
         "displayName": "SqlServer"
@@ -132,8 +122,8 @@
                 "operationMode": "Import",
                 "storageKey": "?",
                 "storageKeyType": "SharedAccessKey",
-                "administratorLogin": "[parameters('sqlAdminLogin')]",
-                "administratorLoginPassword": "[parameters('sqlAdminPassword')]",
+                "administratorLogin": "[variables('sqlAdminLogin')]",
+                "administratorLoginPassword": "[variables('sqlAdminPassword')]",
                 "storageUri": "{bacpac file location}"
               }
             }
@@ -358,7 +348,7 @@
             "typeProperties": {
               "connectionString": {
                 "type": "SecureString",
-                "value": "[concat('Server=tcp:', variables('destinationSqlServerName'), '.database.windows.net,1433;Initial Catalog=', variables('destinationSqlDbName'), ';Persist Security Info=False;User ID=', parameters('sqlAdminLogin'), ';Password=', parameters('sqlAdminPassword'), ';MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;')]"
+                "value": "[concat('Server=tcp:', variables('destinationSqlServerName'), '.database.windows.net,1433;Initial Catalog=', variables('destinationSqlDbName'), ';Persist Security Info=False;User ID=', variables('sqlAdminLogin'), ';Password=', variables('sqlAdminPassword'), ';MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;')]"
               },
               "tenant": "[subscription().tenantId]",
               "resourceGroupName": "[resourceGroup().name]",

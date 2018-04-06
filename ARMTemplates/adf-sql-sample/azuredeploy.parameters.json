@@ -16,12 +16,6 @@
     },
     "userId": {
       "value": ""
-    },
-    "sqlAdminLogin": {
-      "value": ""
-    },
-    "sqlAdminPassword": {
-      "value": ""
     }
   }
 }
