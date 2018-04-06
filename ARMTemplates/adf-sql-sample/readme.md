@@ -6,3 +6,7 @@ This sample covers:
  
  
 > **NOTE:** The sampleimportdb.bacpac needs to be uploaded to an accessible location and the storageUri property in ARM template(azureDeploy.json) needs to be substituted with the bacpac file location.
+
+Helpful Links:
+
+https://docs.microsoft.com/en-us/azure/sql-database/sql-database-export

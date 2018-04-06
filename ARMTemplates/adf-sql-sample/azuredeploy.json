@@ -20,12 +20,6 @@
         "description": "The key of the service principal that has access to the destination Data Lake store."
       }
     },
-    "office365TenantId": {
-      "type": "string",
-      "metadata": {
-        "description": "The id of the O365 tenant for which the data needs to be extracted."
-      }
-    },
     "userId": {
       "type": "string",
       "metadata": {
@@ -40,13 +34,13 @@
     "destinationSqlDbName": "[concat('destsqldb', uniqueString(resourceGroup().id))]",
     "sqlAdminLogin": "[concat('sqladmin', uniqueString(resourceGroup().id))]",
     "sqlAdminPassword": "[concat('Sq!Pwd', uniqueString(resourceGroup().id))]",
-    "source1LinkedServiceName": "SourceO365LinkedService",
-    "destination1LinkedServiceName": "DestinationADLSLinkedService",
-    "input1MessageDatasetName": "O365InputMessageDataset",
-    "output1MessageDatasetName": "ADLSOutputMessageDataset",
-    "destination2LinkedServiceName": "DestinationSQLLinkedService",
-    "input2MessageDatasetName": "ADLSInputMessageDataset",
-    "output2MessageDatasetName": "SQLOutputMessageDataset",
+    "sourceO365LinkedServiceName": "SourceO365LinkedService",
+    "destinationADLSLinkedServiceName": "DestinationADLSLinkedService",
+    "o365InputMessageDatasetName": "O365InputMessageDataset",
+    "adlsOutputMessageDatasetName": "ADLSOutputMessageDataset",
+    "destinationSQLLinkedServiceName": "DestinationSQLLinkedService",
+    "adlsInputMessageDatasetName": "ADLSInputMessageDataset",
+    "sqlOutputMessageDatasetName": "SQLOutputMessageDataset",
     "pipelineName": "O365ToADLSPipeline",
     "o365DataDiscoveryServiceUrl": "https://52.165.130.25/DiscoveryService/DataPreparationJob",
     "destinationAdlsLocation": "East US 2",
@@ -158,7 +152,7 @@
       "resources": [
         {
           "type": "linkedservices",
-          "name": "[variables('source1LinkedServiceName')]",
+          "name": "[variables('sourceO365LinkedServiceName')]",
           "comments": "Creates the link to O365 which is used as the source of the data extraction. Using service principal supplied by the source ADLS owner.",
           "dependsOn": [
             "[variables('dataFactoryName')]"
@@ -168,7 +162,7 @@
             "type": "Office365",
             "description": "Source O365 linked service",
             "typeProperties": {
-              "office365tenantId": "[parameters('office365tenantId')]",
+              "office365tenantId": "[subscription().tenantId]",
               "o365DataDiscoveryServiceUrl": "[variables('o365DataDiscoveryServiceUrl')]",
               "PrivacyPolicyUri": "http://www.wkw.com/privacy",
               "TermsOfUseUri": "http://www.wkw.com/tos",
@@ -179,13 +173,13 @@
                 "value": "A/sGehNSNIdxr9ZdMADbEfL1tD93U2RtwCohKy67QI4="
               },
               "userId": "[parameters('userId')]",
-              "tenant": "[parameters('office365tenantId')]"
+              "tenant": "[subscription().tenantId]"
             }
           }
         },
         {
           "type": "linkedservices",
-          "name": "[variables('destination1LinkedServiceName')]",
+          "name": "[variables('destinationADLSLinkedServiceName')]",
           "comments": "Creates the link to the newly created destination ADLS, using service principal supplied by the customer deploying this template.",
           "dependsOn": [
             "[variables('dataFactoryName')]"
@@ -209,17 +203,17 @@
         },
         {
           "type": "datasets",
-          "name": "[variables('input1MessageDatasetName')]",
+          "name": "[variables('o365InputMessageDatasetName')]",
           "dependsOn": [
             "[variables('dataFactoryName')]",
-            "[variables('source1LinkedServiceName')]"
+            "[variables('sourceO365LinkedServiceName')]"
           ],
           "apiVersion": "2017-09-01-preview",
           "properties": {
             "published": false,
             "type": "Office365Table",
             "linkedServiceName": {
-              "referenceName": "[variables('source1LinkedServiceName')]",
+              "referenceName": "[variables('sourceO365LinkedServiceName')]",
               "type": "LinkedServiceReference"
             },
             "structure": [
@@ -315,17 +309,17 @@
         },
         {
           "type": "datasets",
-          "name": "[variables('output1MessageDatasetName')]",
+          "name": "[variables('adlsOutputMessageDatasetName')]",
           "dependsOn": [
             "[variables('dataFactoryName')]",
-            "[variables('destination1LinkedServiceName')]"
+            "[variables('destinationADLSLinkedServiceName')]"
           ],
           "apiVersion": "2017-09-01-preview",
           "properties": {
             "published": false,
             "type": "AzureDataLakeStore",
             "linkedServiceName": {
-              "referenceName": "[variables('destination1LinkedServiceName')]",
+              "referenceName": "[variables('destinationADLSLinkedServiceName')]",
               "type": "LinkedServiceReference"
             },
             "typeProperties": {
@@ -335,7 +329,7 @@
         },
         {
           "type": "linkedservices",
-          "name": "[variables('destination2LinkedServiceName')]",
+          "name": "[variables('destinationSQLLinkedServiceName')]",
           "dependsOn": [
             "[variables('dataFactoryName')]",
             "[resourceId('Microsoft.Sql/servers', variables('destinationSqlServerName'))]",
@@ -358,16 +352,16 @@
         },
         {
           "type": "datasets",
-          "name": "[variables('input2MessageDatasetName')]",
+          "name": "[variables('adlsInputMessageDatasetName')]",
           "dependsOn": [
             "[variables('dataFactoryName')]",
-            "[variables('destination1LinkedServiceName')]"
+            "[variables('destinationADLSLinkedServiceName')]"
           ],
           "apiVersion": "2017-09-01-preview",
           "properties": {
             "type": "AzureDataLakeStore",
             "linkedServiceName": {
-              "referenceName": "[variables('destination1LinkedServiceName')]",
+              "referenceName": "[variables('destinationADLSLinkedServiceName')]",
               "type": "LinkedServiceReference"
             },
             "structure": [
@@ -491,16 +485,16 @@
         },
         {
           "type": "datasets",
-          "name": "[variables('output2MessageDatasetName')]",
+          "name": "[variables('sqlOutputMessageDatasetName')]",
           "dependsOn": [
             "[variables('dataFactoryName')]",
-            "[variables('destination2LinkedServiceName')]"
+            "[variables('destinationSQLLinkedServiceName')]"
           ],
           "apiVersion": "2017-09-01-preview",
           "properties": {
             "type": "AzureSqlTable",
             "linkedServiceName": {
-              "referenceName": "[variables('destination2LinkedServiceName')]",
+              "referenceName": "[variables('destinationSQLLinkedServiceName')]",
               "type": "LinkedServiceReference"
             },
             "structure": [
@@ -599,13 +593,13 @@
           "name": "[variables('pipelineName')]",
           "dependsOn": [
             "[variables('dataFactoryName')]",
-            "[variables('source1LinkedServiceName')]",
-            "[variables('destination1LinkedServiceName')]",
-            "[variables('destination2LinkedServiceName')]",
-            "[variables('input1MessageDatasetName')]",
-            "[variables('output1MessageDatasetName')]",
-            "[variables('input2MessageDatasetName')]",
-            "[variables('output2MessageDatasetName')]"
+            "[variables('sourceO365LinkedServiceName')]",
+            "[variables('destinationADLSLinkedServiceName')]",
+            "[variables('destinationSQLLinkedServiceName')]",
+            "[variables('o365InputMessageDatasetName')]",
+            "[variables('adlsOutputMessageDatasetName')]",
+            "[variables('adlsInputMessageDatasetName')]",
+            "[variables('sqlOutputMessageDatasetName')]"
           ],
           "apiVersion": "2017-09-01-preview",
           "properties": {
@@ -616,13 +610,13 @@
                 "type": "Copy",
                 "inputs": [
                   {
-                    "referenceName": "[variables('input1MessageDatasetName')]",
+                    "referenceName": "[variables('o365InputMessageDatasetName')]",
                     "type": "DatasetReference"
                   }
                 ],
                 "outputs": [
                   {
-                    "referenceName": "[variables('output1MessageDatasetName')]",
+                    "referenceName": "[variables('adlsOutputMessageDatasetName')]",
                     "type": "DatasetReference"
                   }
                 ],
@@ -641,13 +635,13 @@
                 "type": "Copy",
                 "inputs": [
                   {
-                    "referenceName": "[variables('input2MessageDatasetName')]",
+                    "referenceName": "[variables('adlsInputMessageDatasetName')]",
                     "type": "DatasetReference"
                   }
                 ],
                 "outputs": [
                   {
-                    "referenceName": "[variables('output2MessageDatasetName')]",
+                    "referenceName": "[variables('sqlOutputMessageDatasetName')]",
                     "type": "DatasetReference"
                   }
                 ],
@@ -679,13 +673,13 @@
           "name": "pipelineTrigger",
           "dependsOn": [
             "[variables('dataFactoryName')]",
-            "[variables('source1LinkedServiceName')]",
-            "[variables('destination1LinkedServiceName')]",
-            "[variables('destination2LinkedServiceName')]",
-            "[variables('input1MessageDatasetName')]",
-            "[variables('output1MessageDatasetName')]",
-            "[variables('input2MessageDatasetName')]",
-            "[variables('output2MessageDatasetName')]",
+            "[variables('sourceO365LinkedServiceName')]",
+            "[variables('destinationADLSLinkedServiceName')]",
+            "[variables('destinationSQLLinkedServiceName')]",
+            "[variables('o365InputMessageDatasetName')]",
+            "[variables('adlsOutputMessageDatasetName')]",
+            "[variables('adlsInputMessageDatasetName')]",
+            "[variables('sqlOutputMessageDatasetName')]",
             "[variables('pipelineName')]"
           ],
           "apiVersion": "2017-09-01-preview",

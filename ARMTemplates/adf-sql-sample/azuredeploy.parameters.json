@@ -11,9 +11,6 @@
     "destinationServicePrincipalKey": {
       "value": ""
     },
-    "office365TenantId": {
-      "value": ""
-    },
     "userId": {
       "value": ""
     }
