@@ -398,7 +398,7 @@
           "apiVersion": "2017-09-01-preview",
           "properties": {
             "published": false,
-            "type": "AzureDataLakeStore",
+            "type": "AzureDataLakeStoreFile",
             "linkedServiceName": {
               "referenceName": "[variables('destinationLinkedServiceName')]",
               "type": "LinkedServiceReference"
@@ -418,7 +418,7 @@
           "apiVersion": "2017-09-01-preview",
           "properties": {
             "published": false,
-            "type": "AzureDataLakeStore",
+            "type": "AzureDataLakeStoreFile",
             "linkedServiceName": {
               "referenceName": "[variables('destinationLinkedServiceName')]",
               "type": "LinkedServiceReference"
@@ -438,7 +438,7 @@
           "apiVersion": "2017-09-01-preview",
           "properties": {
             "published": false,
-            "type": "AzureDataLakeStore",
+            "type": "AzureDataLakeStoreFile",
             "linkedServiceName": {
               "referenceName": "[variables('destinationLinkedServiceName')]",
               "type": "LinkedServiceReference"
@@ -458,7 +458,7 @@
           "apiVersion": "2017-09-01-preview",
           "properties": {
             "published": false,
-            "type": "AzureDataLakeStore",
+            "type": "AzureDataLakeStoreFile",
             "linkedServiceName": {
               "referenceName": "[variables('destinationLinkedServiceName')]",
               "type": "LinkedServiceReference"
