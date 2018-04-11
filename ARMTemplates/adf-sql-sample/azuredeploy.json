@@ -317,7 +317,7 @@
           "apiVersion": "2017-09-01-preview",
           "properties": {
             "published": false,
-            "type": "AzureDataLakeStore",
+            "type": "AzureDataLakeStoreFile",
             "linkedServiceName": {
               "referenceName": "[variables('destinationADLSLinkedServiceName')]",
               "type": "LinkedServiceReference"
@@ -359,7 +359,7 @@
           ],
           "apiVersion": "2017-09-01-preview",
           "properties": {
-            "type": "AzureDataLakeStore",
+            "type": "AzureDataLakeStoreFile",
             "linkedServiceName": {
               "referenceName": "[variables('destinationADLSLinkedServiceName')]",
               "type": "LinkedServiceReference"
