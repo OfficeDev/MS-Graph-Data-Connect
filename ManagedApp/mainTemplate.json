@@ -40,6 +40,9 @@
     "dataFactoryName": "[concat('myadf', uniqueString(resourceGroup().id))]",
     "destinationAdlsAccountName": "[concat('myadls', uniqueString(resourceGroup().id))]",
     "integrationRuntimeName": "[concat('myir', uniqueString(resourceGroup().id))]",
+    "o365dataPlanName": "[concat('eucliddataplan', uniqueString(resourceGroup().id))]",
+    "o365dataPlanSourceName": "Office365EnterpriseDataSecurityPackageV1",
+    "o365dataPlanSourceLocation": "East US 2",
     "sourceLinkedServiceName": "SourceO365LinkedService",
     "destinationLinkedServiceName": "DestinationADLSLinkedService",
     "inputEventDatasetName": "O365InputEventDataset",
@@ -73,6 +76,33 @@
     }
   },
   "resources": [
+    {
+      "type": "Microsoft.Authorization/policyAssignments",
+      "name": "adlsEncryption",
+      "apiVersion": "2017-06-01-preview",
+      "properties": {
+        "policyDefinitionId": "/providers/Microsoft.Authorization/policyDefinitions/a7ff3161-0087-490a-9ad9-ad6217f4f43a"
+      },
+      "sku": {
+        "name": "A1",
+        "tier": "Standard"
+      }
+    },
+    {
+      "type": "Microsoft.DataExchange/plans",
+      "name": "[variables('o365dataPlanName')]",
+      "apiVersion": "2018-03-01-preview",
+      "location": "[variables('o365dataPlanSourceLocation')]",
+      "dependsOn": [
+        "adlsEncryption"
+      ],
+      "properties": {
+        "source": "[variables('o365dataPlanSourceName')]",
+        "managedApplicationEnrollment": {
+          "complianceMonitoring": "Enabled"
+        }
+      }
+    },
     {
       "type": "Microsoft.DataLakeStore/accounts",
       "name": "[variables('destinationAdlsAccountName')]",
@@ -126,6 +156,7 @@
             "type": "Office365",
             "description": "Source O365 linked service",
             "typeProperties": {
+              "flightingFeatures": "EnableDataVault",
               "office365tenantId": "[subscription().tenantId]",
               "o365DataDiscoveryServiceUrl": "[variables('o365DataDiscoveryServiceUrl')]",
               "PrivacyPolicyUri": "http://www.wkw.com/privacy",
