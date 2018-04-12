@@ -478,7 +478,7 @@
           "properties": {
             "arm:TenantId": "[subscription().tenantId]",
             "arm:ClientId": "[parameters('destinationServicePrincipalId')]",
-            "arm:PostLogoutRedirectUri": "[variables('webSiteName')]",
+            "arm:PostLogoutRedirectUri": "[concat('https://', variables('webSiteName'), '.azurewebsites.net/')]",
             "arm:AADInstance": "[variables('aadInstance')]",
             "arm:SubscriptionId": "[subscription().subscriptionId]",
             "arm:ManagedResourceGroupName": "[resourceGroup().name]",
