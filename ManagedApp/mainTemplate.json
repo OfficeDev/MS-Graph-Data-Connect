@@ -28,6 +28,12 @@
     },
     "webSiteName": {
       "type": "string"
+    },
+	"triggerStartTime": {
+      "type": "string",
+      "metadata": {
+        "description": "The time when the trigger will first start to run the pipeline. Everything prior to this time will be backfilled."
+      }
     }
   },
   "variables": {
@@ -42,6 +48,15 @@
     "pipelineName": "O365ToADLSPipeline",
     "o365DataDiscoveryServiceUrl": "https://52.165.130.25/DiscoveryService/DataPreparationJob",
     "webSiteName": "[parameters('webSiteName')]",
+	"backfillnumberofdays": 30,
+	"isBackfill": "[concat('bool(equals(trigger().outputs.windowStartTime,''', parameters('triggerStartTime'),'''))')]",
+        "backfillDays": "[sub(0, variables('backfillnumberofdays'))]",
+        "backfillStart":"[concat('formatDateTime(adddays(trigger().outputs.windowStartTime,', variables('backfillDays'),', ''yyyy-MM-ddTHH:mm:ss.fffffffzzz''))')]",
+        "backfillEnd": "formatDateTime(adddays(trigger().outputs.windowStartTime, 0,'yyyy-MM-ddTHH:mm:ss.fffffffzzz'))",
+        "incrementalStart": "formatDateTime(adddays(trigger().outputs.windowStartTime, -1,'yyyy-MM-ddTHH:mm:ss.fffffffzzz'))",
+        "incrementalEnd": "formatDateTime(adddays(trigger().outputs.windowEndTime, -1,'yyyy-MM-ddTHH:mm:ss.fffffffzzz'))",
+        "windowStart": "[concat('@if(', variables('isBackfill'), ',',variables('backfillStart'), ',',variables('incrementalStart'),')')]",
+        "windowEnd": "@formatDateTime(adddays(trigger().outputs.windowEndTime, -1,'yyyy-MM-ddTHH:mm:ss.fffffffzzz'))",
     "hostingPlanName": "Free",
     "skuCapacity": "1",
     "skuName": "F1",
@@ -191,9 +206,20 @@
               }
             ],
             "typeProperties": {
-              "tableName": "Message"
+              "tableName": "Message",
+			  "predicate": {
+                "type": "Expression",
+                "value": "SentDateTime > @{dataset().windowStart} AND SentDateTime  <= @{dataset().windowEnd}"
+              }
             },
-            "external": true
+            "parameters": {
+              "windowStart": {
+                "type": "String"
+              },
+              "windowEnd": {
+                "type": "String"
+              }
+            }
           }
         },
         {
@@ -258,9 +284,20 @@
               }
             ],
             "typeProperties": {
-              "tableName": "Event"
+              "tableName": "Event",
+			  "predicate": {
+                "type": "Expression",
+                "value": "CreatedDateTime >= @{dataset().windowStart} AND CreatedDateTime  < @{dataset().windowEnd}"
+              }
             },
-            "external": true
+            "parameters": {
+              "windowStart": {
+                "type": "String"
+              },
+              "windowEnd": {
+                "type": "String"
+              }
+            }
           }
         },
         {
@@ -317,6 +354,14 @@
           ],
           "apiVersion": "2017-09-01-preview",
           "properties": {
+            "parameters": {
+              "windowStart": {
+                "type": "String"
+              },
+              "windowEnd": {
+                "type": "String"
+              }
+            },
             "activities": [
               {
                 "name": "CopyMessageFromO365ToAzureDLS",
@@ -325,7 +370,17 @@
                 "inputs": [
                   {
                     "referenceName": "[variables('inputMessageDatasetName')]",
-                    "type": "DatasetReference"
+                    "type": "DatasetReference",
+					"parameters": {
+                      "windowStart": {
+                        "value": "@pipeline().parameters.windowStart",
+                        "type": "Expression"
+                      },
+                      "windowEnd": {
+                        "value": "@pipeline().parameters.windowEnd",
+                        "type": "Expression"
+                      }
+                    }
                   }
                 ],
                 "outputs": [
@@ -350,7 +405,17 @@
                 "inputs": [
                   {
                     "referenceName": "[variables('inputEventDatasetName')]",
-                    "type": "DatasetReference"
+                    "type": "DatasetReference",
+					"parameters": {
+                      "windowStart": {
+                        "value": "@pipeline().parameters.windowStart",
+                        "type": "Expression"
+                      },
+                      "windowEnd": {
+                        "value": "@pipeline().parameters.windowEnd",
+                        "type": "Expression"
+                      }
+                    }
                   }
                 ],
                 "outputs": [
@@ -386,25 +451,29 @@
           ],
           "apiVersion": "2017-09-01-preview",
           "properties": {
-            "type": "ScheduleTrigger",
+            "type": "TumblingWindowTrigger",
             "typeProperties": {
-              "recurrence": {
-                "frequency": "Day",
-                "interval": 1,
-                "startTime": "2017-11-01T00:00:00Z",
-                "endTime": "2018-11-01T00:00:00Z",
-                "timeZone": "UTC"
+                "frequency": "Hour",
+                "interval": 24,
+                "startTime": "[parameters('triggerStartTime')]",
+                "delay": "00:00:01",
+                "retryPolicy": {
+                "count": 2,
+                "intervalInSeconds": 30
+              },
+              "maxConcurrency": 10
+            },
+            "pipeline": {
+              "pipelineReference": {
+                "type": "PipelineReference",
+                "referenceName": "[variables('pipelineName')]"
+              },
+              "parameters": {
+                "windowStart": "[variables('windowStart')]",
+                "windowEnd": "[variables('windowEnd')]"
               }
             },
-            "pipelines": [
-              {
-                "pipelineReference": {
-                  "type": "PipelineReference",
-                  "referenceName": "[variables('pipelineName')]"
-                },
-                "parameters": {}
-              }
-            ]
+            "runtimeState": "Started"
           }
         }
       ]

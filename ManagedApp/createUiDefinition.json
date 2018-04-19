@@ -65,6 +65,15 @@
                         "constraints": {
                             "required": true
                         }
+                    },
+					{
+                        "name": "triggerStartTime",
+                        "type": "Microsoft.Common.TextBox",
+                        "label": "Trigger start time",
+                        "toolTip": "The time when the trigger will first start to run the pipeline. Everything prior to this time will be backfilled",
+                        "constraints": {
+                            "required": true
+                        }
                     }
                 ]
             }
@@ -74,6 +83,7 @@
             "destinationServicePrincipalId": "[steps('adfSettings').destinationServicePrincipalId]",
             "destinationServicePrincipalKey": "[steps('adfSettings').destinationServicePrincipalKey]",
 			"userId": "[steps('adfSettings').userId]",
+			"triggerStartTime": "[steps('adfSettings').triggerStartTime]",
             "webSiteName": "[steps('webAppSettings').webSiteName]"
         }
     }
