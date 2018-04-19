@@ -46,6 +46,7 @@
     "outputEventDatasetName": "ADLSOutputEventDataset",
     "outputMessageDatasetName": "ADLSOutputMessageDataset",
     "pipelineName": "O365ToADLSPipeline",
+    "triggerName": "pipelineTrigger",
     "o365DataDiscoveryServiceUrl": "https://52.165.130.25/DiscoveryService/DataPreparationJob",
     "webSiteName": "[parameters('webSiteName')]",
     "backfillnumberofdays": 30,
@@ -68,7 +69,7 @@
     "outputDataLakeStore": {
       "path": "targetFolder",
       "messagePath": "targetFolder/Message",
-      "eventPath": "targetFolder/Event",
+      "eventPath": "targetFolder/Event"
     }
   },
   "resources": [
@@ -438,7 +439,7 @@
         },
         {
           "type": "triggers",
-          "name": "pipelineTrigger",
+          "name": "[variables('triggerName')]",
           "dependsOn": [
             "[variables('dataFactoryName')]",
             "[variables('sourceLinkedServiceName')]",
@@ -473,7 +474,17 @@
                 "windowEnd": "[variables('windowEnd')]"
               }
             },
-            "runtimeState": "Started"
+            "resources": [
+              {
+                "apiVersion": "2017-09-01-preview",
+                "dependsOn": [
+                  "[variables('triggerName')]"
+                ],
+                "name": "start",
+                "properties": {},
+                "type": "status"
+              }
+            ]
           }
         }
       ]
