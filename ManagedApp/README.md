@@ -51,11 +51,12 @@ You will be able to see the application getting deployed on the dashboard.
 
 #### Step 4
 
-##### Kickstart an ADF pipeline
-
 Once the deployment completes, you can click on the app and on the overview tab, click on the "Managed Resource Group".
 Click on the "Data Factory" that has been created under the managed resource group.
 In the Data Factory window that opens up, click on "Author & Monitor" under Quick Links section.
+
+##### Kickstart an ADF pipeline
+
 In the new tab that opens up for the data factory, click on the "Author" icon on the top left.
 Choose the "O365ToADLSPipeline" under the "Pipelines" section, in the pipeline window that appears, click on "Trigger" and choose "Trigger Now" option.
 In the "Pipeline Run" window that appears click on finish.
@@ -65,3 +66,26 @@ You can use the following powershell cmdlet to kickstart the pipeline
 Invoke-AzureRmDataFactoryV2Pipeline -ResourceGroupName <resource group name> -DataFactory <data factory name> -PipelineName <pipeline name>
 
 You can click on the "Monitor" icon on the top left and monitor the pipeline.
+
+##### Kickstart an ADF pipeline trigger
+
+In the current sample app, the tumbling window trigger is sued to schedule the pipeline run consistently
+
+https://docs.microsoft.com/en-us/azure/data-factory/how-to-create-tumbling-window-trigger
+
+Based on the backfillDays parameter value, the trigger windowStart time is calculated. 
+If the trigger windowStart is older than the triggerStartTime parameter value, then it means that we need to backfill the data. 
+So the first pipeline that gets kicked off by the trigger will do a backfill and then the subsequent pipelines that get triggered will fetch data incrementally with a frequency of 24 hours.
+
+In this example we have set the retry policy for the trigger pipeline run to be 2 and max concurrency to be 10. These values can be configured as per the need.
+
+https://docs.microsoft.com/en-us/azure/data-factory/concepts-pipeline-execution-triggers#trigger-type-comparison
+
+NOTE: If the pipeline fails even after 2 retries, the window moves forward to the next day and this might result in holes in data.
+
+You can use the following powershell cmdlet to kickstart the pipeline
+
+Start-AzureRmDataFactoryV2Trigger -ResourceGroupName <resource group name> -DataFactoryName <data factory name> -TriggerName <trigger name>
+
+You can click on the "Monitor" icon on the top left of the ADF page and monitor the pipeline.
+
