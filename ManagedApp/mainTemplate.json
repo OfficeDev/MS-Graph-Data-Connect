@@ -37,15 +37,16 @@
     }
   },
   "variables": {
-    "dataFactoryName": "[concat('O365ToAzureDLSDataFactory', uniqueString(resourceGroup().id))]",
-    "destinationAdlsAccountName": "[concat('destaccount', uniqueString(resourceGroup().id))]",
+    "dataFactoryName": "[concat('myadf', uniqueString(resourceGroup().id))]",
+    "destinationAdlsAccountName": "[concat('myadls', uniqueString(resourceGroup().id))]",
+    "integrationRuntimeName": "[concat('myir', uniqueString(resourceGroup().id))]",
     "sourceLinkedServiceName": "SourceO365LinkedService",
     "destinationLinkedServiceName": "DestinationADLSLinkedService",
     "inputEventDatasetName": "O365InputEventDataset",
     "inputMessageDatasetName": "O365InputMessageDataset",
     "outputEventDatasetName": "ADLSOutputEventDataset",
     "outputMessageDatasetName": "ADLSOutputMessageDataset",
-    "pipelineName": "O365ToADLSPipeline",
+    "pipelineName": "euclidpipeline",
     "triggerName": "pipelineTrigger",
     "o365DataDiscoveryServiceUrl": "https://52.165.130.25/DiscoveryService/DataPreparationJob",
     "webSiteName": "[parameters('webSiteName')]",
@@ -61,7 +62,6 @@
     "hostingPlanName": "Free",
     "skuCapacity": "1",
     "skuName": "F1",
-    "destinationAdlsLocation": "East US 2",
     "aadInstance": "https://login.microsoftonline.com/",
     "artifacts": {
       "webAppRemote": "https://euclidsamplestorage.blob.core.windows.net/webappcontainer/WhoKnowWho.zip"
@@ -77,7 +77,7 @@
       "type": "Microsoft.DataLakeStore/accounts",
       "name": "[variables('destinationAdlsAccountName')]",
       "comments": "Creates the destination Data Lake store in the customer's subscription used in the ADF pipeline for the data output.",
-      "location": "[variables('destinationAdlsLocation')]",
+      "location": "[resourceGroup().location]",
       "apiVersion": "2016-11-01",
       "properties": {
         "initialUser": "[parameters('destinationServicePrincipalAadId')]",
@@ -96,8 +96,24 @@
       "dependsOn": [
         "[resourceId('Microsoft.DataLakeStore/accounts/', variables('destinationAdlsAccountName'))]"
       ],
-      "location": "East US",
+      "location": "[resourceGroup().location]",
       "resources": [
+        {
+          "name": "[variables('integrationRuntimeName')]",
+          "type": "integrationRuntimes",
+          "apiVersion": "2017-09-01-preview",
+          "properties": {
+            "type": "Managed",
+            "typeProperties": {
+              "computeProperties": {
+                "location": "[resourceGroup().location]"
+              }
+            }
+          },
+          "dependsOn": [
+            "[variables('dataFactoryName')]"
+          ]
+        },
         {
           "type": "linkedservices",
           "name": "[variables('sourceLinkedServiceName')]",
@@ -130,7 +146,8 @@
           "name": "[variables('destinationLinkedServiceName')]",
           "comments": "Creates the link to the newly created destination ADLS, using service principal supplied by the customer deploying this template.",
           "dependsOn": [
-            "[variables('dataFactoryName')]"
+            "[variables('dataFactoryName')]",
+            "[variables('integrationRuntimeName')]"
           ],
           "apiVersion": "2017-09-01-preview",
           "properties": {
@@ -145,7 +162,11 @@
               },
               "tenant": "[subscription().tenantId]",
               "resourceGroupName": "[resourceGroup().name]",
-              "subscriptionId": "[subscription().subscriptionId]"
+              "subscriptionId": "[subscription().subscriptionId]",
+              "connectVia": {
+                "referenceName": "[variables('integrationRuntimeName')]",
+                "type": "IntegrationRuntimeReference"
+              }
             }
           }
         },
