@@ -83,13 +83,6 @@ $now = Get-Date
 $nextYear = $now.AddYears(1)
 $DestPassword = New-AzureADApplicationPasswordCredential -ObjectId $AadApplication.ObjectId -StartDate $now -EndDate $nextYear
 
-# Temporary fix to bypass the role assignment bug in managed app
-# Need to sleep for 10 secs so that the role assignment can find the newly created SPN
-Sleep -Seconds 10
-Write-Host "Granting subscription level reader access to the new AAD Application" -foregroundcolor "Yellow"
-$spObjId = $ServicePrincipal.ObjectId
-$role = New-AzureRmRoleAssignment -ObjectId $spObjId -RoleDefinitionName Reader -Scope /subscriptions/$SubscriptionId
-
 Write-Host $ApplicationDisplayName " has been created successfully. " -foregroundcolor "Green"
 
 Write-Host "`n App installation parameter details:"
