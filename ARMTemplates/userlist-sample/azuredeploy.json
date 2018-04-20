@@ -247,8 +247,8 @@
               "type": "LinkedServiceReference"
             },
             "typeProperties": {
-              "folderPath": "/folder1",
-              "fileName": "userlist.txt"
+              "folderPath": "[parameters('userListFolderPath')]",
+              "fileName": "[parameters('userListFileName')]"
             }
           }
         },
