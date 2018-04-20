@@ -122,13 +122,6 @@ namespace WhoKnowWho.Models
             messagesList = ContactMap.GetMessages();
             if(messagesList == null || messagesList.Count == 0)
             {
-                ServiceClientCredentials creds = ApplicationTokenProvider.LoginSilentAsync(tenantId, clientId, clientSecret).Result;
-                DataFactoryManagementClient adfClient = new DataFactoryManagementClient(creds) { SubscriptionId = subscriptionId };
-
-                // In the actual use case we might want to schedule the ADF pipeline trigger to start.
-                // Because this is a sample app we are just kickstarting the pipeline once.
-                CreateRunResponse runResponse = adfClient.Pipelines.CreateRunWithHttpMessagesAsync(resourceGroupName, dataFactoryName, pipelineName).Result.Body;
-
                 return;
             }
 
