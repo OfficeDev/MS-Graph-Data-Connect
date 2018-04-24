@@ -44,7 +44,6 @@
     "auditStorageAccountSku": "Standard_LRS",
     "o365dataPlanName": "[concat('eucliddataplan', uniqueString(resourceGroup().id))]",
     "o365dataPlanSourceName": "Office365EnterpriseDataSecurityPackageV1",
-    "o365dataPlanSourceLocation": "East US 2",
     "sourceLinkedServiceName": "SourceO365LinkedService",
     "destinationLinkedServiceName": "DestinationADLSLinkedService",
     "inputEventDatasetName": "O365InputEventDataset",
@@ -79,74 +78,10 @@
   },
   "resources": [
     {
-      "type": "Microsoft.Authorization/policyAssignments",
-      "name": "adlsEncryption",
-      "apiVersion": "2017-06-01-preview",
-      "properties": {
-        "policyDefinitionId": "/providers/Microsoft.Authorization/policyDefinitions/a7ff3161-0087-490a-9ad9-ad6217f4f43a"
-      },
-      "sku": {
-        "name": "A1",
-        "tier": "Standard"
-      }
-    },
-    {
-      "type": "Microsoft.Authorization/policyAssignments",
-      "name": "adlsAudit",
-      "apiVersion": "2017-06-01-preview",
-      "properties": {
-        "policyDefinitionId": "/providers/Microsoft.Authorization/policyDefinitions/7f89b1eb-583c-429a-8828-af049802c1d9",
-        "parameters": {
-          "listOfResourceTypes": {
-            "value": [ "Microsoft.DataLakeStore/accounts" ]
-          }
-        }
-      },
-      "sku": {
-        "name": "A1",
-        "tier": "Standard"
-      }
-    },
-    {
-      "type": "Microsoft.Authorization/policyAssignments",
-      "name": "sqlEncryption",
-      "apiVersion": "2017-06-01-preview",
-      "properties": {
-        "policyDefinitionId": "/providers/Microsoft.Authorization/policyDefinitions/17k78e20-9358-41c9-923c-fb736d382a12"
-      },
-      "sku": {
-        "name": "A1",
-        "tier": "Standard"
-      }
-    },
-    {
-      "type": "Microsoft.Authorization/policyAssignments",
-      "name": "sqlAudit",
-      "apiVersion": "2017-06-01-preview",
-      "properties": {
-        "policyDefinitionId": "/providers/Microsoft.Authorization/policyDefinitions/a6fb4358-5bf4-4ad7-ba82-2cd2f41ce5e9",
-        "parameters": {
-          "setting": {
-            "value": "enabled"
-          }
-        }
-      },
-      "sku": {
-        "name": "A1",
-        "tier": "Standard"
-      }
-    },
-    {
       "type": "Microsoft.DataExchange/plans",
       "name": "[variables('o365dataPlanName')]",
       "apiVersion": "2018-03-01-preview",
-      "location": "[variables('o365dataPlanSourceLocation')]",
-      "dependsOn": [
-        "adlsEncryption",
-        "adlsAudit",
-        "sqlEncryption",
-        "sqlAudit"
-      ],
+      "location": "[resourceGroup().location]",
       "properties": {
         "source": "[variables('o365dataPlanSourceName')]",
         "managedApplicationEnrollment": {
@@ -158,7 +93,7 @@
       "type": "Microsoft.Storage/storageAccounts",
       "name": "[variables('auditStorageAccountName')]",
       "apiVersion": "2016-01-01",
-      "location": "[variables('destinationAdlsLocation')]",
+      "location": "[resourceGroup().location]",
       "dependsOn": [
         "[variables('o365dataPlanName')]"
       ],
