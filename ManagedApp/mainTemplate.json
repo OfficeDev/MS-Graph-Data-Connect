@@ -53,12 +53,12 @@
     "backfillnumberofdays": 30,
     "isBackfill": "[concat('bool(equals(trigger().outputs.windowStartTime,''', parameters('triggerStartTime'),'''))')]",
     "backfillDays": "[sub(0, variables('backfillnumberofdays'))]",
-    "backfillStart": "[concat('formatDateTime(adddays(trigger().outputs.windowStartTime,', variables('backfillDays'),', ''yyyy-MM-ddTHH:mm:ss.fffffffzzz''))')]",
-    "backfillEnd": "formatDateTime(adddays(trigger().outputs.windowStartTime, 0,'yyyy-MM-ddTHH:mm:ss.fffffffzzz'))",
-    "incrementalStart": "formatDateTime(adddays(trigger().outputs.windowStartTime, -1,'yyyy-MM-ddTHH:mm:ss.fffffffzzz'))",
+    "backfillStart": "[concat('formatDateTime(adddays(trigger().outputs.windowStartTime,', variables('backfillDays'),', ''yyyy-MM-ddTHH:mm:ss.fffffffzzz''),''yyyy-MM-ddTHH:mm:ssZ'')')]",
+    "backfillEnd": "formatDateTime(adddays(trigger().outputs.windowStartTime, 0,'yyyy-MM-ddTHH:mm:ss.fffffffzzz'),'yyyy-MM-ddTHH:mm:ssZ')",
+    "incrementalStart": "formatDateTime(adddays(trigger().outputs.windowStartTime, -1,'yyyy-MM-ddTHH:mm:ss.fffffffzzz'),'yyyy-MM-ddTHH:mm:ssZ')",
     "incrementalEnd": "formatDateTime(adddays(trigger().outputs.windowEndTime, -1,'yyyy-MM-ddTHH:mm:ss.fffffffzzz'))",
     "windowStart": "[concat('@if(', variables('isBackfill'), ',',variables('backfillStart'), ',',variables('incrementalStart'),')')]",
-    "windowEnd": "@formatDateTime(adddays(trigger().outputs.windowEndTime, -1,'yyyy-MM-ddTHH:mm:ss.fffffffzzz'))",
+    "windowEnd": "@formatDateTime(adddays(trigger().outputs.windowEndTime, -1,'yyyy-MM-ddTHH:mm:ss.fffffffzzz'),'yyyy-MM-ddTHH:mm:ssZ')",
     "hostingPlanName": "Free",
     "skuCapacity": "1",
     "skuName": "F1",
@@ -192,35 +192,35 @@
               },
               {
                 "name": "HasAttachments",
-                "type": "bool"
+                "type": "boolean"
               },
               {
                 "name": "SentDateTime",
-                "type": "DateTime"
+                "type": "datetime"
               },
               {
                 "name": "ReceivedDateTime",
-                "type": "DateTime"
+                "type": "datetime"
               },
               {
                 "name": "Sender",
-                "type": "Object"
+                "type": "string"
               },
               {
                 "name": "From",
-                "type": "Object"
+                "type": "string"
               },
               {
                 "name": "ToRecipients",
-                "type": "Object"
+                "type": "string"
               },
               {
                 "name": "CcRecipients",
-                "type": "Object"
+                "type": "string"
               },
               {
                 "name": "BccRecipients",
-                "type": "Object"
+                "type": "string"
               },
               {
                 "name": "ConversationId",
@@ -228,7 +228,7 @@
               }
             ],
             "typeProperties": {
-              "tableName": "Message",
+              "tableName": "BasicDataSet_v0.Message_v0",
               "predicate": {
                 "type": "Expression",
                 "value": "SentDateTime > @{dataset().windowStart} AND SentDateTime  <= @{dataset().windowEnd}"
@@ -266,15 +266,15 @@
               },
               {
                 "name": "HasAttachments",
-                "type": "bool"
+                "type": "boolean"
               },
               {
                 "name": "End",
-                "type": "DateTime"
+                "type": "string"
               },
               {
                 "name": "Start",
-                "type": "DateTime"
+                "type": "string"
               },
               {
                 "name": "ResponseStatus",
@@ -282,7 +282,7 @@
               },
               {
                 "name": "Organizer",
-                "type": "Object"
+                "type": "string"
               },
               {
                 "name": "Attendees",
@@ -306,7 +306,7 @@
               }
             ],
             "typeProperties": {
-              "tableName": "Event",
+              "tableName": "BasicDataSet_v0.Event_v0",
               "predicate": {
                 "type": "Expression",
                 "value": "CreatedDateTime >= @{dataset().windowStart} AND CreatedDateTime  < @{dataset().windowEnd}"

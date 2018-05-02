@@ -146,7 +146,7 @@
               },
               {
                 "name": "HasAttachments",
-                "type": "bool"
+                "type": "boolean"
               },
               {
                 "name": "SentDateTime",
@@ -158,23 +158,23 @@
               },
               {
                 "name": "Sender",
-                "type": "Object"
+                "type": "string"
               },
               {
                 "name": "From",
-                "type": "Object"
+                "type": "string"
               },
               {
                 "name": "ToRecipients",
-                "type": "Object"
+                "type": "string"
               },
               {
                 "name": "CcRecipients",
-                "type": "Object"
+                "type": "string"
               },
               {
                 "name": "BccRecipients",
-                "type": "Object"
+                "type": "string"
               },
               {
                 "name": "ConversationId",
@@ -182,7 +182,7 @@
               }
             ],
             "typeProperties": {
-              "tableName": "Message"
+              "tableName": "BasicDataSet_v0.Message_v0"
             },
             "external": true
           }
@@ -209,7 +209,7 @@
               },
               {
                 "name": "HasAttachments",
-                "type": "bool"
+                "type": "boolean"
               },
               {
                 "name": "End",
@@ -225,7 +225,7 @@
               },
               {
                 "name": "Organizer",
-                "type": "Object"
+                "type": "string"
               },
               {
                 "name": "Attendees",
@@ -249,7 +249,7 @@
               }
             ],
             "typeProperties": {
-              "tableName": "Event"
+              "tableName": "BasicDataSet_v0.Event_v0"
             },
             "external": true
           }
@@ -288,7 +288,7 @@
               },
               {
                 "name": "EmailAddresses",
-                "type": "Object"
+                "type": "string"
               },
               {
                 "name": "JobTitle",
@@ -296,11 +296,11 @@
               },
               {
                 "name": "HomePhones",
-                "type": "Object"
+                "type": "string"
               },
               {
                 "name": "HomeAddress",
-                "type": "Object"
+                "type": "string"
               },
               {
                 "name": "CreatedDateTime",
@@ -316,7 +316,7 @@
               }
             ],
             "typeProperties": {
-              "tableName": "Contact"
+              "tableName": "BasicDataSet_v0.Contact_v0"
             },
             "external": true
           }
@@ -338,31 +338,19 @@
             },
             "structure": [
               {
-                "name": "ObjectId",
+                "name": "Name",
                 "type": "string"
               },
               {
-                "name": "AccountEnabled",
-                "type": "bool"
+                "name": "EmailAddresses",
+                "type": "string"
               },
               {
-                "name": "DeletionTimestamp",
-                "type": "DateTime"
+                "name": "ExternalEmailAddress",
+                "type": "string"
               },
               {
-                "name": "ReceivedDateTime",
-                "type": "DateTime"
-              },
-              {
-                "name": "SignInNames",
-                "type": "Object"
-              },
-              {
-                "name": "AssignedLicenses",
-                "type": "Object"
-              },
-              {
-                "name": "CompanyName",
+                "name": "Company",
                 "type": "string"
               },
               {
@@ -370,12 +358,12 @@
                 "type": "string"
               },
               {
-                "name": "JobTitle",
+                "name": "Title",
                 "type": "string"
               },
               {
-                "name": "PasswordProfile",
-                "type": "Object"
+                "name": "Phone",
+                "type": "string"
               },
               {
                 "name": "PostalCode",
@@ -383,7 +371,7 @@
               }
             ],
             "typeProperties": {
-              "tableName": "User"
+              "tableName": "BasicDataSet_v0.User_v0"
             },
             "external": true
           }
