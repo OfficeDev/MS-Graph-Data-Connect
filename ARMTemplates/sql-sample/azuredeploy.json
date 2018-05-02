@@ -223,19 +223,19 @@
               },
               {
                 "name": "CreatedDateTime",
-                "type": "DateTime"
+                "type": "datetime"
               },
               {
                 "name": "LastModifiedDateTime",
-                "type": "DateTime"
+                "type": "datetime"
               },
               {
                 "name": "ReceivedDateTime",
-                "type": "DateTime"
+                "type": "datetime"
               },
               {
                 "name": "SentDateTime",
-                "type": "DateTime"
+                "type": "datetime"
               },
               {
                 "name": "Subject",
@@ -246,7 +246,7 @@
                 "type": "string"
               },
               {
-                "name": "BodyPreview",
+                "name": "UniqueBody",
                 "type": "string"
               },
               {
@@ -259,27 +259,27 @@
               },
               {
                 "name": "Sender",
-                "type": "Object"
+                "type": "string"
               },
               {
                 "name": "From",
-                "type": "Object"
+                "type": "string"
               },
               {
                 "name": "ToRecipients",
-                "type": "Object"
+                "type": "string"
               },
               {
                 "name": "CcRecipients",
-                "type": "Object"
+                "type": "string"
               },
               {
                 "name": "BccRecipients",
-                "type": "Object"
+                "type": "string"
               },
               {
                 "name": "ReplyTo",
-                "type": "Object"
+                "type": "string"
               },
               {
                 "name": "ConversationId",
@@ -287,23 +287,23 @@
               },
               {
                 "name": "IsDeliveryReceiptRequested",
-                "type": "bool"
+                "type": "boolean"
               },
               {
                 "name": "IsReadReceiptRequested",
-                "type": "bool"
+                "type": "boolean"
               },
               {
                 "name": "IsRead",
-                "type": "bool"
+                "type": "boolean"
               },
               {
                 "name": "IsDraft",
-                "type": "bool"
+                "type": "boolean"
               }
             ],
             "typeProperties": {
-              "tableName": "Message"
+              "tableName": "BasicDataSet_v0.Message_v0"
             }
           }
         },
@@ -405,9 +405,9 @@
                 "identity": "InternetMessageId"
               },
               {
-                "name": "BodyPreview",
+                "name": "UniqueBody",
                 "type": "String",
-                "identity": "BodyPreview"
+                "identity": "UniqueBody"
               },
               {
                 "name": "Importance",
@@ -655,7 +655,7 @@
                   "enableSkipIncompatibleRow": true,
                   "translator": {
                     "type": "TabularTranslator",
-                    "columnMappings": "Id: Id, CreatedDateTime: CreatedDateTime, LastModifiedDateTime: LastModifiedDateTime, ReceivedDateTime: ReceivedDateTime, SentDateTime: SentDateTime, Subject: Subject, InternetMessageId: InternetMessageId, BodyPreview: BodyPreview, Importance: Importance, ParentFolderId: ParentFolderId, ConversationId: ConversationId, Sender: Sender, From: From, ToRecipients: ToRecipients, CcRecipients: CCRecipients, BccRecipients: BccRecipients, ReplyTo: ReplyTo, IsDeliveryReceiptRequested: IsDeliveryReceiptRequested, IsReadReceiptRequested: IsReadReceiptRequested, IsRead: IsRead, IsDraft: IsDraft"
+                    "columnMappings": "Id: Id, CreatedDateTime: CreatedDateTime, LastModifiedDateTime: LastModifiedDateTime, ReceivedDateTime: ReceivedDateTime, SentDateTime: SentDateTime, Subject: Subject, InternetMessageId: InternetMessageId, UniqueBody: BodyPreview, Importance: Importance, ParentFolderId: ParentFolderId, ConversationId: ConversationId, Sender: Sender, From: From, ToRecipients: ToRecipients, CcRecipients: CCRecipients, BccRecipients: BccRecipients, ReplyTo: ReplyTo, IsDeliveryReceiptRequested: IsDeliveryReceiptRequested, IsReadReceiptRequested: IsReadReceiptRequested, IsRead: IsRead, IsDraft: IsDraft"
                   }
                 },
                 "dependsOn": [
