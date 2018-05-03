@@ -22,7 +22,11 @@ Param
     # Has FirstName LastName and Location of users we want to create
     # Sample file: wkw_users.csv
     [Parameter(Mandatory=$true)]
-    [string] $UserInfoTableLocation
+    [string] $UserInfoTableLocation,
+
+    # This is the license pack you want to assign to the user
+    [Parameter(Mandatory=$false)]
+    [string] $LicensePack = "ENTERPRISEPACK"
 )
 
 # Import the user list
@@ -39,6 +43,6 @@ for ($i = 0; $i -lt $users.Length; $i++)
     $location = $users[$i].Location
     $displayName = "$firstName $lastName"
     $upn = "$firstName.$lastName@$TenantName.onmicrosoft.com"
-    $license = $TenantName + ":ENTERPRISEPACK"
+    $license = $TenantName + ":" + $LicensePack
     New-MsolUser -DisplayName $displayName -UserPrincipalName $upn -Password "$DefaultUserPassword" -LicenseAssignment $license -UsageLocation $location -ForceChangePassword $false -PasswordNeverExpires $true
 }
