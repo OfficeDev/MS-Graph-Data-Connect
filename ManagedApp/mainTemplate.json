@@ -40,6 +40,10 @@
     "dataFactoryName": "[concat('myadf', uniqueString(resourceGroup().id))]",
     "destinationAdlsAccountName": "[concat('myadls', uniqueString(resourceGroup().id))]",
     "integrationRuntimeName": "[concat('myir', uniqueString(resourceGroup().id))]",
+    "auditStorageAccountName": "[concat('audit', uniqueString(resourceGroup().id))]",
+    "auditStorageAccountSku": "Standard_LRS",
+    "o365dataPlanName": "[concat('eucliddataplan', uniqueString(resourceGroup().id))]",
+    "o365dataPlanSourceName": "Office365EnterpriseDataSecurityPackageV1",
     "sourceLinkedServiceName": "SourceO365LinkedService",
     "destinationLinkedServiceName": "DestinationADLSLinkedService",
     "inputEventDatasetName": "O365InputEventDataset",
@@ -74,10 +78,39 @@
   },
   "resources": [
     {
+      "type": "Microsoft.DataExchange/plans",
+      "name": "[variables('o365dataPlanName')]",
+      "apiVersion": "2018-03-01-preview",
+      "location": "[resourceGroup().location]",
+      "properties": {
+        "source": "[variables('o365dataPlanSourceName')]",
+        "managedApplicationEnrollment": {
+          "complianceMonitoring": "Enabled"
+        }
+      }
+    },
+    {
+      "type": "Microsoft.Storage/storageAccounts",
+      "name": "[variables('auditStorageAccountName')]",
+      "apiVersion": "2016-01-01",
+      "location": "[resourceGroup().location]",
+      "dependsOn": [
+        "[variables('o365dataPlanName')]"
+      ],
+      "sku": {
+        "name": "[variables('auditStorageAccountSku')]"
+      },
+      "kind": "Storage",
+      "properties": {}
+    },
+    {
       "type": "Microsoft.DataLakeStore/accounts",
       "name": "[variables('destinationAdlsAccountName')]",
       "comments": "Creates the destination Data Lake store in the customer's subscription used in the ADF pipeline for the data output.",
       "location": "[resourceGroup().location]",
+      "dependsOn": [
+        "[variables('auditStorageAccountName')]"
+      ],
       "apiVersion": "2016-11-01",
       "properties": {
         "initialUser": "[parameters('destinationServicePrincipalAadId')]",
@@ -86,7 +119,50 @@
         "encryptionConfig": {
           "type": "ServiceManaged"
         }
-      }
+      },
+      "resources": [
+        {
+          "type": "providers/diagnosticSettings",
+          "name": "Microsoft.Insights/current",
+          "dependsOn": [
+            "[concat('Microsoft.DataLakeStore/accounts/', variables('destinationAdlsAccountName'))]",
+            "[concat('Microsoft.Storage/storageAccounts/', variables('auditStorageAccountName'))]"
+          ],
+          "apiVersion": "2017-05-01-preview",
+          "properties": {
+            "name": "current",
+            "storageAccountId": "[resourceId('Microsoft.Storage/storageAccounts', variables('auditStorageAccountName'))]",
+            "logs": [
+              {
+                "category": "Audit",
+                "enabled": true,
+                "retentionPolicy": {
+                  "days": 180,
+                  "enabled": true
+                }
+              },
+              {
+                "category": "Requests",
+                "enabled": true,
+                "retentionPolicy": {
+                  "days": 180,
+                  "enabled": true
+                }
+              }
+            ],
+            "metrics": [
+              {
+                "category": "AllMetrics",
+                "enabled": true,
+                "retentionPolicy": {
+                  "enabled": true,
+                  "days": 30
+                }
+              }
+            ]
+          }
+        }
+      ]
     },
     {
       "name": "[variables('dataFactoryName')]",
@@ -126,6 +202,7 @@
             "type": "Office365",
             "description": "Source O365 linked service",
             "typeProperties": {
+              "flightingFeatures": "EnableDataVault",
               "office365tenantId": "[subscription().tenantId]",
               "o365DataDiscoveryServiceUrl": "[variables('o365DataDiscoveryServiceUrl')]",
               "PrivacyPolicyUri": "http://www.wkw.com/privacy",
