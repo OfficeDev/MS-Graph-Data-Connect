@@ -1,8 +1,7 @@
 
-# Step 0: Pre-Requisites
+# Pre-Requisites
 - Install office365 modules for powershell. Instructions at https://technet.microsoft.com/en-us/library/dn975125.aspx.
 - Install Microsoft Exchange Web Services Managed API 2.2. Instructions at https://www.microsoft.com/en-us/download/details.aspx?id=42951.
-- Sign up and create a tenant at https://www.office.com/. You can even start with a trial tenant which will last for 30 days.
 - Keep note of the tenant name and the admin's userid and password.
 
 # Step 1: Creating Users

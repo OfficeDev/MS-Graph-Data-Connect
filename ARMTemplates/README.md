@@ -9,30 +9,10 @@ For any sample, you can take a look at the `.\*-sample\azuredeploy.json` file to
 
 ## Deployment instructions
 
-----------
-
-#### Step 0
-
-Bash
-
-Before you start on the instructions below, please ensure that you have [node and npm](https://docs.npmjs.com/getting-started/installing-node), [jq](https://stedolan.github.io/jq/download/) and [azure-cli](https://docs.microsoft.com/en-us/azure/cli-install-nodejs) installed.
-
-Powershell
-
-Before you start on the instructions below, please ensure that you have [Azure Powershell](https://docs.microsoft.com/en-us/powershell/azure/install-azurerm-ps?view=azurermps-4.4.0) installed.
-
-----------
-
 #### Step 1
 Fire below command in shell of your choice and follow the instructions to login to your azure subscription.
 
-Bash
-```bash
-azure login
-```
-
-Powershell
-```bash
+```powershell
 Login-AzureRmAccount
 ```
 
@@ -47,19 +27,10 @@ Use the `ManagedApp\Scripts\GetAppInstallationParameters.ps1` to get values for 
 - `destinationServicePrincipalKey` is the Authentication Key you generated for your service principal.
 - `destinationServicePrincipalAadId` is the `Object Id` (bash)/`Id` (powershell) you receieve when you run the following command:
 
-----------
-
 #### Step 3
 
 Finally, deploy the ARM template and create the ADF pipeline by running the deployment script.
 
-Bash
-```bash
-./azure-group-deploy.sh -l eastus2 -a *-sample
+```shell
+.\Deploy-AzureResourceGroup.ps1 -ResourceGroupLocation "eastus2" -ArtifactStagingDirectory *-sample
 ```
-
-Powershell
-```bash
-.\Deploy-AzureResourceGroup.ps1 -ResourceGroupLocation eastus2  -ArtifactStagingDirectory *-sample
-```
-

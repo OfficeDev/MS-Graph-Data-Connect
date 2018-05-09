@@ -1,91 +1,255 @@
-# Running your first euclid sample app in under 10 mins
+# Azure Managed Applications
 
-The instructions below will help you to -
-	1. Publish the sample managed app definition 
-	2. Get the app installation parameters
-	3. Install the managed application
-	4. Kickstart an ADF pipeline
+## Overview
 
-#### Step 1
+The Azure Managed App on Office 365 can be broken down into 3 components:
 
-##### Publish the sample managed app definition
+- Data Ingestion from Euclid/Office365
+- Data processing/analytics to produce intelligent data
+- UX to surface the intelligent data
 
-The DeployManagedApp.ps1 script can be used for uploading the ARM templates into an azure blob storage account. 
-It creates a new resource group, storage account, container and uploads the app.zip if an existing resource group or storage name wasn't specified as a parameter.
-It then publishes the managed application for you.
+We will work through a sample that covers all three components:
 
-Eg: .\DeployManagedApp.ps1 -ArtifactStagingDirectory "E:\share" -ResourceGroupLocation "West Central US" -StorageAccountName "samplestorageaccount" -ResourceGroupName "sampleResourceGroup"
+1. We use Azure Data Factory (ADF) with copy activity to move data from O365 to your target adls.
+2. We then have an azure web app that reads the data at target adls and outputs intelligent data.
 
-If the artifacts were already uploaded then you can just specify the PackageFileUrl and run the script.
-It publishes the managed application for you.
+Before we begin exploring the sample application, here are a few resources to get you started with the involved technologies:
 
-Eg: .\DeployManagedApp.ps1 -ResourceGroupLocation "West Central US" -PackageFileUri "https://samplestorageaccount.blob.core.windows.net/appcontainer/app.zip"
+- [Azure Data Factory](https://docs.microsoft.com/en-us/azure/data-factory/)
+- [Azure Data Lake Analytics](https://docs.microsoft.com/en-us/azure/data-lake-analytics/)
+- [Azure ARM Templates](https://azure.microsoft.com/en-us/resources/templates/)
+- [Azure ARM Template Samples](https://github.com/Azure/azure-quickstart-templates)
+- [Azure Managed App](https://docs.microsoft.com/en-us/azure/managed-applications/)
+- [Azure Managed App Samples](https://github.com/Azure/azure-managedapp-samples/tree/master/samples)
 
-#### Step 2
+## Prerequisites
 
-##### Get the app installation parameters
+- Visual Studio 2017
+- Office 365 tenant with Azure subscription - The tenant should have users with data in their mailboxes.
+- [Azure AD Powershell](https://docs.microsoft.com/en-us/powershell/azure/active-directory/install-adv2?view=azureadps-2.0)
+- [Azure Powershell](https://docs.microsoft.com/en-us/powershell/azure/install-azurerm-ps)
 
-Run the GetAppInstallationParameters script.
-It will output the app installation parameter values.
+## Create and publish an O365-powered Azure managed application:
 
-Eg: .\GetAppInstallationParameters.ps1
+The instructions below will help you create and publish an Azure managed application internally.
+For reference: [Publish a managed application for internal consumption](https://docs.microsoft.com/en-us/azure/managed-applications/publish-service-catalog-app).
 
-You can specify the subscription id and application display name as parameters tot he above script.
-If nothing is specified it uses the default values.
+### Step 1: Package the web application
 
-Eg: .\GetAppInstallationParameters.ps1 -SubscriptionId <azure subscription id> -ApplicationDisplayName "WhoKnowsWhom" 
+Open the **./src/WhoKnowsWho.sln** solution in Visual Studio 2017. This solution contains the web application which will consume and process the data in the Azure Data Lake Store created by Project Euclid.
 
-#### Step 3
+#### Create the package
 
-##### Install the managed application
+1. Right-click the **WhoKnowsWho** solution in **Solution Explorer** and choose **Restore NuGet Packages**.
+2. Select the **WhoKnowsWho** project in **Solution Explorer**. Select the **Build** menu, then **Publish WhoKnowsWho**.
+3. Select the **WebPackage** publishing profile and select **Publish**.
 
-Login to the Azure Portal.
-Go to Managed Applications.
-Click on Add. You will be able to see the sample app that we published in Step 1 listed in the "Create service catalog managed application" window.
-Choose the app and click on Create.
-In the "Basics" tab, specify the resource group where you want the app to be installed and click on "OK"
-In the "Web App Settings" tab, copy paste the "Website name" value that you got when you ran the script in Step 2 and click on "OK"
-In the "Data Factory Settings" tab, copy paste the corresponding values that you got whenyou ran the script in Step 2 and click on "OK".
-In the "Summary" tab, once the validation passes, click on "OK".
-You will be able to see the application getting deployed on the dashboard.
+This should generate a **WhoKnowsWho.zip** file in the `ManagedApp` directory, unless you specified a different output directory in the publishing profile.
 
-#### Step 4
+#### Upload the package to blob storage
 
-Once the deployment completes, you can click on the app and on the overview tab, click on the "Managed Resource Group".
-Click on the "Data Factory" that has been created under the managed resource group.
-In the Data Factory window that opens up, click on "Author & Monitor" under Quick Links section.
+In this step we'll create a storage account and upload the **WhoKnowsWho.zip** file as a blob. This will allow us to include the web application as part of the Azure managed application we'll create later.
 
-##### Kickstart an ADF pipeline
+1. Follow the steps in [Create a storage account](https://docs.microsoft.com/en-us/azure/storage/common/storage-quickstart-create-account?tabs=portal) to create a storage account.
 
-In the new tab that opens up for the data factory, click on the "Author" icon on the top left.
-Choose the "O365ToADLSPipeline" under the "Pipelines" section, in the pipeline window that appears, click on "Trigger" and choose "Trigger Now" option.
-In the "Pipeline Run" window that appears click on finish.
+2. Follow the steps in the [Create a container](https://docs.microsoft.com/en-us/azure/storage/blobs/storage-quickstart-blobs-portal#create-a-container) section and the [Upload a block blob](https://docs.microsoft.com/en-us/azure/storage/blobs/storage-quickstart-blobs-portal#upload-a-block-blob) section of [Quickstart: Upload, download, and list blobs using the Azure portal](https://docs.microsoft.com/en-us/azure/storage/blobs/storage-quickstart-blobs-portal) to upload **WhoKnowsWho.zip**.
 
-You can use the following powershell cmdlet to kickstart the pipeline
+   > **Note:** Be sure to select **Blob (anonymous read access for blobs only)** in the **Public access level** dropdown when creating the container.
 
-Invoke-AzureRmDataFactoryV2Pipeline -ResourceGroupName <resource group name> -DataFactory <data factory name> -PipelineName <pipeline name>
+3. Take a note of the **WhoKnowsWho.zip** blob **URL** value.
 
-You can click on the "Monitor" icon on the top left and monitor the pipeline.
+### Step 2: Create the app template
 
-##### Kickstart an ADF pipeline trigger
+Create a template that defines the resources to deploy with the managed application (refer to [mainTemplate.json](mainTemplate.json)).
 
-In the current sample app, the tumbling window trigger is sued to schedule the pipeline run consistently
+If you look at the **mainTemplate.json**, it consists of three main sections:
 
-https://docs.microsoft.com/en-us/azure/data-factory/how-to-create-tumbling-window-trigger
+#### Parameters
 
-Based on the backfillDays parameter value, the trigger windowStart time is calculated. 
-If the trigger windowStart is older than the triggerStartTime parameter value, then it means that we need to backfill the data. 
-So the first pipeline that gets kicked off by the trigger will do a backfill and then the subsequent pipelines that get triggered will fetch data incrementally with a frequency of 24 hours.
+Contains the list of parameters whose values will be provided by the user.
 
-In this example we have set the retry policy for the trigger pipeline run to be 2 and max concurrency to be 10. These values can be configured as per the need.
+| Parameter name | Description |
+|----------------|-------------|
+| `WebSiteName` | The website name, used as the prefix in the url of the published web app. For example: `<websitename>.azurewebsites.net` |
+| `DestinationServicePrincipalAadId` | The Azure Active Directory ID of the service principal to be granted access to the destination Data Lake store |
+| `DestinationServicePrincipalId` | The app ID of the service principal that has access to the destination Data Lake store |
+| `DestinationServicePrincipalKey` | The app secret of the service principal that has access to the destination Data Lake store |
+| `UserId` | The Office 365 user that want to deploy this app |
+| `TriggerStartTime` | UTC date in `YYYY-MM-ddT00:00:00Z` format |
 
-https://docs.microsoft.com/en-us/azure/data-factory/concepts-pipeline-execution-triggers#trigger-type-comparison
 
-NOTE: If the pipeline fails even after 2 retries, the window moves forward to the next day and this might result in holes in data.
+#### Variables 
 
-You can use the following powershell cmdlet to kickstart the pipeline
+Contains the list of variables. You can update the variable values if needed.
 
-Start-AzureRmDataFactoryV2Trigger -ResourceGroupName <resource group name> -DataFactoryName <data factory name> -TriggerName <trigger name>
+#### Resources
 
-You can click on the "Monitor" icon on the top left of the ADF page and monitor the pipeline.
+Contains the list of resources that will be deployed as a part of the managed app creation.
 
+Below are few of the resources that will be deployed as a part of the **mainTemplate.json** explained briefly.
+
+| Resource name | Description |
+|---------------|-------------|
+| `DestinationAdlsAccount` | Creates the destination Data Lake store in the customer's subscription used in the ADF pipeline for the data output. |
+| `DataFactory` | Creates the ADF pipeline that copies data from O365 to the newly created destination ADLS (`DestinationAdlsAccount` that was created above) |
+| `WebApp` | Creates the web app that uses data stored in the newly created destination ADLS. Sample: [web app](https://github.com/Azure/azure-managedapp-samples/tree/master/samples/201-managed-web-app)|
+
+The data factory has couple of interesting resources of it's own.
+
+| Resource name | Description |
+|---------------|-------------|
+| `SourceLinkedService` | Creates the link to O365 which is used as the source of the data extraction. Using service principal supplied by the source ADLS owner. |
+| `DestinationLinkedService` | Creates the link to the newly created destination ADLS, using service principal supplied by the customer deploying this template. |
+| `*InputDataset` | You should change the structure in this resource to match the table and columns that you would like to extract. In this template we are trying to extract messages and events. For contacts and users refer [basic-sample](../ARMTemplates/basic-sample)|
+| `*OutputDataset` | Corresponds to the `DestinationAdlsAccount` where we wanted the data to be copied to. |
+| `Pipeline` | The Copy activity pipeline that copies the data from source O365 to the destination ADLS. Sample [copy activity](https://docs.microsoft.com/en-us/azure/data-factory/load-azure-data-lake-store)|
+| `PipelineTriggers` | Contains settings to ensure the copy pipeline can be scheduled to run periodically. Sample: [tumbling window trigger](https://docs.microsoft.com/en-us/azure/data-factory/how-to-create-tumbling-window-trigger)|
+
+
+### Step 3: Create the UI definition
+
+Define the user interface elements for the portal when deploying the managed application (refer to [createUiDefinition.json](ManagedApp/createUiDefinition.json)). The Azure portal uses the **createUiDefinition.json** file to generate the user interface for users who create the managed application. You define how users provide input for each parameter. You can use options like a drop-down list, text box, password box, and other input tools. To learn how to create a UI definition file for a managed application, see [Get started with CreateUiDefinition](https://docs.microsoft.com/en-us/azure/managed-applications/create-uidefinition-overview).
+
+The values of the parameters defined in **mainTemplate.json** are supplied through the UI generated by **createUiDefinition.json** when the managed application is being created.
+
+### Step 4: Deploy managed app
+
+1. Open the **./ManagedApp/mainTemplate.json** file.
+2. Locate the `webAppRemote` value. Change this value to the URL of the **WhoKnowsWho.zip** blob you created above.
+3. Save the file.
+4. Create a new ZIP file named **app.zip** that contains **./ManagedApp/mainTemplate.json** and **./ManagedApp/createUiDefinition.json**.
+
+Use `scripts/DeployManagedApp.ps1` to deploy the managed app
+
+```shell
+.\Scripts\DeployManagedApp.ps1 -ResourceGroupLocation "eastus2"
+```
+
+The script automates the following steps:
+
+#### Upload the app.zip
+
+More details under the section [Packages the Files](https://docs.microsoft.com/en-us/azure/managed-applications/publish-service-catalog-app#package-the-files) in [Publish a managed application for internal consumption](https://docs.microsoft.com/en-us/azure/managed-applications/publish-service-catalog-app) for packaging the template files and uploading them to a blob storage.
+
+#### Assign a user group or application
+
+Create a user group or application for managing the resources on behalf of a customer by following the steps under the section [Create the managed application definition](https://docs.microsoft.com/en-us/azure/managed-applications/publish-service-catalog-app#create-the-managed-application-definition) in [Publish a managed application for internal consumption](https://docs.microsoft.com/en-us/azure/managed-applications/publish-service-catalog-app)
+
+Get the role definition ID by following the steps in [Get the role definition ID](https://docs.microsoft.com/en-us/azure/managed-applications/publish-service-catalog-app#get-the-role-definition-id).
+
+#### Create the managed application definition
+
+Create the managed application definition using [`New-AzureRmManagedApplicationDefinition`](https://docs.microsoft.com/en-us/powershell/module/azurerm.resources/new-azurermmanagedapplicationdefinition?view=azurermps-6.0.0)
+
+### Step 5: Install the managed application
+
+You can create the managed application by following the steps listed below.
+
+1. Run the `Scripts\GetAppInstallationParameters.ps1` script with no parameters. Save these values to use during the installation of the managed app.
+
+   > **NOTE:** The script automates [creation of an Azure Active Directory application](https://docs.microsoft.com/en-us/azure/azure-resource-manager/resource-group-create-service-principal-portal#create-an-azure-active-directory-application) and [gets application id and authentication key](https://docs.microsoft.com/en-us/azure/azure-resource-manager/resource-group-create-service-principal-portal#get-application-id-and-authentication-key).
+
+1. Go to Azure Portal and choose **Managed Applications** from **All Services**.
+
+1. Click on **Add** and you will see the Managed Application definition that we created above.
+
+1. Select the Managed App definition that you want to create and click on **Create**.
+
+1. On the **Basics** screen, select your subscription and either create a new resource group or use an existing one, then select **OK**.
+
+1. On the **Web App Settings** screen, enter the **Website name** value generated by the **GetAppInstallationParameters.ps1** script, then select **OK**.
+
+1. On the **Data Factory Settings** screen enter the corresponding values from the output of the **GetAppInstallationParameters.ps1** script, then select **OK**.
+
+1. On the **Summary** screen, wait for the validation to complete and select **OK**.
+
+The deployment of the app starts and once it completes you will be able to see it in the dashboard.
+
+### Step 6: Try it out
+
+Click on the app and in the overview section you will see two resource groups. Click on the managed resource group.
+
+You will notice that all the resources mentioned in the ARM template have been created successfully.
+
+#### Running the ADF Pipeline
+
+Execute the following commands in your shell to kick off the ADF pipeline.
+
+1. Create variable for resource group name, data factory name, and pipeline name
+
+    ```Powershell
+    $resourceGroupName = <name of the managed resource group which contains the data factory>
+    $dataFactoryName = <data factory name>
+    $pipelineName = <pipeline name that was specified in the ARM template under variables section>
+    ```
+1. Start the pipeline:
+
+    ```powershell
+    Invoke-AzureRmDataFactoryV2Pipeline -ResourceGroupName $resourceGroupName -DataFactory $dataFactoryName -PipelineName $pipelineName
+    ```
+
+
+#### Schedule the pipeline
+
+Execute the following commands in your shell to run the pipeline on a scheduled basis.
+
+##### Powershell
+
+1. Create variable for resource group name, data factory name, and trigger name
+
+    ```Powershell
+    $resourceGroupName = <managed resource group name>
+    $dataFactoryName = <data factory name>
+    $triggerName = <trigger name>
+    ```
+1. Start trigger:
+
+    ```Powershell
+    Start-AzureRmDataFactoryV2Trigger -ResourceGroupName $resourceGroupName -DataFactoryName $dataFactoryName -TriggerName $triggerName
+    ```
+1. Get status of the trigger:
+
+    ```Powershell
+    Get-AzureRmDataFactoryV2Trigger -ResourceGroupName $resourceGroupName -DataFactoryName $dataFactoryName -Name $triggerName
+    ```
+
+You should see a response similar to the following.
+
+```
+TriggerName : MarsEuclidTestTrigger
+ResourceGroupName : MarsEuclid1\_ResourceGroup
+DataFactoryName : MarsEuclid2DataFactory
+Properties :
+    Microsoft.Azure.Management.DataFactory.Models.ScheduleTrigger
+RuntimeState : Started
+```
+
+If you need to stop the trigger, use the following command.
+
+```Powershell
+Stop-AzureRmDataFactoryV2Trigger -ResourceGroupName $resourceGroupName -DataFactoryName $dataFactoryName -TriggerName $triggerName
+```
+
+#### Monitor the Pipeline
+
+1. In the [Azure Portal](https://portal.azure.com), go to your data factory.
+
+2. Click on the **Author & Monitor** quick link tile.
+
+3. In the Azure Data Factory page that opens, click on the monitor icon. You will be able to see the ADF pipelines and their status.
+
+> **NOTE:** You can find more info on these commands [here](https://docs.microsoft.com/en-us/powershell/module/azurerm.datafactoryv2/?view=azurermps-5.7.0)
+
+## Using the sample web app
+
+1. Open your browser and browse to `https://<websitename>.azurewebsites.net`, where `<websitename>` is the value of **Website name** you provided during the installation of the managed application.
+
+2. If prompted to login, use an account from your test tenant.
+
+3. Accept the prompt advising that the app would like to sign you in and read your profile.
+
+4. At the bottom of the page, enter one of your user's email address and click the search button.
+
+### Web App Sample UX
+
+![](../docs/images/web-app-sample-ux.png)
