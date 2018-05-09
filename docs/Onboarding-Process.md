@@ -46,7 +46,7 @@ Use below screenshot to understand the layout:
 
 ## Enabling Tenant Lockbox
 
-1. Use IE for this step. Download the Microsoft Exchange Online PowerShell module following [these instructions](https://technet.microsoft.com/en-us/library/mt775114(v=exchg.160).aspx)
+1. **Use Internet Explorer/Edge for this step**. Download the Microsoft Exchange Online PowerShell module following [these instructions](https://technet.microsoft.com/en-us/library/mt775114(v=exchg.160).aspx)
 
 2. Open the installed Microsoft Exchange Online PowerShell module.
 
@@ -56,7 +56,7 @@ Use below screenshot to understand the layout:
 Connect-EXOPSSession
 ```
 
-4. You will have to set up an approver group as part of the flow, with **at least two** members in the group to approve tenant lockbox requests. More info on the command is available [here](https://docs.microsoft.com/en-us/powershell/module/exchange/users-and-groups/new-distributiongroup?view=exchange-ps). 
+4. You will have to set up an approver group as part of the flow, with **at least two** members in the group to approve data access requests. More info on the command is available [here](https://docs.microsoft.com/en-us/powershell/module/exchange/users-and-groups/new-distributiongroup?view=exchange-ps). 
 
 ```powershell
 New-DistributionGroup -Name "TenantLockboxApprovers" -Members "chris@contoso.com,michelle@contoso.com,laura@contoso.com,julia@contoso.com"
