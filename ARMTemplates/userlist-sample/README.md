@@ -1,6 +1,13 @@
-This sample covers:
- 1. Using user list instead of entire tenant for o365 data extraction
+This sample demonstrates how to use a user list instead of entire tenant for o365 data extraction
+>**NOTE:** The userlist file can have at most 10 users. For format refer `userlist.txt` file.
 
-It consists of adding another data sets corresponding to the userlist and then using it in the copy activity
+1. `UserListLinkedService ` corresponds to the store that has the userlist.
+2. `UserListDataSet ` corresponds to the file in the store represented by `UserListLinkedService `.
+3. `CopyMessageFromO365ToAzureDLS ` copy activity uses the `UserListDataSet `.
 
-NOTE; The userlist file can have atmost 10 users
+   ```shell
+   "userList": {
+     "type": "DatasetReference",
+     "referenceName": "[variables('userListDatasetName')]"
+   }
+   ```

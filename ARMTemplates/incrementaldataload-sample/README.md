@@ -1,9 +1,6 @@
-# Overview of Watermarksample.json:
+# Incremental data load - Watermark method
 
-This sample covers:
- 1. Incrementally load data using watermark stored in a DB.
-
-It consists of 3 activities, 
+It consists of 3 activities
 
 #### LookUp Activity
 
@@ -28,4 +25,4 @@ It makes use of TumblingWindowTrigger to schedule the pipeline to run consistent
 
 https://docs.microsoft.com/en-us/azure/data-factory/how-to-create-tumbling-window-trigger
 
-> **NOTE:** The connectionString property under waterMarkLinkedService in ARM template needs to be substituted with the db connection string. (You can find a samplewatermarkdb bacpac for reference)
+> **NOTE:** The connectionString property under waterMarkLinkedService in ARM template needs to be substituted with the db connection string. (Refer [samplewatermarkdbsetup.sql](samplewatermarkdbsetup.sql) for table and sproc definitions)

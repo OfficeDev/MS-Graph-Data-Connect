@@ -46,7 +46,8 @@
     "destinationAdlsLocation": "East US 2",
     "outputDataLakeStore": {
       "messagePath": "targetFolder/Message"
-    }
+    },
+    "dbBackupURI": "{db backup uri}"
   },
   "resources": [
     {
@@ -118,7 +119,7 @@
                 "storageKeyType": "SharedAccessKey",
                 "administratorLogin": "[variables('sqlAdminLogin')]",
                 "administratorLoginPassword": "[variables('sqlAdminPassword')]",
-                "storageUri": "{bacpac file location}"
+                "storageUri": "[variables('dbBackupURI')]"
               }
             }
           ]

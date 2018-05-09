@@ -90,7 +90,9 @@ Below are few of the resources that will be deployed as a part of the **mainTemp
 
 | Resource name | Description |
 |---------------|-------------|
-| `DestinationAdlsAccount` | Creates the destination Data Lake store in the customer's subscription used in the ADF pipeline for the data output. |
+| `O365DataPlan` | The first resource that should be deployed. All resources should take direct or indirect dependencies on it. |
+| `AuditStorageAccount` | Storage account to store all audit logs |
+| `DestinationAdlsAccount` | Creates the destination Data Lake store in the customer's subscription used in the ADF pipeline for the data output. The account also creates `diagnosticSettings` with `AuditStorageAccount` as the store to collect `audit` and `requests` logs. |
 | `DataFactory` | Creates the ADF pipeline that copies data from O365 to the newly created destination ADLS (`DestinationAdlsAccount` that was created above) |
 | `WebApp` | Creates the web app that uses data stored in the newly created destination ADLS. Sample: [web app](https://github.com/Azure/azure-managedapp-samples/tree/master/samples/201-managed-web-app)|
 
@@ -98,6 +100,7 @@ The data factory has couple of interesting resources of it's own.
 
 | Resource name | Description |
 |---------------|-------------|
+| `IntegrationRuntime` | Runtime ADF will use to execute copy activities |
 | `SourceLinkedService` | Creates the link to O365 which is used as the source of the data extraction. Using service principal supplied by the source ADLS owner. |
 | `DestinationLinkedService` | Creates the link to the newly created destination ADLS, using service principal supplied by the customer deploying this template. |
 | `*InputDataset` | You should change the structure in this resource to match the table and columns that you would like to extract. In this template we are trying to extract messages and events. For contacts and users refer [basic-sample](../ARMTemplates/basic-sample)|
