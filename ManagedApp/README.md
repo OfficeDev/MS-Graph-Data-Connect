@@ -240,6 +240,55 @@ Stop-AzureRmDataFactoryV2Trigger -ResourceGroupName $resourceGroupName -DataFact
 
 > **NOTE:** You can find more info on these commands [here](https://docs.microsoft.com/en-us/powershell/module/azurerm.datafactoryv2/?view=azurermps-5.7.0)
 
+#### Approving Data Access Request
+
+1. Open Microsoft Exchange Online PowerShell module
+2. Login with an account that's part of the approver group you created when you enabled Tenant Lockbox:
+
+   ```powershell
+   Connect-EXOPSSession
+   ```
+
+3. Find all pending requests
+
+   ```powershell
+   Get-ElevatedAccessRequest | ?{$_.RequestStatus -eq 'Pending'}
+   ```
+
+4. Take a closer look at the **context** field of the request you are interested in
+   >**NOTE:** Context field has most of the interesting fields of the data access request
+
+   ```powershell
+   (Get-ElevatedAccessRequest -RequestId $requestId).Context | ConvertFrom-Json
+   ```
+
+   You'll get a response like:
+
+   ```powershell
+   Key                          Value
+   ---                          -----
+   ApplicationName
+   ComplianceStatus             [{"Timestamp":"2018-05-02T18:29:21.5705664Z","RequirementName":"adlsEncryption","PolicyComplianceState":"Compliant","Violations":0},{"Timestamp":"2018-05-02T...
+   ApplicationMarketPlaceUri
+   OutputUri                    adl://myadlserumvrroyspmq.azuredatalakestore.net/targetFolder/Event
+   ApplicationPrivacyPolicyUri  http://www.wkw.com/privacy
+   ApplicationTermsOfServiceUri http://www.wkw.com/tos
+   InstallerIdentity            a89885c3-4b0e-499e-86ed-14d7ed9147c2@942229f8-4656-4fb0-828b-e938dad4019a
+   SourceTenantId               942229f8-4656-4fb0-828b-e938dad4019a
+   UserScopeQuery               tenant in (942229f8-4656-4fb0-828b-e938dad4019a)
+   ApplicationId
+   DataTable                    Calendar Events
+   DestinationTenantId          942229f8-4656-4fb0-828b-e938dad4019a
+   Columns                      Subject:string, HasAttachments:bool, End:DateTime, Start:DateTime, ResponseStatus:string, Organizer:Object, Attendees:string, Importance:string, Sensitivity:...
+   ```
+
+5. Approve/Deny the request
+
+   ```powershell
+   Approve-ElevatedAccessRequest -RequestId $requestId -Comment "Yay!!"
+   Deny-ElevatedAccessRequest -RequestId $requestId -Comment "Nay!!"
+   ```
+
 ## Using the sample web app
 
 1. Open your browser and browse to `https://<websitename>.azurewebsites.net`, where `<websitename>` is the value of **Website name** you provided during the installation of the managed application.

@@ -415,6 +415,10 @@
               "type": "LinkedServiceReference"
             },
             "typeProperties": {
+              "format": {
+                "type": "JsonFormat",
+                "filePattern": "setOfObjects"
+              },
               "folderPath": "[variables('outputDataLakeStore').messagePath]"
             }
           }
@@ -435,6 +439,10 @@
               "type": "LinkedServiceReference"
             },
             "typeProperties": {
+              "format": {
+                "type": "JsonFormat",
+                "filePattern": "setOfObjects"
+              },
               "folderPath": "[variables('outputDataLakeStore').eventPath]"
             }
           }
