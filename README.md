@@ -1,4 +1,3 @@
-  
 # Project Euclid
 #### Using Office 365 data with Azure analytics to build intelligent applications 
 
@@ -6,33 +5,25 @@
 
 Project Euclid brings Office 365 data and Azure resources to independent software vendors (ISVs). Project Euclid will enable ISVs to build intelligent applications with Microsoft’s most valuable data, and best development tools. Office 365 Customers will gain innovative or industry-specific applications that enhance their productivity while keeping full control over their data. 
 
-
-
 ## How to Get Started 
+
 To get started, read through the documentation below starting with the onboarding process. 
 
 > **Note:** If you would like to review the Project Euclid Overview Deck that was pitched to you during our introduction meeting, it can be found in the table of contents below. The deck contains key information around the architecture and data schemas of Project Euclid.
 
 ## Table of Contents
 
+[Onboarding Process](docs/Onboarding-Process.md)
 
-[Project Euclid Overview Deck](ProjectEuclidOverviewDeck.pptx)
+[Intro to Euclid](docs/Intro-to-Euclid.md)
 
-[Onboarding Process](Project-Euclid-On-boarding-Process.md)
+[Project Euclid Overview Deck](docs/ProjectEuclidOverviewDeck.pptx)
 
-[Intro to Euclid](Intro-to-Euclid.md)
+[Create users and dummy interactions](SetUp/README.md)
 
-[Euclid Dev Doc](ISV-Dev-Doc.md)
+[Try the sample Euclid managed application](ManagedApp/README.md)
 
-[Set Up](SetUp/README.md)
-
-[ARM Templates](ARMTemplates/)
-
-[Managed App](ManagedApp/)
-
-
-
-
+[More Samples](ARMTemplates/README.md)
 
 ## Contributing
 
@@ -47,5 +38,3 @@ provided by the bot. You will only need to do this once across all repos using o
 This project has adopted the [Microsoft Open Source Code of Conduct](https://opensource.microsoft.com/codeofconduct/).
 For more information see the [Code of Conduct FAQ](https://opensource.microsoft.com/codeofconduct/faq/) or
 contact [opencode@microsoft.com](mailto:opencode@microsoft.com) with any additional questions or comments.
-
-
