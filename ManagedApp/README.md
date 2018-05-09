@@ -34,7 +34,7 @@ Before we begin exploring the sample application, here are a few resources to ge
 The instructions below will help you create and publish an Azure managed application internally.
 For reference: [Publish a managed application for internal consumption](https://docs.microsoft.com/en-us/azure/managed-applications/publish-service-catalog-app).
 
-###Step 1: Package the web application###
+### Step 1: Package the web application
 
 Open the **./src/WhoKnowsWho.sln** solution in Visual Studio 2017. This solution contains the web application which will consume and process the data in the Azure Data Lake Store created by Project Euclid.
 

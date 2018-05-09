@@ -19,11 +19,11 @@ To get started, read through the documentation below starting with the onboardin
 
 [Project Euclid Overview Deck](docs/ProjectEuclidOverviewDeck.pptx)
 
-[Create users and dummy interactions](SetUp/README.md)
+[Create users and dummy interactions](SetUp)
 
-[Try the sample Euclid managed application](ManagedApp/README.md)
+[Try the sample Euclid managed application](ManagedApp)
 
-[More Samples](ARMTemplates/README.md)
+[More Samples](ARMTemplates)
 
 ## Contributing
 
