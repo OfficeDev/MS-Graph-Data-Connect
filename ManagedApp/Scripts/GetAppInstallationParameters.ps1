@@ -23,7 +23,7 @@ Param (
 $creds = Get-Credential
 
 if ([string]::IsNullOrEmpty($(Get-AzureRmContext).Account)) { 
-	$login = Login-AzureRmAccount -Credential $creds
+    $login = Login-AzureRmAccount -Credential $creds
 }
 
 $adConnection = Connect-AzureAD -Credential $creds
@@ -96,3 +96,6 @@ Write-Host "`t Destination ADLS service principal Id : " $ServicePrincipal.AppId
 Write-Host "`t Destination ADLS service principal key : " $DestPassword.Value
 
 Write-Host "`t The Object Id of the user installing the app: " $user.ObjectId
+
+$date = [System.DateTime]::UtcNow.Date.ToString("yyyy-MM-ddTHH:mm:ssZ")
+Write-Host "`t Trigger start time: " $date
