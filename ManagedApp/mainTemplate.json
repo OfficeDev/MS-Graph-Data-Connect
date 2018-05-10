@@ -579,21 +579,19 @@
                 "windowStart": "[variables('windowStart')]",
                 "windowEnd": "[variables('windowEnd')]"
               }
-            },
-            "resources": [
-              {
-                "apiVersion": "2017-09-01-preview",
-                "dependsOn": [
-                  "[variables('triggerName')]"
-                ],
-                "name": "start",
-                "properties": {},
-                "type": "status"
-              }
-            ]
+            }
           }
         }
       ]
+    },
+    {
+      "type": "Microsoft.DataFactory/factories/triggers/status",
+      "name": "[concat(variables('dataFactoryName'), '/', variables('triggerName'), '/start')]",
+      "apiVersion": "2017-09-01-preview",
+      "dependsOn": [
+        "[concat('Microsoft.DataFactory/factories/', variables('dataFactoryName'), '/triggers/', variables('triggerName'))]"
+      ],
+      "properties": {}
     },
     {
       "apiVersion": "2015-08-01",
