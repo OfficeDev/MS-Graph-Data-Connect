@@ -90,7 +90,7 @@ Below are few of the resources that will be deployed as a part of the **mainTemp
 
 | Resource name | Description |
 |---------------|-------------|
-| `O365DataPlan` | The first resource that should be deployed. All resources should take direct or indirect dependencies on it. |
+| `O365DataPlan` | This resource enables compliance monitoring for your app and is **mandatory** for managed apps. You shouldn't add it to ARM templates that you deploy directly without managed app. For e.g. sample ARM templates at [`/ARMTemplates`](../ARMTemplates) |
 | `AuditStorageAccount` | Storage account to store all audit logs |
 | `DestinationAdlsAccount` | Creates the destination Data Lake store in the customer's subscription used in the ADF pipeline for the data output. The account also creates `diagnosticSettings` with `AuditStorageAccount` as the store to collect `audit` and `requests` logs. |
 | `DataFactory` | Creates the ADF pipeline that copies data from O365 to the newly created destination ADLS (`DestinationAdlsAccount` that was created above) |
