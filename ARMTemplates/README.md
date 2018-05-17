@@ -19,9 +19,11 @@ Login-AzureRmAccount
 ----------
 
 #### Step 2
-Fill in all the parameters in `.\*-sample\azuredeploy.parameters.json`.
+Fill in **all** the parameters in `.\*-sample\azuredeploy.parameters.json`. Refer `.\*-sample\azuredeploy.json` for description of the parameters.
 
-Use the `ManagedApp\Scripts\GetAppInstallationParameters.ps1` to get values for following parameters. You can reuse same values for other samples as well.
+Below parameters are common across all samples and can be filled using the `ManagedApp\Scripts\GetAppInstallationParameters.ps1` PowerShell script.
+
+> **NOTE:** You don't need to run the script for every sample you try or every deployment. Same values can be re-used for every sample and every deployment.
 
 - `destinationServicePrincipalId` is the Application Id of your service principal.
 - `destinationServicePrincipalKey` is the Authentication Key you generated for your service principal.
@@ -34,3 +36,5 @@ Finally, deploy the ARM template and create the ADF pipeline by running the depl
 ```shell
 .\Deploy-AzureResourceGroup.ps1 -ResourceGroupLocation "eastus2" -ArtifactStagingDirectory *-sample
 ```
+
+> **NOTE:** This will create all the resources in a resource group by the same name as the folder name of the sample (i.e. `ArtifactStagingDirectory`) For e.g. if you deploy `basic-sample` you'll find all the resource created in a resource group named `basic-sample`. So if you make changes to the `azuredeploy.json` and re-run the same command without changing the folder name, it will simply update the resources instead of creating new ones.
