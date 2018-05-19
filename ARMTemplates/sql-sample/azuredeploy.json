@@ -28,10 +28,11 @@
     }
   },
   "variables": {
-    "dataFactoryName": "[concat('O365ToAzureDLSDataFactory', uniqueString(resourceGroup().id))]",
-    "destinationAdlsAccountName": "[concat('destaccount', uniqueString(resourceGroup().id))]",
-    "destinationSqlServerName": "[concat('destsqlserver', uniqueString(resourceGroup().id))]",
-    "destinationSqlDbName": "[concat('destsqldb', uniqueString(resourceGroup().id))]",
+    "dataFactoryName": "[concat('myadf', uniqueString(resourceGroup().id))]",
+    "destinationAdlsAccountName": "[concat('myadls', uniqueString(resourceGroup().id))]",
+    "integrationRuntimeName": "[concat('myir', uniqueString(resourceGroup().id))]",
+    "destinationSqlServerName": "[concat('mysqlserver', uniqueString(resourceGroup().id))]",
+    "destinationSqlDbName": "[concat('mysqldb', uniqueString(resourceGroup().id))]",
     "sqlAdminLogin": "[concat('sqladmin', uniqueString(resourceGroup().id))]",
     "sqlAdminPassword": "[concat('Sq!Pwd', uniqueString(resourceGroup().id))]",
     "sourceO365LinkedServiceName": "SourceO365LinkedService",
@@ -152,6 +153,22 @@
       "location": "East US",
       "resources": [
         {
+          "name": "[variables('integrationRuntimeName')]",
+          "type": "integrationRuntimes",
+          "apiVersion": "2017-09-01-preview",
+          "properties": {
+            "type": "Managed",
+            "typeProperties": {
+              "computeProperties": {
+                "location": "[resourceGroup().location]"
+              }
+            }
+          },
+          "dependsOn": [
+            "[variables('dataFactoryName')]"
+          ]
+        },
+        {
           "type": "linkedservices",
           "name": "[variables('sourceO365LinkedServiceName')]",
           "comments": "Creates the link to O365 which is used as the source of the data extraction. Using service principal supplied by the source ADLS owner.",
@@ -198,7 +215,11 @@
               },
               "tenant": "[subscription().tenantId]",
               "resourceGroupName": "[resourceGroup().name]",
-              "subscriptionId": "[subscription().subscriptionId]"
+              "subscriptionId": "[subscription().subscriptionId]",
+              "connectVia": {
+                "referenceName": "[variables('integrationRuntimeName')]",
+                "type": "IntegrationRuntimeReference"
+              }
             }
           }
         },

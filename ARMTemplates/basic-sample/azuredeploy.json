@@ -19,17 +19,12 @@
       "metadata": {
         "description": "The key of the service principal that has access to the destination Data Lake store."
       }
-    },
-    "office365TenantId": {
-      "type": "string",
-      "metadata": {
-        "description": "The id of the O365 tenant for which the data needs to be extracted."
-      }
     }
   },
   "variables": {
-    "dataFactoryName": "[concat('O365ToAzureDLSDataFactory', uniqueString(resourceGroup().id))]",
-    "destinationAdlsAccountName": "[concat('destaccount', uniqueString(resourceGroup().id))]",
+    "dataFactoryName": "[concat('myadf', uniqueString(resourceGroup().id))]",
+    "destinationAdlsAccountName": "[concat('myadls', uniqueString(resourceGroup().id))]",
+    "integrationRuntimeName": "[concat('myir', uniqueString(resourceGroup().id))]",
     "sourceLinkedServiceName": "SourceO365LinkedService",
     "destinationLinkedServiceName": "DestinationADLSLinkedService",
     "inputEventDatasetName": "O365InputEventDataset",
@@ -40,9 +35,9 @@
     "outputMessageDatasetName": "ADLSOutputMessageDataset",
     "outputContactDatasetName": "ADLSOutputContactDataset",
     "outputUserDatasetName": "ADLSOutputUserDataset",
-    "pipelineName": "O365ToADLSPipeline",
+    "pipelineName": "mypipeline",
+    "triggerName": "mytrigger",
     "o365DataDiscoveryServiceUrl": "https://52.165.130.25/DiscoveryService/DataPreparationJob",
-    "destinationAdlsLocation": "East US 2",
     "outputDataLakeStore": {
       "messagePath": "targetFolder/Message",
       "eventPath": "targetFolder/Event",
@@ -55,7 +50,7 @@
       "type": "Microsoft.DataLakeStore/accounts",
       "name": "[variables('destinationAdlsAccountName')]",
       "comments": "Creates the destination Data Lake store in the customer's subscription used in the ADF pipeline for the data output.",
-      "location": "[variables('destinationAdlsLocation')]",
+      "location": "[resourceGroup().location]",
       "apiVersion": "2016-11-01",
       "properties": {
         "initialUser": "[parameters('destinationServicePrincipalAadId')]",
@@ -77,6 +72,22 @@
       "location": "East US",
       "resources": [
         {
+          "name": "[variables('integrationRuntimeName')]",
+          "type": "integrationRuntimes",
+          "apiVersion": "2017-09-01-preview",
+          "properties": {
+            "type": "Managed",
+            "typeProperties": {
+              "computeProperties": {
+                "location": "[resourceGroup().location]"
+              }
+            }
+          },
+          "dependsOn": [
+            "[variables('dataFactoryName')]"
+          ]
+        },
+        {
           "type": "linkedservices",
           "name": "[variables('sourceLinkedServiceName')]",
           "comments": "Creates the link to O365 which is used as the source of the data extraction. Using service principal supplied by the source ADLS owner.",
@@ -88,7 +99,7 @@
             "type": "Office365",
             "description": "Source O365 linked service",
             "typeProperties": {
-              "office365tenantId": "[parameters('office365tenantId')]",
+              "office365tenantId": "[subscription().tenantId]",
               "o365DataDiscoveryServiceUrl": "[variables('o365DataDiscoveryServiceUrl')]",
               "office365SubscriptionId": "00000000-0000-0000-0000-000000000000",
               "servicePrincipalId": "00000000-0000-0000-0000-000000000000",
@@ -120,7 +131,11 @@
               },
               "tenant": "[subscription().tenantId]",
               "resourceGroupName": "[resourceGroup().name]",
-              "subscriptionId": "[subscription().subscriptionId]"
+              "subscriptionId": "[subscription().subscriptionId]",
+              "connectVia": {
+                "referenceName": "[variables('integrationRuntimeName')]",
+                "type": "IntegrationRuntimeReference"
+              }
             }
           }
         },

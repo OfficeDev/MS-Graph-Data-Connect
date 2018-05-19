@@ -9,13 +9,13 @@
       "value": ""
     },
     "destinationServicePrincipalKey": {
-        "value": ""
+      "value": ""
     },
-	"triggerStartTime": {
-        "value": ""
+    "triggerStartTime": {
+      "value": ""
     },
     "triggerEndTime": {
-        "value": ""
+      "value": ""
     }
   }
 }

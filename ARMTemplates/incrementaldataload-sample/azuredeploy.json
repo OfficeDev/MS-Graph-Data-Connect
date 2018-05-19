@@ -34,8 +34,9 @@
     }
   },
   "variables": {
-    "dataFactoryName": "[concat('O365ToAzureDLSDataFactory', uniqueString(resourceGroup().id))]",
-    "destinationAdlsAccountName": "[concat('destaccount', uniqueString(resourceGroup().id))]",
+    "dataFactoryName": "[concat('myadf', uniqueString(resourceGroup().id))]",
+    "destinationAdlsAccountName": "[concat('myadls', uniqueString(resourceGroup().id))]",
+    "integrationRuntimeName": "[concat('myir', uniqueString(resourceGroup().id))]",
     "sourceLinkedServiceName": "SourceO365LinkedService",
     "destinationLinkedServiceName": "DestinationADLSLinkedService",
     "waterMarkLinkedServiceName": "WatermarkLinkedService",
@@ -50,16 +51,6 @@
     }
   },
   "resources": [
-    {
-      "type": "Microsoft.Authorization/roleAssignments",
-      "apiVersion": "2017-05-01",
-      "name": "[guid(resourceGroup().id)]",
-      "properties": {
-        "roleDefinitionId": "[concat('/subscriptions/',subscription().subscriptionId, '/providers/Microsoft.Authorization/roleDefinitions/', '8e3af657-a8ff-443c-a75c-2fe8c4bcb635')]",
-        "principalId": "[parameters('destinationServicePrincipalAadId')]",
-        "scope": "[resourceGroup().id]"
-      }
-    },
     {
       "type": "Microsoft.DataLakeStore/accounts",
       "name": "[variables('destinationAdlsAccountName')]",
@@ -85,6 +76,22 @@
       ],
       "location": "East US",
       "resources": [
+        {
+          "name": "[variables('integrationRuntimeName')]",
+          "type": "integrationRuntimes",
+          "apiVersion": "2017-09-01-preview",
+          "properties": {
+            "type": "Managed",
+            "typeProperties": {
+              "computeProperties": {
+                "location": "[resourceGroup().location]"
+              }
+            }
+          },
+          "dependsOn": [
+            "[variables('dataFactoryName')]"
+          ]
+        },
         {
           "type": "linkedservices",
           "name": "[variables('sourceLinkedServiceName')]",
@@ -129,7 +136,11 @@
               },
               "tenant": "[subscription().tenantId]",
               "resourceGroupName": "[resourceGroup().name]",
-              "subscriptionId": "[subscription().subscriptionId]"
+              "subscriptionId": "[subscription().subscriptionId]",
+              "connectVia": {
+                "referenceName": "[variables('integrationRuntimeName')]",
+                "type": "IntegrationRuntimeReference"
+              }
             }
           }
         },

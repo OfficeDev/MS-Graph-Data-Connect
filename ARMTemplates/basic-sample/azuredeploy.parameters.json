@@ -9,10 +9,7 @@
       "value": ""
     },
     "destinationServicePrincipalKey": {
-        "value": ""
-    },
-    "office365TenantId": {
-        "value": ""
+      "value": ""
     }
   }
 }

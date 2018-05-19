@@ -52,8 +52,9 @@
     }
   },
   "variables": {
-    "dataFactoryName": "[concat('O365ToAzureDLSDataFactory', uniqueString(resourceGroup().id))]",
-    "destinationAdlsAccountName": "[concat('destaccount', uniqueString(resourceGroup().id))]",
+    "dataFactoryName": "[concat('myadf', uniqueString(resourceGroup().id))]",
+    "destinationAdlsAccountName": "[concat('myadls', uniqueString(resourceGroup().id))]",
+    "integrationRuntimeName": "[concat('myir', uniqueString(resourceGroup().id))]",
     "sourceLinkedServiceName": "SourceO365LinkedService",
     "destinationLinkedServiceName": "DestinationADLSLinkedService",
     "userListLinkedServiceName": "UserListLinkedService",
@@ -88,6 +89,22 @@
       "dependsOn": [ "[resourceId('Microsoft.DataLakeStore/accounts/', variables('destinationAdlsAccountName'))]" ],
       "location": "[resourceGroup().location]",
       "resources": [
+        {
+          "name": "[variables('integrationRuntimeName')]",
+          "type": "integrationRuntimes",
+          "apiVersion": "2017-09-01-preview",
+          "properties": {
+            "type": "Managed",
+            "typeProperties": {
+              "computeProperties": {
+                "location": "[resourceGroup().location]"
+              }
+            }
+          },
+          "dependsOn": [
+            "[variables('dataFactoryName')]"
+          ]
+        },
         {
           "type": "linkedservices",
           "name": "[variables('sourceLinkedServiceName')]",
@@ -131,7 +148,11 @@
               },
               "tenant": "[subscription().tenantId]",
               "resourceGroupName": "[resourceGroup().name]",
-              "subscriptionId": "[subscription().subscriptionId]"
+              "subscriptionId": "[subscription().subscriptionId]",
+              "connectVia": {
+                "referenceName": "[variables('integrationRuntimeName')]",
+                "type": "IntegrationRuntimeReference"
+              }
             }
           }
         },
