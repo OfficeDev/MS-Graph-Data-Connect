@@ -80,8 +80,7 @@ $AadApplication = New-AzureADApplication -DisplayName $ApplicationDisplayName -H
 $ServicePrincipal = New-AzureADServicePrincipal -AppId $AadApplication.AppId
 
 $now = Get-Date
-$nextYear = $now.AddYears(1)
-$DestPassword = New-AzureADApplicationPasswordCredential -ObjectId $AadApplication.ObjectId -StartDate $now -EndDate $nextYear
+$DestPassword = New-AzureADApplicationPasswordCredential -ObjectId $AadApplication.ObjectId -StartDate $now
 
 Write-Host $ApplicationDisplayName " has been created successfully. " -foregroundcolor "Green"
 
@@ -94,8 +93,6 @@ Write-Host "`t Destination ADLS service principal AAD Id : " $ServicePrincipal.O
 Write-Host "`t Destination ADLS service principal Id : " $ServicePrincipal.AppId
 
 Write-Host "`t Destination ADLS service principal key : " $DestPassword.Value
-
-Write-Host "`t The Object Id of the user installing the app: " $user.ObjectId
 
 $date = [System.DateTime]::UtcNow.Date.ToString("yyyy-MM-ddTHH:mm:ssZ")
 Write-Host "`t Trigger start time: " $date
