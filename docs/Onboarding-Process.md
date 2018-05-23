@@ -63,10 +63,19 @@ New-DistributionGroup -Name "TenantLockboxApprovers" -Members "chris@contoso.com
 ```
 
 5. Turn on Tenant Lockbox.
->**NOTE:** "TenantLockboxApprovers" in the below command refers to the name of approver group created in step 4.
+   > **NOTE:** "TenantLockboxApprovers" in the below command refers to the name of approver group created in step 4.
 
 ```powershell
 Enable-ElevatedAccessControl -AdminGroup "TenantLockboxApprovers" -SystemAccounts @()
+```
+
+6. Set up an approval policy.
+
+   > **NOTE:** Set -ApprovalType to `Manual` if you want to experience Office365 Admin consent flow of approving the data pull requests from Office365. Set it to `Auto` if you are using a test tenant and don't want to manually approve your pipelines every time you do a new deployment during your development phase.
+   >
+   > We make new requests only when you create/modify a pipeline, we don't create new requests for every pipeline runs.
+```powershell
+New-ElevatedAccessApprovalPolicy -Task 'Office365\Data Access Request' -ApprovalType Manual -ApproverGroup "TenantLockboxApprovers"
 ```
 
 ------
