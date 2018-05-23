@@ -20,6 +20,12 @@
         "description": "The key of the service principal that has access to the destination Data Lake store."
       }
     },
+    "userId": {
+      "type": "string",
+      "metadata": {
+        "description": "The Object Id of the user installing the app."
+      }
+    },
     "webSiteName": {
       "type": "string"
     },
@@ -210,7 +216,8 @@
                 "type": "SecureString",
                 "value": "[variables('sourceLinkedServicePrincipalKey')]"
               },
-              "servicePrincipalTenantId": "[variables('sourceLinkedServicePrincipalTenantId')]"
+              "servicePrincipalTenantId": "[variables('sourceLinkedServicePrincipalTenantId')]",
+              "userId": "[parameters('userId')]"
             }
           }
         },
