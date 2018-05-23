@@ -58,7 +58,9 @@ In this step we'll create a storage account and upload the **WhoKnowsWho.zip** f
 
 3. Take a note of the **WhoKnowsWho.zip** blob **URL** value.
 
-### Step 2: Create a service principal
+### Step 2: Create an Application in your tenant
+
+For Office365 LinkedService you need to provide an AAD application in your company's tenant (azure marketplace app publisher tenant). This application is different from the destination service principal. The destination service principal belongs to the customer tenant where the resources are being deployed and it's provided to your app via parameters by the customer during installation. Although, if you are deploying a service catalog app or an ARM template directly (for e.g. sample [ARMTemplates](../ARMTemplates)), your company tenant and installer tenants are same and you can technically use the same service principal for Office365 LinkedService as well as ADLS account & LinkedService.
 
 1. Follow these [instructions](to https://docs.microsoft.com/en-us/azure/azure-resource-manager/resource-group-create-service-principal-portal#create-an-azure-active-directory-application) to create an app registration in your tenant.
 
