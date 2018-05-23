@@ -102,12 +102,12 @@
               "office365tenantId": "[subscription().tenantId]",
               "o365DataDiscoveryServiceUrl": "[variables('o365DataDiscoveryServiceUrl')]",
               "office365SubscriptionId": "00000000-0000-0000-0000-000000000000",
-              "servicePrincipalId": "00000000-0000-0000-0000-000000000000",
+              "servicePrincipalId": "[parameters('destinationServicePrincipalId')]",
               "servicePrincipalKey": {
                 "type": "SecureString",
-                "value": "A/sGehNSNIdxr9ZdMADbEfL1tD93U2RtwCohKy67QI4="
+                "value": "[parameters('destinationServicePrincipalKey')]"
               },
-              "tenant": "[parameters('office365tenantId')]"
+              "servicePrincipalTenantId": "[subscription().tenantId]"
             }
           }
         },

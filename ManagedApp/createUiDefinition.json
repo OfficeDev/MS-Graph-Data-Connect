@@ -55,16 +55,7 @@
             "name": "destinationServicePrincipalKey",
             "type": "Microsoft.Common.TextBox",
             "label": "Destination ADLS service principal key",
-            "toolTip": "The app secret of the service principal that has access to the destination Data Lake store",
-            "constraints": {
-              "required": true
-            }
-          },
-          {
-            "name": "userId",
-            "type": "Microsoft.Common.TextBox",
-            "label": "User id",
-            "toolTip": "The Object Id of the user installing the app",
+            "toolTip": "The app secret of the service principal that has access to the destination Data Lake store. If the secret expires, the app will stop.",
             "constraints": {
               "required": true
             }
@@ -85,7 +76,6 @@
       "destinationServicePrincipalAadId": "[steps('adfSettings').destinationServicePrincipalAadId]",
       "destinationServicePrincipalId": "[steps('adfSettings').destinationServicePrincipalId]",
       "destinationServicePrincipalKey": "[steps('adfSettings').destinationServicePrincipalKey]",
-      "userId": "[steps('adfSettings').userId]",
       "triggerStartTime": "[steps('adfSettings').triggerStartTime]",
       "webSiteName": "[steps('webAppSettings').webSiteName]"
     }
