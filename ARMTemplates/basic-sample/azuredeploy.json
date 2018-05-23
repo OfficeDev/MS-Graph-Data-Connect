@@ -235,11 +235,11 @@
               },
               {
                 "name": "End",
-                "type": "DateTime"
+                "type": "string"
               },
               {
                 "name": "Start",
-                "type": "DateTime"
+                "type": "string"
               },
               {
                 "name": "ResponseStatus",
