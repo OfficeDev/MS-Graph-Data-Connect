@@ -200,7 +200,8 @@
           "name": "[variables('destinationADLSLinkedServiceName')]",
           "comments": "Creates the link to the newly created destination ADLS, using service principal supplied by the customer deploying this template.",
           "dependsOn": [
-            "[variables('dataFactoryName')]"
+            "[variables('dataFactoryName')]",
+            "[variables('integrationRuntimeName')]"
           ],
           "apiVersion": "2017-09-01-preview",
           "properties": {
