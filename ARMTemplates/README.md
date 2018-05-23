@@ -27,7 +27,8 @@ Below parameters are common across all samples and can be filled using the `Mana
 
 - `destinationServicePrincipalId` is the Application Id of your service principal.
 - `destinationServicePrincipalKey` is the Authentication Key you generated for your service principal.
-- `destinationServicePrincipalAadId` is the `Object Id` (bash)/`Id` (powershell) you receieve when you run the following command:
+- `destinationServicePrincipalAadId` is the Object Id of your service principal.
+- `userId` is the Object Id of the user you login with.
 
 #### Step 3
 

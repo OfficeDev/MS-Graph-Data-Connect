@@ -11,6 +11,9 @@
     "destinationServicePrincipalKey": {
       "value": ""
     },
+    "userId": {
+      "value": ""
+    },
     "userListDatalakeStoreUri": {
       "value": ""
     },
