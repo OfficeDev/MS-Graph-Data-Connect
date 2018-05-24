@@ -158,6 +158,8 @@ Get the role definition ID by following the steps in [Get the role definition ID
 
 Create the managed application definition using [`New-AzureRmManagedApplicationDefinition`](https://docs.microsoft.com/en-us/powershell/module/azurerm.resources/new-azurermmanagedapplicationdefinition?view=azurermps-6.0.0)
 
+> **NOTE:** Step 5 is going to deploy managed app for internal users. This step will differ when you are [publishing your official app to azure marketplace](https://docs.microsoft.com/en-us/azure/managed-applications/publish-marketplace-app).
+
 ### Step 6: Install the managed application
 
 You can create the managed application by following the steps listed below.

@@ -29,9 +29,12 @@ To start prototyping you need to first onboard a test office tenant and an azure
 
 ------
 
+## Post onboarding steps
+
 Once you receive communication from us, you need to turn on couple of knobs.
 
-## Tenant Opt-in
+### Tenant Opt-in
+
 1. Go to <https://www.office.com/> and sign in using tenant admin credential.
 2. Select "Admin" app from Apps panel.
 3. On the left side menu, go to settings -> ServicesAndAddIns option.
@@ -44,7 +47,7 @@ Use below screenshot to understand the layout:
 
 ------
 
-## Enabling Tenant Lockbox
+### Enabling Tenant Lockbox
 
 1. **Use Internet Explorer/Edge for this step**. Download the Microsoft Exchange Online PowerShell module following [these instructions](https://technet.microsoft.com/en-us/library/mt775114(v=exchg.160).aspx)
 
