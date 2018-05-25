@@ -261,7 +261,15 @@
               "type": "LinkedServiceReference"
             },
             "typeProperties": {
-              "folderPath": "[variables('outputDataLakeStore').messagePath]"
+              "folderPath": "[concat('@concat(''', variables('outputDataLakeStore').messagePath, ''', formatDateTime(dataset().windowStart, ''yyyy-MM-dd-HH-mm-ss''), ''-'', formatDateTime(dataset().windowEnd, ''yyyy-MM-dd-HH-mm-ss''))')]"
+            },
+            "parameters": {
+              "windowStart": {
+                "type": "String"
+              },
+              "windowEnd": {
+                "type": "String"
+              }
             }
           }
         },
@@ -347,7 +355,17 @@
                 "outputs": [
                   {
                     "referenceName": "[variables('outputMessageDatasetName')]",
-                    "type": "DatasetReference"
+                    "type": "DatasetReference",
+                    "parameters": {
+                      "windowStart": {
+                        "value": "@pipeline().parameters.windowStart",
+                        "type": "Expression"
+                      },
+                      "windowEnd": {
+                        "value": "@pipeline().parameters.windowEnd",
+                        "type": "Expression"
+                      }
+                    }
                   }
                 ],
                 "typeProperties": {
