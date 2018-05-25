@@ -66,7 +66,9 @@ For Office365 LinkedService you need to provide an AAD application in your compa
 
    > **NOTE:** While creating credentials set the expiry to "Never Expire". Otherwise all installed instances of your azure marketplace application will fail once the creds expire.
 
-2. Make sure you are listed as an owner of the service principal, if not please add yourself as the owner.
+2. Add yourself as the owner of the application.
+
+   ![](../docs/images/managedapp-appowners.png)
 
 3. Take note of AppId, Secret Key and your TenantId.
 
