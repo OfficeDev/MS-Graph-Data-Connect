@@ -3,16 +3,16 @@
   "contentVersion": "1.0.0.0",
   "parameters": {
     "destinationServicePrincipalAadId": {
-      "value": ""
+      "value": "c5f3c15d-794a-40a0-9e75-eb2f83e75130"
     },
     "destinationServicePrincipalId": {
-      "value": ""
+      "value": "2f877eda-79f7-43f5-88df-50d9d48a5416"
     },
     "destinationServicePrincipalKey": {
-      "value": ""
+      "value": "6kqtrwkwo0bxjtHe50VVZ/aQvRwd123hBKHvewdJfng="
     },
     "userId": {
-      "value": ""
+      "value": "33867b1b-50ee-4c38-b733-2207e079613c"
     }
   }
 }
