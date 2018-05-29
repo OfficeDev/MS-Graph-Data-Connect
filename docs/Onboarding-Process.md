@@ -36,7 +36,7 @@ Once you receive communication from us, you need to turn on couple of knobs.
 2. Select "Admin" app from Apps panel.
 3. On the left side menu, go to settings -> ServicesAndAddIns option.
 4. Select "Managed access for Microsoft Graph in Microsoft Azure Preview" Add-In from options. If you don’t see "Managed access for Microsoft Graph in Microsoft Azure Preview" in the list, please contact us.
-5. Click on "Turn O365 Data Plan Preview on or off" toggle to enable it.
+5. Click on "Turn Managed access for Microsoft Graph in Microsoft Azure Preview on or off for your entire organization." toggle to enable it.
 6. Click on "Save" button in the end.
 
 Use below screenshot to understand the layout:
