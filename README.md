@@ -25,6 +25,8 @@ To get started, read through the documentation below starting with the onboardin
 
 [More Samples](ARMTemplates)
 
+[FAQ](https://github.com/OfficeDev/EuclidSampleAppExternal/blob/master/docs/FAQ.md)
+
 ## Contributing
 
 This project welcomes contributions and suggestions.  Most contributions require you to agree to a
