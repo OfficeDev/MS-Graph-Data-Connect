@@ -92,9 +92,15 @@ Contains the list of parameters whose values will be provided by the user.
 
 #### Variables 
 
-Contains the list of variables. Please go through all the variables. You should update the variable values if needed.
+Contains the list of variables. Please go through all the variables. You should update all the fields marked below unless marked as *(Optional)*.
 
-Make sure you fill values for `sourceLinkedServicePrincipalId`, `sourceLinkedServicePrincipalKey` and `sourceLinkedServicePrincipalTenantId` from Step 2.
+| Variable name | Description |
+|----------------|-------------|
+| `sourceLinkedServicePrincipalId` | The App Id for the SPN created in Step 2 |
+| `sourceLinkedServicePrincipalKey` | The Secret for the SPN created in Step 2 |
+| `sourceLinkedServicePrincipalTenantId` | The TenantId for the SPN created in Step 2 |
+| `office365DataDiscoveryServiceUrl` *(Optional)* | Use the  value corresponding to the environment you want to target. **PPE** is the pre-production environment and will be the first to have the latest set of changes. **PROD** is updated weekly, but will tend to be more stable.  <br><br> **PPE** *(Default)*: `https://104.43.241.84/DiscoveryService/`<br> **PROD**: `https://104.43.245.57/DiscoveryService/` <br> Note: These are the only valid values, if you are pointing to a different endpoint, it could be stale.|
+
 
 #### Resources
 

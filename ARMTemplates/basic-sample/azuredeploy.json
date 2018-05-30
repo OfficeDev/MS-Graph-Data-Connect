@@ -43,7 +43,7 @@
     "outputUserDatasetName": "ADLSOutputUserDataset",
     "pipelineName": "mypipeline",
     "triggerName": "mytrigger",
-    "o365DataDiscoveryServiceUrl": "https://52.165.130.25/DiscoveryService/DataPreparationJob",
+    "office365DataDiscoveryServiceUrl": "https://104.43.241.84/DiscoveryService/",
     "outputDataLakeStore": {
       "messagePath": "targetFolder/Message",
       "eventPath": "targetFolder/Event",
@@ -106,7 +106,7 @@
             "description": "Source O365 linked service",
             "typeProperties": {
               "office365tenantId": "[subscription().tenantId]",
-              "o365DataDiscoveryServiceUrl": "[variables('o365DataDiscoveryServiceUrl')]",
+              "office365DataDiscoveryServiceUrl": "[variables('office365DataDiscoveryServiceUrl')]",
               "PrivacyPolicyUri": "http://www.wkw.com/privacy",
               "TermsOfUseUri": "http://www.wkw.com/tos",
               "office365SubscriptionId": "00000000-0000-0000-0000-000000000000",
