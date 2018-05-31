@@ -35,12 +35,10 @@
     "destinationLinkedServiceName": "DestinationADLSLinkedService",
     "inputEventDatasetName": "O365InputEventDataset",
     "inputMessageDatasetName": "O365InputMessageDataset",
-    "inputGroupMessageDatasetName": "O365InputGroupMessageDataset",
     "inputContactDatasetName": "O365InputContactDataset",
     "inputUserDatasetName": "O365InputUserDataset",
     "outputEventDatasetName": "ADLSOutputEventDataset",
     "outputMessageDatasetName": "ADLSOutputMessageDataset",
-    "outputGroupMessageDatasetName": "ADLSOutputGroupMessageDataset",
     "outputContactDatasetName": "ADLSOutputContactDataset",
     "outputUserDatasetName": "ADLSOutputUserDataset",
     "pipelineName": "mypipeline",
@@ -48,7 +46,6 @@
     "o365DataDiscoveryServiceUrl": "https://52.165.130.25/DiscoveryService/DataPreparationJob",
     "outputDataLakeStore": {
       "messagePath": "targetFolder/Message",
-      "groupMessagePath": "targetFolder/GroupMessage",
       "eventPath": "targetFolder/Event",
       "contactPath": "targetFolder/Contact",
       "userPath": "targetFolder/User"
@@ -211,69 +208,6 @@
             ],
             "typeProperties": {
               "tableName": "BasicDataSet_v0.Message_v0"
-            },
-            "external": true
-          }
-        },
-        {
-          "type": "datasets",
-          "name": "[variables('inputGroupMessageDatasetName')]",
-          "dependsOn": [
-            "[variables('dataFactoryName')]",
-            "[variables('sourceLinkedServiceName')]"
-          ],
-          "apiVersion": "2017-09-01-preview",
-          "properties": {
-            "published": false,
-            "type": "Office365Table",
-            "linkedServiceName": {
-              "referenceName": "[variables('sourceLinkedServiceName')]",
-              "type": "LinkedServiceReference"
-            },
-            "structure": [
-              {
-                "name": "Subject",
-                "type": "string"
-              },
-              {
-                "name": "HasAttachments",
-                "type": "boolean"
-              },
-              {
-                "name": "SentDateTime",
-                "type": "DateTime"
-              },
-              {
-                "name": "ReceivedDateTime",
-                "type": "DateTime"
-              },
-              {
-                "name": "Sender",
-                "type": "string"
-              },
-              {
-                "name": "From",
-                "type": "string"
-              },
-              {
-                "name": "ToRecipients",
-                "type": "string"
-              },
-              {
-                "name": "CcRecipients",
-                "type": "string"
-              },
-              {
-                "name": "BccRecipients",
-                "type": "string"
-              },
-              {
-                "name": "ConversationId",
-                "type": "string"
-              }
-            ],
-            "typeProperties": {
-              "tableName": "BasicDataSet_v0.Group_Messages_v0"
             },
             "external": true
           }
@@ -489,26 +423,6 @@
         },
         {
           "type": "datasets",
-          "name": "[variables('outputGroupMessageDatasetName')]",
-          "dependsOn": [
-            "[variables('dataFactoryName')]",
-            "[variables('destinationLinkedServiceName')]"
-          ],
-          "apiVersion": "2017-09-01-preview",
-          "properties": {
-            "published": false,
-            "type": "AzureDataLakeStoreFile",
-            "linkedServiceName": {
-              "referenceName": "[variables('destinationLinkedServiceName')]",
-              "type": "LinkedServiceReference"
-            },
-            "typeProperties": {
-              "folderPath": "[variables('outputDataLakeStore').groupMessagePath]"
-            }
-          }
-        },
-        {
-          "type": "datasets",
           "name": "[variables('outputEventDatasetName')]",
           "dependsOn": [
             "[variables('dataFactoryName')]",
@@ -575,9 +489,7 @@
             "[variables('sourceLinkedServiceName')]",
             "[variables('destinationLinkedServiceName')]",
             "[variables('inputMessageDatasetName')]",
-            "[variables('inputGroupMessageDatasetName')]",
             "[variables('outputMessageDatasetName')]",
-            "[variables('outputGroupMessageDatasetName')]",
             "[variables('inputEventDatasetName')]",
             "[variables('outputEventDatasetName')]",
             "[variables('inputContactDatasetName')]",
@@ -601,31 +513,6 @@
                 "outputs": [
                   {
                     "referenceName": "[variables('outputMessageDatasetName')]",
-                    "type": "DatasetReference"
-                  }
-                ],
-                "typeProperties": {
-                  "source": {
-                    "type": "Office365Source"
-                  },
-                  "sink": {
-                    "type": "AzureDataLakeStoreSink"
-                  }
-                }
-              },
-              {
-                "name": "CopyGroupMessageFromO365ToAzureDLS",
-                "description": "Copy  group message data from O365 to Azure Data Lake Store",
-                "type": "Copy",
-                "inputs": [
-                  {
-                    "referenceName": "[variables('inputGroupMessageDatasetName')]",
-                    "type": "DatasetReference"
-                  }
-                ],
-                "outputs": [
-                  {
-                    "referenceName": "[variables('outputGroupMessageDatasetName')]",
                     "type": "DatasetReference"
                   }
                 ],
@@ -724,9 +611,7 @@
             "[variables('sourceLinkedServiceName')]",
             "[variables('destinationLinkedServiceName')]",
             "[variables('inputMessageDatasetName')]",
-            "[variables('inputGroupMessageDatasetName')]",
             "[variables('outputMessageDatasetName')]",
-            "[variables('outputGroupMessageDatasetName')]",
             "[variables('inputEventDatasetName')]",
             "[variables('outputEventDatasetName')]",
             "[variables('inputContactDatasetName')]",
