@@ -1,6 +1,6 @@
 # Contact Us
 
-Please send any question/feedback to O365Analytics@microsoft.com. Follow the guidelines below to provide us info for some of the common scenarios
+Please send any question/feedback to [VeniceO365EA@microsoft.com](mailto:veniceo365ea@microsoft.com). Follow the guidelines below to provide us info for some of the common scenarios
 
 ## Deployment Failures
 
