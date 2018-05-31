@@ -82,6 +82,9 @@ $ServicePrincipal = New-AzureADServicePrincipal -AppId $AadApplication.AppId
 $now = Get-Date
 $DestPassword = New-AzureADApplicationPasswordCredential -ObjectId $AadApplication.ObjectId -StartDate $now
 
+# set the user as the owner of the application
+$addOwnerReturn = Add-AzureADApplicationOwner -ObjectId $AadApplication.ObjectId -RefObjectId $user.ObjectId
+
 Write-Host $ApplicationDisplayName " has been created successfully. " -foregroundcolor "Green"
 
 Write-Host "`n App installation parameter details:"
