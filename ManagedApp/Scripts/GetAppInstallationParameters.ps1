@@ -61,11 +61,9 @@ $aad_ResourceAccess.ResourceAccess = $aad_readAndSignInPerm
 
 $requiredResources.Add($aad_ResourceAccess)
 
-$chars = [char[]]"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789"
-
 if ($ApplicationDisplayName -eq "") 
 {
-   $ApplicationDisplayName = "dest" + [string](($chars[0..25]|Get-Random)+(($chars|Get-Random -Count 4) -join ""))
+   $ApplicationDisplayName = "dest" + [string]([System.Guid]::NewGuid().ToString().Substring(0,8))
 }
 
 $ReplyUrls = "https://" + $ApplicationDisplayName + ".azurewebsites.net"
@@ -82,8 +80,12 @@ $ServicePrincipal = New-AzureADServicePrincipal -AppId $AadApplication.AppId
 $now = Get-Date
 $DestPassword = New-AzureADApplicationPasswordCredential -ObjectId $AadApplication.ObjectId -StartDate $now
 
-# set the user as the owner of the application
-$addOwnerReturn = Add-AzureADApplicationOwner -ObjectId $AadApplication.ObjectId -RefObjectId $user.ObjectId
+$owners = Get-AzureADApplicationOwner -ObjectId $AadApplication.ObjectId
+if ($owners.Count -eq 0)
+{
+   # set the user as the owner of the application
+   $addOwnerReturn = Add-AzureADApplicationOwner -ObjectId $AadApplication.ObjectId -RefObjectId $user.ObjectId
+}
 
 Write-Host $ApplicationDisplayName " has been created successfully. " -foregroundcolor "Green"
 
