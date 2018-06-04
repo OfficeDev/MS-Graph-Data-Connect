@@ -107,7 +107,8 @@
                 "value": "[parameters('destinationServicePrincipalKey')]"
               },
               "servicePrincipalTenantId": "[subscription().tenantId]",
-              "userId": "[parameters('userId')]"
+              "userId": "[parameters('userId')]",
+              "FlightingFeatures": "UseHiveJSSEndpoint"
             }
           }
         },
@@ -198,7 +199,7 @@
               }
             ],
             "typeProperties": {
-              "tableName": "BasicDataSet_v0.Group_Messages_v0"
+              "tableName": "BasicDataSet_v0.GroupMessages_v0"
             },
             "external": true
           }
