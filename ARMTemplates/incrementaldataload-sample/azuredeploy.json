@@ -261,7 +261,7 @@
               "type": "LinkedServiceReference"
             },
             "typeProperties": {
-              "folderPath": "[concat('@concat(''', variables('outputDataLakeStore').messagePath, ''', formatDateTime(dataset().windowStart, ''yyyy-MM-dd-HH-mm-ss''), ''-'', formatDateTime(dataset().windowEnd, ''yyyy-MM-dd-HH-mm-ss''))')]"
+              "folderPath": "[concat('@concat(''', variables('outputDataLakeStore').messagePath, '/'', formatDateTime(dataset().windowStart, ''yyyy-MM-dd-HH-mm-ss''), ''-'', formatDateTime(dataset().windowEnd, ''yyyy-MM-dd-HH-mm-ss''))')]"
             },
             "parameters": {
               "windowStart": {
