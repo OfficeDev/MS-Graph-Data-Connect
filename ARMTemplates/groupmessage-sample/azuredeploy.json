@@ -37,7 +37,7 @@
     "outputGroupMessageDatasetName": "ADLSOutputGroupMessageDataset",
     "pipelineName": "mypipeline",
     "triggerName": "mytrigger",
-    "o365DataDiscoveryServiceUrl": "https://52.165.130.25/DiscoveryService/DataPreparationJob",
+    "office365DataDiscoveryServiceUrl": "https://104.43.241.84/DiscoveryService/",
     "outputDataLakeStore": {
       "groupMessagePath": "targetFolder/GroupMessage"
     }
@@ -66,7 +66,7 @@
       "dependsOn": [
         "[resourceId('Microsoft.DataLakeStore/accounts/', variables('destinationAdlsAccountName'))]"
       ],
-      "location": "East US",
+      "location": "[resourceGroup().location]",
       "resources": [
         {
           "name": "[variables('integrationRuntimeName')]",
@@ -108,6 +108,7 @@
               },
               "servicePrincipalTenantId": "[subscription().tenantId]",
               "userId": "[parameters('userId')]",
+              "AllowedGroups": [ "786fed05-2a5e-4201-a5dc-132a9fe635a0", "dd233448-ce35-4463-a0cc-32d5c1dcd21b", "2c61b73c-f364-4a4f-80b9-106dd81e781b" ],
               "FlightingFeatures": "UseHiveJSSEndpoint"
             }
           }
