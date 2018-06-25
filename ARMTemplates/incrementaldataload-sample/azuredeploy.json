@@ -20,12 +20,6 @@
         "description": "The key of the service principal that has access to the destination Data Lake store."
       }
     },
-    "userId": {
-      "type": "string",
-      "metadata": {
-        "description": "The Object Id of the user installing the app."
-      }
-    },
     "triggerStartTime": {
       "type": "string",
       "metadata": {
@@ -114,14 +108,12 @@
               "office365DataDiscoveryServiceUrl": "[variables('office365DataDiscoveryServiceUrl')]",
               "PrivacyPolicyUri": "http://www.wkw.com/privacy",
               "TermsOfUseUri": "http://www.wkw.com/tos",
-              "office365SubscriptionId": "00000000-0000-0000-0000-000000000000",
               "servicePrincipalId": "[parameters('destinationServicePrincipalId')]",
               "servicePrincipalKey": {
                 "type": "SecureString",
                 "value": "[parameters('destinationServicePrincipalKey')]"
               },
-              "servicePrincipalTenantId": "[subscription().tenantId]",
-              "userId": "[parameters('userId')]"
+              "servicePrincipalTenantId": "[subscription().tenantId]"
             }
           }
         },

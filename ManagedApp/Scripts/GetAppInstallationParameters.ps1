@@ -99,7 +99,5 @@ Write-Host "`t Destination ADLS service principal Id : " $ServicePrincipal.AppId
 
 Write-Host "`t Destination ADLS service principal key : " $DestPassword.Value
 
-Write-Host "`t The Object Id of the user installing the app: " $user.ObjectId
-
 $date = [System.DateTime]::UtcNow.Date.ToString("yyyy-MM-ddTHH:mm:ssZ")
 Write-Host "`t Trigger start time: " $date

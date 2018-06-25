@@ -61,15 +61,6 @@
             }
           },
           {
-            "name": "userId",
-            "type": "Microsoft.Common.TextBox",
-            "label": "User id",
-            "toolTip": "The Object Id of the user installing the app",
-            "constraints": {
-              "required": true
-            }
-          },
-          {
             "name": "triggerStartTime",
             "type": "Microsoft.Common.TextBox",
             "label": "Trigger start time",
@@ -85,7 +76,6 @@
       "destinationServicePrincipalAadId": "[steps('adfSettings').destinationServicePrincipalAadId]",
       "destinationServicePrincipalId": "[steps('adfSettings').destinationServicePrincipalId]",
       "destinationServicePrincipalKey": "[steps('adfSettings').destinationServicePrincipalKey]",
-      "userId": "[steps('adfSettings').userId]",
       "triggerStartTime": "[steps('adfSettings').triggerStartTime]",
       "webSiteName": "[steps('webAppSettings').webSiteName]"
     }

@@ -88,7 +88,6 @@ Contains the list of parameters whose values will be provided by the user.
 | `DestinationServicePrincipalAadId` | The Azure Active Directory ID of the service principal to be granted access to the destination Data Lake store |
 | `DestinationServicePrincipalId` | The app ID of the service principal that has access to the destination Data Lake store |
 | `DestinationServicePrincipalKey` | The app secret of the service principal that has access to the destination Data Lake store |
-| `UserId` | The Office 365 user that want to deploy this app |
 | `TriggerStartTime` | UTC date in `YYYY-MM-ddT00:00:00Z` format |
 
 
