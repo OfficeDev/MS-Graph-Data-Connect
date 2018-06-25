@@ -114,7 +114,6 @@
               "office365DataDiscoveryServiceUrl": "[variables('office365DataDiscoveryServiceUrl')]",
               "PrivacyPolicyUri": "http://www.wkw.com/privacy",
               "TermsOfUseUri": "http://www.wkw.com/tos",
-              "office365SubscriptionId": "00000000-0000-0000-0000-000000000000",
               "servicePrincipalId": "[parameters('destinationServicePrincipalId')]",
               "servicePrincipalKey": {
                 "type": "SecureString",
