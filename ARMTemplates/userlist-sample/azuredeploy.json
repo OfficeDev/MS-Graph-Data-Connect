@@ -14,12 +14,6 @@
       "type": "string",
       "metadata": { "description": "The key of the service principal that has access to the destination Data Lake store." }
     },
-    "userId": {
-      "type": "string",
-      "metadata": {
-        "description": "The Object Id of the user installing the app."
-      }
-    },
     "userListDatalakeStoreUri": {
       "type": "string",
       "metadata": { "description": "The User List ADLS." }
