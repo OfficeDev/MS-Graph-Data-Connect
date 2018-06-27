@@ -34,8 +34,8 @@ To start prototyping you need to first onboard a test office tenant and an azure
 Once you receive communication from us, you need to turn on couple of knobs.
 
 ### Before using Office 365 data, an Office 365 Admin must take 2 actions:
-1. Give consent to data leaving Office 365
-2. Set an approver group within the Office 365 subscription. The approver group will be tasked with approving specific requests for data.
+1. Give consent for copying data from Office 365 to Azure (i.e. keep full control over the data, but allow Azure resources to access it)
+2. Set an approver group within the Office 365 subscription. The approver group will be tasked with approving specific requests for access to data.
 
 ```
 Privileged Access Management (PAM) allows for granular access control over privileged tasks in Office 365.
@@ -47,7 +47,7 @@ To do this, an admin must
 1. Go to https://portal.office.com/adminportal/home#/groups
 1. Click "Add a group"
 1. Select "Mail-enabled security"
-1. Enter a name for the group (E.g. Privileged Access Management group)
+1. Enter a name for the group (E.g. Privileged Access Management approver group)
 1. Enter a email address for the group (E.g. approvers@contoso.com)
 1. Click "Save"
 1. Go to https://portal.office.com/adminportal/home#/Settings/ServicesAndAddIns
