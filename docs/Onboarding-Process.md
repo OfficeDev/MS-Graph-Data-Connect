@@ -27,11 +27,11 @@ To start prototyping you need to first onboard a test office tenant and an azure
 
 9. The features will be enabled in 1-2 weeks and you will receive a communication from us about the same.
 
+10. **After** you receive a communication from us, you need to setup Managed Access. For security reasons, your copy activity won't have access to Office 365 data until *after* setting up Managed Access.
+
 ------
 
-## Post onboarding steps
-
-Once you receive communication from us, you need to turn on couple of knobs.
+## Setup Managed Access (Required)
 
 ### Before using Office 365 data, an Office 365 Admin must take 2 actions:
 1. Give consent for copying data from Office 365 to Azure (i.e. keep full control over the data, but allow Azure resources to access it)
@@ -44,6 +44,9 @@ This gives users Just Enough Access (JEA) to perform the task at hand.
 ```
 
 To do this, an admin must
+```
+You must be added to the private preview list before completing these steps.
+```
 1. Go to https://portal.office.com/adminportal/home#/groups
 1. Click "Add a group"
 1. Select "Mail-enabled security"
