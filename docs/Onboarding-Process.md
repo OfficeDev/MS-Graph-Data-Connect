@@ -27,59 +27,40 @@ To start prototyping you need to first onboard a test office tenant and an azure
 
 9. The features will be enabled in 1-2 weeks and you will receive a communication from us about the same.
 
-------
-
-## Post onboarding steps
-
-Once you receive communication from us, you need to turn on couple of knobs.
-
-### Tenant Opt-in
-
-1. Go to <https://www.office.com/> and sign in using tenant admin credential.
-2. Select "Admin" app from Apps panel.
-3. On the left side menu, go to settings -> ServicesAndAddIns option.
-4. Select "Managed access for Microsoft Graph in Microsoft Azure Preview" Add-In from options. If you don’t see "Managed access for Microsoft Graph in Microsoft Azure Preview" in the list, please contact us.
-5. Click on "Turn Managed access for Microsoft Graph in Microsoft Azure Preview on or off for your entire organization." toggle to enable it.
-6. Click on "Save" button in the end.
-
-Use below screenshot to understand the layout:
-![](images/onboard-tenant-optin.png)
+10. **After** you receive a communication from us, you need to setup Managed Access. For security reasons, your copy activity won't have access to Office 365 data until *after* setting up Managed Access.
 
 ------
 
-### Enabling Tenant Lockbox
+## Setup Managed Access (Required)
 
-1. **Use Internet Explorer/Edge for this step**. Download the Microsoft Exchange Online PowerShell module following [these instructions](https://technet.microsoft.com/en-us/library/mt775114(v=exchg.160).aspx)
+### Before using Office 365 data, an Office 365 Admin must take 2 actions:
+1. Give consent for copying data from Office 365 to Azure (i.e. keep full control over the data, but allow Azure resources to access it)
+2. Set an approver group within the Office 365 subscription. The approver group will be tasked with approving specific requests for access to data.
 
-2. Open the installed Microsoft Exchange Online PowerShell module.
-
-3. Login:
-
-```powershell
-Connect-EXOPSSession
+```
+Privileged Access Management (PAM) allows for granular access control over privileged tasks in Office 365.
+Users can request highly scoped and time bound Just-In-Time (JIT) access to privileged tasks.
+This gives users Just Enough Access (JEA) to perform the task at hand.
 ```
 
-4. You will have to set up an approver group as part of the flow, with **at least two** members in the group to approve data access requests. More info on the command is available [here](https://docs.microsoft.com/en-us/powershell/module/exchange/users-and-groups/new-distributiongroup?view=exchange-ps). 
-
-```powershell
-New-DistributionGroup -Name "TenantLockboxApprovers" -Members "chris@contoso.com,michelle@contoso.com,laura@contoso.com,julia@contoso.com"
+To do this, an admin must
 ```
-
-5. Turn on Tenant Lockbox.
-   > **NOTE:** "TenantLockboxApprovers" in the below command refers to the name of approver group created in step 4.
-
-```powershell
-Enable-ElevatedAccessControl -AdminGroup "TenantLockboxApprovers" -SystemAccounts @()
+You must be added to the private preview list before completing these steps.
 ```
+1. Go to https://portal.office.com/adminportal/home#/groups
+1. Click "Add a group"
+1. Select "Mail-enabled security"
+1. Enter a name for the group (E.g. Privileged Access Management approver group)
+1. Enter a email address for the group (E.g. approvers@contoso.com)
+1. Click "Save"
+1. Go to https://portal.office.com/adminportal/home#/Settings/ServicesAndAddIns
+1. Open "Managed access for Microsoft Graph in Microsoft Azure Preview" (If you don’t see "Managed access for Microsoft Graph in Microsoft Azure Preview" in the list, please contact us.)
+1. Flip the switch to "On"
+1. Enter a mail enabled security group (E.g. approvers@contoso.com) under "Group of users to make approval decisions"
+1. Click "Save"
+1. Wait until the settings update confirmation message is displayed (E.g. "Managed access for Microsoft Graph in Microsoft Azure Preview settings have been updated.")
 
-6. Set up an approval policy.
-
-   > **NOTE:** Set -ApprovalType to `Manual` if you want to experience Office365 Admin consent flow of approving the data pull requests from Office365. Set it to `Auto` if you are using a test tenant and don't want to manually approve your pipelines every time you do a new deployment during your development phase.
-   >
-   > We make new requests only when you create/modify a pipeline, we don't create new requests for every pipeline runs.
-```powershell
-New-ElevatedAccessApprovalPolicy -Task 'Office365\Data Access Request' -ApprovalType Manual -ApproverGroup "TenantLockboxApprovers"
-```
-
-------
-
+Here are images of the user interface:
+![](images/adminSettingsUI_0.png)
+![](images/adminSettingsUI_1.png)
+![](images/adminSettingsUI_2.png)
