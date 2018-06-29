@@ -61,6 +61,9 @@ You must be added to the private preview list before completing these steps.
 1. Wait until the settings update confirmation message is displayed (E.g. "Managed access for Microsoft Graph in Microsoft Azure Preview settings have been updated.")
 
 Here are images of the user interface:
-![](images/adminSettingsUI_0.png)
-![](images/adminSettingsUI_1.png)
-![](images/adminSettingsUI_2.png)
+
+![](images/adminSettingsUI_0.PNG)
+
+![](images/adminSettingsUI_1.PNG)
+
+![](images/adminSettingsUI_2.PNG)
