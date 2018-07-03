@@ -43,10 +43,10 @@ Microsoft has built a sample application called Who Knows Who (WKW) which uses t
 
 ### Marketplace
 
-Euclid leverages the existing integration of Managed Applications with the [AppSource marketplace](https://appsource.microsoft.com). Microsoft AppSource helps enterprise users find and gauge line-of-business (LoB) and software-as-a-service (SaaS) apps from Microsoft and its partners. AppSource apps are built on top of a variety of Microsoft products and includes all their existing apps add-ins and content packages. All applications leveraging Euclid resources can be purchased in the AppSource marketplace.
+Euclid leverages the existing integration of Managed Applications with the [Azure Marketplace](https://azuremarketplace.microsoft.com/en-us). Microsoft Azure Markplace helps enterprise users find and gauge line-of-business (LoB) and software-as-a-service (SaaS) apps from Microsoft and its partners. Azure Marketplace apps are built on top of a variety of Microsoft products and includes all their existing apps add-ins and content packages. All applications leveraging Euclid resources can be purchased in the Azure Marketplace.
 
 ### Application Installation
 
-A customer purchaser that has resource creation rights on an Azure subscription, such as a mid-level manager or IT department, installs applications through the AppSource marketplace. They will see the terms of service, the data that is required, price for each application SKU and approximate cost for resource consumption.
+A customer purchaser that has resource creation rights on an Azure subscription, such as a mid-level manager or IT department, installs applications through the Azure Marketplace. They will see the terms of service, the data that is required, price for each application SKU and approximate cost for resource consumption.
 
 Once the properties are specified by the purchaser the resources are provisioned. This includes the Data Factory pipeline that begins extracting data. The purchaser is given a ReadMe from the developer author about when to expect the installation to be complete, how to use the application, and how to get support.
