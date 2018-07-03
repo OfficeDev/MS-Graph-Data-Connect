@@ -100,8 +100,6 @@ Contains the list of variables. Please go through all the variables. You should 
 | `sourceLinkedServicePrincipalId` | The App Id for the SPN created in Step 2 |
 | `sourceLinkedServicePrincipalKey` | The Secret for the SPN created in Step 2 |
 | `sourceLinkedServicePrincipalTenantId` | The TenantId for the SPN created in Step 2 |
-| `office365DataDiscoveryServiceUrl` *(Optional)* | Use the  value corresponding to the environment you want to target. **PPE** is the pre-production environment and will be the first to have the latest set of changes. **PROD** is updated weekly, but will tend to be more stable.  <br><br> **PPE** *(Default)*: `https://104.43.241.84/DiscoveryService/`<br> **PROD**: `https://104.43.245.57/DiscoveryService/` <br><br>*Note: These are the only valid values, if you are pointing to a different endpoint, it could be stale.*|
-
 
 #### Resources
 

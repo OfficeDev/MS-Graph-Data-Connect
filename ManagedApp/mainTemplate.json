@@ -49,7 +49,6 @@
     "outputMessageDatasetName": "ADLSOutputMessageDataset",
     "pipelineName": "mypipeline",
     "triggerName": "mytrigger",
-    "office365DataDiscoveryServiceUrl": "https://104.43.241.84/DiscoveryService/",
     "webSiteName": "[parameters('webSiteName')]",
     "backfillnumberofdays": 30,
     "isBackfill": "[concat('bool(equals(trigger().outputs.windowStartTime,''', parameters('triggerStartTime'),'''))')]",
@@ -201,7 +200,6 @@
             "typeProperties": {
               "flightingFeatures": "EnableDataVault",
               "office365tenantId": "[subscription().tenantId]",
-              "office365DataDiscoveryServiceUrl": "[variables('office365DataDiscoveryServiceUrl')]",
               "PrivacyPolicyUri": "http://www.wkw.com/privacy",
               "TermsOfUseUri": "http://www.wkw.com/tos",
               "servicePrincipalId": "[variables('sourceLinkedServicePrincipalId')]",

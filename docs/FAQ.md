@@ -19,10 +19,6 @@ This is because your tenant has not opted in and enabled tenant lockbox. Please 
 1. [Tenant Opt-in](https://github.com/OfficeDev/EuclidSampleAppExternal/blob/master/docs/Onboarding-Process.md#tenant-opt-in)
 2. [Enabling Tenant Lockbox](https://github.com/OfficeDev/EuclidSampleAppExternal/blob/master/docs/Onboarding-Process.md#enabling-tenant-lockbox)
 
-### I am running into `An error occurred while sending the request…`. How do I fix this?
-
-This may happen because of failure to connect to the SourceLinkedService. Please verify that that variable `o365DataDiscoveryServiceUrl` in your ARM template points correctly to one of the defined values as listed [here](https://github.com/OfficeDev/EuclidSampleAppExternal/tree/master/ManagedApp#variables)
-
 ### I am running into something else?
 
 Please follow the guidelines here to reach out to us [Contact Us](https://github.com/OfficeDev/EuclidSampleAppExternal/blob/master/docs/Contact-Us.md).
