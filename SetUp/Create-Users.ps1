@@ -1,5 +1,5 @@
 # Pre requisites
-# This script requires installing offine 365 modules for powershell
+# This script requires installing Office 365 modules for powershell
 # Please follow the guide (Connect to Office 365 PowerShell) below
 # https://technet.microsoft.com/en-us/library/dn975125.aspx
 
