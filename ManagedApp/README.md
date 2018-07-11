@@ -130,9 +130,9 @@ The data factory has couple of interesting resources of it's own.
 #### Optional properties
 
 ##### User Groups
-In the `SourceLinkedService`, you can a list of groups to reduce the scope of the pipeline from your company's tenant to only the members of the groups. To do so, add a new field `allowedGroups` under `typeProperties` and set this to a list of up to 10 groups' `Object Ids`. To see how to create a group, refer to [Create a group and add members in Azure Active Directory](https://docs.microsoft.com/en-us/azure/active-directory/fundamentals/active-directory-groups-create-azure-portal).
+In the `SourceLinkedService`, you can specify a list of groups to reduce the scope of the pipeline from your company's tenant to only the members of the groups. To do so, add a new field `allowedGroups` under `typeProperties` and set this to a list of up to 10 groups' `Object Ids`. To see how to create a group, refer to [Create a group and add members in Azure Active Directory](https://docs.microsoft.com/en-us/azure/active-directory/fundamentals/active-directory-groups-create-azure-portal).
 
-Example of a SourceLinkedService with two groups:
+Example of a `SourceLinkedService` with two groups:
 ```
 {
     "type": "linkedservices",
@@ -165,32 +165,32 @@ Example of a SourceLinkedService with two groups:
 ##### Predicate
 A predicate expression that evaluates to True or False can be used to filter out rows of data extracted from the Office365 dataset. 
 
-Currently, predicate based filtering is supported on the following columns of office365 datasets.
-| Dataset Name                | Columns that support filtering                                     |
-|-----------------------------|--------------------------------------------------------------------|
-| BasicDataSet_v0.Contact_v0  | CreatedDateTime LastModifiedDateTime                               |
-| BasicDataSet_v0.Event_v0    | CreatedDateTime LastModifiedDateTime                               |
-| BasicDataSet_v0.Message_v0  | CreatedDateTime LastModifiedDateTime ReceivedDateTime SentDateTime |
-| BasicDataSet_v0.SentItem_v0 | CreatedDateTime LastModifiedDateTime ReceivedDateTime SentDateTime |
+Currently, predicate based filtering is supported on the following columns of Office365 datasets.
+
+| Dataset Name                | Columns that support filtering                                              |
+|-----------------------------|-----------------------------------------------------------------------------|
+| BasicDataSet_v0.Contact_v0  | CreatedDateTime<br>LastModifiedDateTime                                     |
+| BasicDataSet_v0.Event_v0    | CreatedDateTime<br>LastModifiedDateTime                                     |
+| BasicDataSet_v0.Message_v0  | CreatedDateTime<br>LastModifiedDateTime<br>ReceivedDateTime<br>SentDateTime |
+| BasicDataSet_v0.SentItem_v0 | CreatedDateTime<br>LastModifiedDateTime<br>ReceivedDateTime<br>SentDateTime |
 
 The predicate expression specified in the ARM template must follow these rules:
 - There should be a maximum of two predicates per expression, separated by AND, OR, && or || operator and each must evaluate to a boolean value
-- Each predicate should be in the following format <filterable column of table> <predicate operator> <datetime value>
+- Each predicate should be in the format `<Filterable column of table> <Predicate operator> <Datetime value>`
 - **Filterable column of table** - This should be one of the filterable columns of the table that needs to be extracted. Please refer to the table above to see the list of filterable columns for each supported table.
-- **Predicate operator** - This can be one of the following: <, >, <=, >=, !=, gt, lt, ge, le, ne
+- **Predicate operator** - This can be one of the following: `<`, `>`, `<=`, `>=`, `!=`, `gt`, `lt`, `ge`, `le`, `ne`
 - **DateTime value** - This is the value of the columns that the rows will be filtered on. The following datetime patterns are supported
-    ...-Short date pattern, example: 2016/10/28
-    ...-General date/time pattern (long time), example: 6/15/2009 1:45:30 PM
-    ...-Roundtrip date/time pattern, example: 2018-06-20T00:00:27Z, 2018-06-20, 2017-10-28T08:50:27, 2017-10-28T08:50:27.000, 2017-10-28T08:50:27.0000000+03:00
-- Few examples of valid predicates for BasicDataSet_v0.Event_v0 dataset
-    ...-CreatedDateTime > 2016-10-28T15:50:27 || LastModifiedDateTime < 2018-06-20T08:50:27.000
-    ...-CreatedDateTime gt 2016/10/28 10:50:27 AM OR CreatedDateTime le 2018-06-20
-    ...-CreatedDateTime != 2016/10/28 AND LastModifiedDateTime ne 2018-06-20T08:50:27.0000000+03:00
-    ...-CreatedDateTime >= 2016/10/28 && LastModifiedDateTime lt 2018-06-20T13:45:27.0000000-07:00
-    ...-CreatedDateTime lt 2018-06-20
+    - Short date pattern, example: `2016/10/28`
+    - General date/time pattern (long time), example: `6/15/2009 1:45:30 PM`
+    - Roundtrip date/time pattern, examples: `2018-06-20T00:00:27Z`, `2018-06-20`, `2017-10-28T08:50:27`, `2017-10-28T08:50:27.000`, `2017-10-28T08:50:27.0000000+03:00`
+- Examples of valid predicates for BasicDataSet_v0.Event_v0 dataset:
+    - `CreatedDateTime > 2016-10-28T15:50:27 || LastModifiedDateTime < 2018-06-20T08:50:27.000`
+    - `CreatedDateTime gt 2016/10/28 10:50:27 AM OR CreatedDateTime le 2018-06-20`
+    - `CreatedDateTime != 2016/10/28 AND LastModifiedDateTime ne 2018-06-20T08:50:27.0000000+03:00`
+    - `CreatedDateTime >= 2016/10/28 && LastModifiedDateTime lt 2018-06-20T13:45:27.0000000-07:00`
+    - `CreatedDateTime lt 2018-06-20`
 
-In the `InputDataset`, you can add a `predicate` field under `typeProperties` of Office365Table source dataset.
-Example of the Office365Table source dataset with predicate.
+In the `InputDataset`, you can add a `predicate` field under `typeProperties` of Office365Table source dataset. Here's an example of the Office365Table source dataset with a predicate:
 ```
 {
     "type": "datasets",
