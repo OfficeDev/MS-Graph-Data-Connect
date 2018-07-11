@@ -1,9 +1,9 @@
-# Project Euclid
+# Managed Access to Microsoft Graph in Microsoft Azure
 #### Using Office 365 data with Azure analytics to build intelligent applications 
 
 ## Introduction 
 
-Project Euclid brings Office 365 data and Azure resources to independent software vendors (ISVs). Project Euclid will enable ISVs to build intelligent applications with Microsoft’s most valuable data, and best development tools. Office 365 Customers will gain innovative or industry-specific applications that enhance their productivity while keeping full control over their data. 
+Managed Access to Microsoft Graph in Microsoft Azure brings Office 365 data and Azure resources to independent software vendors (ISVs). This system enables ISVs to build intelligent applications with Microsoft’s most valuable data, and best development tools. Office 365 customers will gain innovative or industry-specific applications that enhance their productivity while keeping full control over their data. 
 
 ## How to Get Started 
 
@@ -15,13 +15,13 @@ To get started, read through the documentation below starting with the onboardin
 
 [Onboarding Process](docs/Onboarding-Process.md)
 
-[Intro to Euclid](docs/Intro-to-Euclid.md)
+[Intro to Managed Access to Microsoft Graph in Microsoft Azure](docs/Intro-to-Euclid.md)
 
-[Project Euclid Overview Deck](docs/ProjectEuclidOverviewDeck.pptx)
+[Overview Deck](docs/ProjectEuclidOverviewDeck.pptx)
 
 [Create users and dummy interactions](SetUp)
 
-[Try the sample Euclid managed application](ManagedApp)
+[Try the sample managed application](ManagedApp)
 
 [More Samples](ARMTemplates)
 
