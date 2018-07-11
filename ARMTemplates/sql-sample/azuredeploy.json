@@ -490,11 +490,33 @@
             ],
             "typeProperties": {
               "format": {
-                "type": "JsonFormat"
+                "type": "JsonFormat",
+                "jsonPathDefinition": {
+                  "Id": "$.Id",
+                  "CreatedDateTime": "$.CreatedDateTime",
+                  "LastModifiedDateTime": "$.LastModifiedDateTime",
+                  "SentDateTime": "$.SentDateTime",
+                  "ReceivedDateTime": "$.ReceivedDateTime",
+                  "Subject": "$.Subject",
+                  "InternetMessageId": "$.InternetMessageId",
+                  "UniqueBody": "$.UniqueBody.Content",
+                  "Importance": "$.Importance",
+                  "ParentFolderId": "$.ParentFolderId",
+                  "Sender": "$.Sender",
+                  "From": "$.From.EmailAddress.Address",
+                  "ToRecipients": "$.ToRecipients",
+                  "CcRecipients": "$.CcRecipients",
+                  "BccRecipients": "$.BccRecipients",
+                  "ReplyTo": "$.ReplyTo",
+                  "ConversationId": "$.ConversationId",
+                  "IsDeliveryReceiptRequested": "$.IsDeliveryReceiptRequested",
+                  "IsReadReceiptRequested": "$.IsReadReceiptRequested",
+                  "IsRead": "$.IsRead",
+                  "IsDraft": "$.IsDraft"
+                }
               },
               "folderPath": "[variables('outputDataLakeStore').messagePath]"
             }
-          }
         },
         {
           "type": "datasets",
@@ -660,7 +682,8 @@
                 ],
                 "typeProperties": {
                   "source": {
-                    "type": "AzureDataLakeStoreSource"
+                    "type": "AzureDataLakeStoreSource",
+                    "recursive": false
                   },
                   "sink": {
                     "type": "SqlSink"
