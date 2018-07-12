@@ -4,14 +4,14 @@
 
 The Azure Managed App on Office 365 can be broken down into 3 components:
 
-- Data Ingestion from Euclid/Office365
+- Data Ingestion from Office 365 via Managed access to Microsoft Graph in Microsoft Azure
 - Data processing/analytics to produce intelligent data
 - UX to surface the intelligent data
 
 We will work through a sample that covers all three components:
 
-1. We use Azure Data Factory (ADF) with copy activity to move data from O365 to your target adls.
-2. We then have an azure web app that reads the data at target adls and outputs intelligent data.
+1. We use Azure Data Factory (ADF) with copy activity to move data from Office 365 to your target ADLS instance.
+2. We then have an Azure web app that reads the data at the target ADLS instance and outputs intelligent data.
 
 Before we begin exploring the sample application, here are a few resources to get you started with the involved technologies:
 
@@ -29,7 +29,7 @@ Before we begin exploring the sample application, here are a few resources to ge
 - [Azure AD Powershell](https://docs.microsoft.com/en-us/powershell/azure/active-directory/install-adv2?view=azureadps-2.0)
 - [Azure Powershell](https://docs.microsoft.com/en-us/powershell/azure/install-azurerm-ps)
 
-## Create and publish an O365-powered Azure managed application:
+## Create and publish an Office 365 powered Azure managed application:
 
 The instructions below will help you create and publish an Azure managed application internally.
 For reference: [Publish a managed application for internal consumption](https://docs.microsoft.com/en-us/azure/managed-applications/publish-service-catalog-app).
@@ -60,7 +60,7 @@ In this step we'll create a storage account and upload the **WhoKnowsWho.zip** f
 
 ### Step 2: Create an Application in your tenant
 
-For Office365 LinkedService you need to provide an AAD application in your company's tenant (azure marketplace app publisher tenant). This application is different from the destination service principal. The destination service principal belongs to the customer tenant where the resources are being deployed and it's provided to your app via parameters by the customer during installation. Although, if you are deploying a service catalog app or an ARM template directly (for e.g. sample [ARMTemplates](../ARMTemplates)), your company tenant and installer tenants are same and you can technically use the same service principal for Office365 LinkedService as well as ADLS account & LinkedService.
+For Office 365 LinkedService you need to provide an AAD application in your company's tenant (azure marketplace app publisher tenant). This application is different from the destination service principal. The destination service principal belongs to the customer tenant where the resources are being deployed and it's provided to your app via parameters by the customer during installation. Although, if you are deploying a service catalog app or an ARM template directly (for e.g. sample [ARMTemplates](../ARMTemplates)), your company tenant and installer tenants are same and you can technically use the same service principal for Office365 LinkedService as well as ADLS account & LinkedService.
 
 1. Follow these [instructions](https://docs.microsoft.com/en-us/azure/azure-resource-manager/resource-group-create-service-principal-portal#create-an-azure-active-directory-application) to create an app registration in your tenant.
 
@@ -112,7 +112,7 @@ Below are few of the resources that will be deployed as a part of the **mainTemp
 | `O365DataPlan` | This resource enables compliance monitoring for your app and is **mandatory** for managed apps. You shouldn't add it to ARM templates that you deploy directly without managed app. For e.g. sample ARM templates at [`/ARMTemplates`](../ARMTemplates) |
 | `AuditStorageAccount` | Storage account to store all audit logs |
 | `DestinationAdlsAccount` | Creates the destination Data Lake store in the customer's subscription used in the ADF pipeline for the data output. The account also creates `diagnosticSettings` with `AuditStorageAccount` as the store to collect `audit` and `requests` logs. |
-| `DataFactory` | Creates the ADF pipeline that copies data from O365 to the newly created destination ADLS (`DestinationAdlsAccount` that was created above) |
+| `DataFactory` | Creates the ADF pipeline that copies data from Office 365 to the newly created destination ADLS (`DestinationAdlsAccount` that was created above) |
 | `WebApp` | Creates the web app that uses data stored in the newly created destination ADLS. Sample: [web app](https://github.com/Azure/azure-managedapp-samples/tree/master/samples/201-managed-web-app)|
 
 The data factory has couple of interesting resources of it's own.
@@ -120,11 +120,11 @@ The data factory has couple of interesting resources of it's own.
 | Resource name | Description |
 |---------------|-------------|
 | `IntegrationRuntime` | Runtime ADF will use to execute copy activities |
-| `SourceLinkedService` | Creates the link to O365 which is used as the source of the data extraction. Using service principal supplied by the source ADLS owner. |
+| `SourceLinkedService` | Creates the link to Office 365 which is used as the source of the data extraction. Using service principal supplied by the source ADLS owner. |
 | `DestinationLinkedService` | Creates the link to the newly created destination ADLS, using service principal supplied by the customer deploying this template. |
 | `*InputDataset` | You should change the structure in this resource to match the table and columns that you would like to extract. In this template we are trying to extract messages and events. For contacts and users refer [basic-sample](../ARMTemplates/basic-sample)|
 | `*OutputDataset` | Corresponds to the `DestinationAdlsAccount` where we wanted the data to be copied to. |
-| `Pipeline` | The Copy activity pipeline that copies the data from source O365 to the destination ADLS. Sample [copy activity](https://docs.microsoft.com/en-us/azure/data-factory/load-azure-data-lake-store)|
+| `Pipeline` | The Copy activity pipeline that copies the data from source Office 365 to the destination ADLS. Sample [copy activity](https://docs.microsoft.com/en-us/azure/data-factory/load-azure-data-lake-store)|
 | `PipelineTriggers` | Contains settings to ensure the copy pipeline can be scheduled to run periodically. Sample: [tumbling window trigger](https://docs.microsoft.com/en-us/azure/data-factory/how-to-create-tumbling-window-trigger)|
 
 
@@ -241,9 +241,9 @@ Execute the following commands in your shell to run the pipeline on a scheduled 
 You should see a response similar to the following.
 
 ```
-TriggerName : MarsEuclidTestTrigger
-ResourceGroupName : MarsEuclid1\_ResourceGroup
-DataFactoryName : MarsEuclid2DataFactory
+TriggerName : ManagedAccesMSGraphTrigger
+ResourceGroupName : ManagedAccessMSGraph\_ResourceGroup
+DataFactoryName : ManagedAccessMSGraph2DataFactory
 Properties :
     Microsoft.Azure.Management.DataFactory.Models.ScheduleTrigger
 RuntimeState : Started
