@@ -21,7 +21,7 @@ Login-AzureRmAccount
 #### Step 2
 Fill in **all** the parameters in `.\*-sample\azuredeploy.parameters.json`. Refer `.\*-sample\azuredeploy.json` for description of the parameters.
 
-Below parameters are common across all samples and can be filled using the `ManagedApp\Scripts\GetAppInstallationParameters.ps1` PowerShell script.
+Below parameters are common across all samples and can be filled using the [GetAppInstallationParameters.ps1](https://github.com/OfficeDev/ManagedAccessMSGraph/blob/master/ManagedApp/Scripts/GetAppInstallationParameters.ps1) PowerShell script. 
 
 > **NOTE:** You don't need to run the script for every sample you try or every deployment. Same values can be re-used for every sample and every deployment.
 
