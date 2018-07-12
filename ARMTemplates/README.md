@@ -1,11 +1,11 @@
 # Running samples
 
-The samples here are for showcasing how to ingest data from Office365.
+The samples here are for showcasing how to ingest data from Office 365.
 
 The instructions below help you experiment with these samples using [Azure ARM template](https://github.com/Azure/azure-quickstart-templates).
 For any sample, you can take a look at the `.\*-sample\azuredeploy.json` file to understand what azure resources we are deploying.
 
-> **NOTE:** The samples here are not full managed app. When a customer decides to install your managed app from Azure marketplace, your app during installation, will perform steps similar to the below steps to provision resources in customer's azure subscription. For a full managed app take a look at `ManagedApp` at root of this repo.
+> **NOTE:** The samples here are not full managed app. When a customer decides to install your managed app from Azure marketplace, your app during installation, will perform steps similar to the below steps to provision resources in customer's Azure subscription. For a full managed app take a look at `ManagedApp` at root of this repo.
 
 ## Deployment instructions
 

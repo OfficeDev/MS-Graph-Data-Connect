@@ -1,6 +1,7 @@
+This section provides steps to populate your test organization with synthetic data. 
 
 # Pre-Requisites
-- Install office365 modules for powershell. Instructions at https://technet.microsoft.com/en-us/library/dn975125.aspx.
+- Install Office 365 modules for powershell. Instructions at https://technet.microsoft.com/en-us/library/dn975125.aspx.
 - Install Microsoft Exchange Web Services Managed API 2.2. Instructions at https://www.microsoft.com/en-us/download/details.aspx?id=42951.
 - Keep note of the tenant name and the admin's userid and password.
 

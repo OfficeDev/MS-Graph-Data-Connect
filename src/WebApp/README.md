@@ -1,6 +1,6 @@
 ﻿Introduction:
 The WhoKnowsWho App reads an user interaction statistics file produced by
-the MARS analytics from ADLS and store the content in a memory cache.
+the a Managed access to the Microsoft Graph in Microsoft Azure pipeline from ADLS and store the content in a memory cache.
 It uses the data to serve interactive user queries of who in your company
 has the most interactions with a particular outside party.
 
