@@ -1,10 +1,10 @@
 # Onboarding to private preview
 
-To start prototyping you need to first onboard a test office tenant and an azure subscription
+To start prototyping you need to first onboard a test Office 365 tenant and an Azure subscription
 
 ## Onboarding steps
 
-1. Create an enterprise tenant at <https://demos.microsoft.com>. Sign in with your account that is registered as a Microsoft Partner.
+1. Create a tenant at <https://demos.microsoft.com>. Sign in with your account that is registered as a Microsoft Partner.
 2. Log in with that demo admin account at <https://portal.azure.com>.
 3. Open the Subscriptions blade. Select Add.
 
@@ -35,7 +35,7 @@ To start prototyping you need to first onboard a test office tenant and an azure
 
 ### Before using Office 365 data, an Office 365 Admin must take 2 actions:
 1. Give consent for copying data from Office 365 to Azure (i.e. keep full control over the data, but allow Azure resources to access it)
-2. Set an approver group within the Office 365 subscription. The approver group will be tasked with approving specific requests for access to data.
+2. Set an approver group within the Office 365 subscription. The approver group will be tasked with approving specific requests for access to data. Please note, only users with administrator access can approve requests, regardless of if they are in the approver group or not.
 
 ```
 Privileged Access Management (PAM) allows for granular access control over privileged tasks in Office 365.
