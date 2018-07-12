@@ -19,6 +19,13 @@
       "metadata": {
         "description": "The key of the service principal that has access to the destination Data Lake store."
       }
+    },
+    "allowedGroups": {
+      "type": "array",
+      "defaultValue": [],
+      "metadata": {
+        "description": "The object ids of the groups of users to extract data from. List up to 10 groups."
+      }
     }
   },
   "variables": {
@@ -106,7 +113,8 @@
                 "type": "SecureString",
                 "value": "[parameters('destinationServicePrincipalKey')]"
               },
-              "servicePrincipalTenantId": "[subscription().tenantId]"
+              "servicePrincipalTenantId": "[subscription().tenantId]",
+              "allowedGroups": "[parameters('allowedGroups')]"
             }
           }
         },
