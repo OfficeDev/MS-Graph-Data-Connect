@@ -1,4 +1,4 @@
-This sample demonstrates how to use a user list instead of entire tenant for o365 data extraction
+This sample demonstrates how to use a user list instead of entire tenant for Office 365 data extraction
 >**NOTE:** The userlist file can have at most 10 users. For format refer `userlist.txt` file.
 
 1. `UserListLinkedService ` corresponds to the store that has the userlist.
