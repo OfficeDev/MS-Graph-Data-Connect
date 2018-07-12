@@ -6,7 +6,7 @@ Please use this as a general guide for answers to frequently asked questions. We
 
 Managed access to Microsoft Graph in Microsoft Azure brings Office 365 data and Azure resources to developers through a core data pipeline. This enables them to easily build intelligent applications with Microsoft's most valuable data and best development tools, all within the Microsoft secure cloud.
 
-More info [here](https://github.com/OfficeDev/ManagedAccessMSGraph/blob/master/docs/Intro-to-Euclid.md)
+More info [here](https://github.com/OfficeDev/ManagedAccessMSGraph/blob/master/docs/Intro-to-ManagedAccessMSGraph.md)
 
 ### Where do I find sample ARM templates?
 
