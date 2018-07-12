@@ -136,7 +136,7 @@
       "name": "[variables('o365dataPlanName')]",
       "apiVersion": "2018-03-01-preview",
       "location": "[resourceGroup().location]",
-	  "dependsOn": ]
+	  "dependsOn": [
 	    "adlsEncryption",
 		"adlsAudit",
 		"sqlEncryption",
