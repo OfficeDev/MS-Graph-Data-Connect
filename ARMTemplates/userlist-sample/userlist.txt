@@ -1,2 +1,0 @@
-<User1's AAD ObjectId>@<Tenant Id>
-<User2's AAD ObjectId>@<Tenant Id>

@@ -156,7 +156,7 @@ Example of a `SourceLinkedService` with two groups:
                 "value": "[variables('sourceLinkedServicePrincipalKey')]"
             },
             "servicePrincipalTenantId": "[variables('sourceLinkedServicePrincipalTenantId')]",
-			"allowedGroups": ["a61c9441-7298-4d30-9847-ef8ff8482083","ee018a32-8e5d-4c4e-a3b4-4788a4a2582c"]
+            "allowedGroups": ["a61c9441-7298-4d30-9847-ef8ff8482083","ee018a32-8e5d-4c4e-a3b4-4788a4a2582c"]
         }
     }
 }
@@ -255,7 +255,7 @@ In the `InputDataset`, you can add a `predicate` field under `typeProperties` of
         ],
         "typeProperties": {
             "tableName": "BasicDataSet_v0.Event_v0",
-	        "predicate": "CreatedDateTime >= 2016/10/28 OR CreatedDateTime <= 2018-06-20"
+            "predicate": "CreatedDateTime >= 2016/10/28 OR CreatedDateTime <= 2018-06-20"
         },
         "external": true
     }
