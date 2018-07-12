@@ -17,7 +17,6 @@ To get started, read through the documentation below starting with the onboardin
 
 [Intro to Managed Access to Microsoft Graph in Microsoft Azure](docs/Intro-to-Euclid.md)
 
-[Overview Deck](docs/ProjectEuclidOverviewDeck.pptx)
 
 [Create users and dummy interactions](SetUp)
 
@@ -25,7 +24,7 @@ To get started, read through the documentation below starting with the onboardin
 
 [More Samples](ARMTemplates)
 
-[FAQ](https://github.com/OfficeDev/EuclidSampleAppExternal/blob/master/docs/FAQ.md)
+[FAQ](https://github.com/OfficeDev/ManagedAccessMSGraph/blob/master/docs/FAQ.md)
 
 ## Contributing
 
