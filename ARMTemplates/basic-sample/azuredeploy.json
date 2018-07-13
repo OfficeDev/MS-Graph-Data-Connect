@@ -22,7 +22,6 @@
     },
     "allowedGroups": {
       "type": "string",
-      "defaultValue": "default",
       "metadata": {
         "description": "The object ids of the groups of users to extract data from. List up to 10 groups separated by commas."
       }
@@ -114,7 +113,7 @@
                 "value": "[parameters('destinationServicePrincipalKey')]"
               },
               "servicePrincipalTenantId": "[subscription().tenantId]",
-              "allowedGroups": "[if(equals(parameters('allowedGroups'), 'default'), json('null'), split(parameters('allowedGroups'),','))]"
+              "allowedGroups": "[if(equals(parameters('allowedGroups'), ''), json('null'), split(parameters('allowedGroups'),','))]"
             }
           }
         },
