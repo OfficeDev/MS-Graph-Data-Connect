@@ -517,6 +517,7 @@
               },
               "folderPath": "[variables('outputDataLakeStore').messagePath]"
             }
+          }
         },
         {
           "type": "datasets",
