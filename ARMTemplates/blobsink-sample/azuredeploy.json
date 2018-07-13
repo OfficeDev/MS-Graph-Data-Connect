@@ -2,97 +2,54 @@
   "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
   "contentVersion": "1.0.0.0",
   "parameters": {
-    "destinationServicePrincipalAadId": {
-      "type": "string",
-      "metadata": {
-        "description": "The AAD object Id of the service principal that needs to access the destination Data Lake store."
-      }
-    },
-    "destinationServicePrincipalId": {
+    "sourceServicePrincipalId": {
       "type": "string",
       "metadata": {
         "description": "The id of the service principal that has access to the destination Data Lake store."
       }
     },
-    "destinationServicePrincipalKey": {
+    "sourceServicePrincipalKey": {
       "type": "string",
       "metadata": {
         "description": "The key of the service principal that has access to the destination Data Lake store."
       }
     },
-    "allowedGroups": {
-      "type": "array",
-      "defaultValue": [],
+	"destinationBlobConnectionString": {
+      "type": "string",
       "metadata": {
-        "description": "The object ids of the groups of users to extract data from. List up to 10 groups."
+        "description": "The connectionString that has access to the destination Azure Blob Storage."
       }
     }
   },
   "variables": {
     "dataFactoryName": "[concat('myadf', uniqueString(resourceGroup().id))]",
-    "destinationAdlsAccountName": "[concat('myadls', uniqueString(resourceGroup().id))]",
-    "integrationRuntimeName": "[concat('myir', uniqueString(resourceGroup().id))]",
     "sourceLinkedServiceName": "SourceO365LinkedService",
-    "destinationLinkedServiceName": "DestinationADLSLinkedService",
+    "destinationLinkedServiceName": "DestinationBlobLinkedService",
     "inputEventDatasetName": "O365InputEventDataset",
     "inputMessageDatasetName": "O365InputMessageDataset",
     "inputContactDatasetName": "O365InputContactDataset",
     "inputUserDatasetName": "O365InputUserDataset",
-    "outputEventDatasetName": "ADLSOutputEventDataset",
-    "outputMessageDatasetName": "ADLSOutputMessageDataset",
-    "outputContactDatasetName": "ADLSOutputContactDataset",
-    "outputUserDatasetName": "ADLSOutputUserDataset",
+    "outputEventDatasetName": "BlobOutputEventDataset",
+    "outputMessageDatasetName": "BlobOutputMessageDataset",
+    "outputContactDatasetName": "BlobOutputContactDataset",
+    "outputUserDatasetName": "BlobOutputUserDataset",
     "pipelineName": "mypipeline",
     "triggerName": "mytrigger",
-    "outputDataLakeStore": {
-      "messagePath": "targetFolder/Message",
-      "eventPath": "targetFolder/Event",
-      "contactPath": "targetFolder/Contact",
-      "userPath": "targetFolder/User"
+    "outputBlobStore": {
+      "messagePath": "targetfolder/Message",
+      "eventPath": "targetfolder/Event",
+      "contactPath": "targetfolder/Contact",
+      "userPath": "targetfolder/User"
     }
   },
   "resources": [
     {
-      "type": "Microsoft.DataLakeStore/accounts",
-      "name": "[variables('destinationAdlsAccountName')]",
-      "comments": "Creates the destination Data Lake store in the customer's subscription used in the ADF pipeline for the data output.",
-      "location": "[resourceGroup().location]",
-      "apiVersion": "2016-11-01",
-      "properties": {
-        "initialUser": "[parameters('destinationServicePrincipalAadId')]",
-        "newTier": "Consumption",
-        "encryptionState": "Enabled",
-        "encryptionConfig": {
-          "type": "ServiceManaged"
-        }
-      }
-    },
-    {
       "name": "[variables('dataFactoryName')]",
       "apiVersion": "2017-09-01-preview",
       "type": "Microsoft.DataFactory/factories",
-      "comments": "Creates the ADF pipeline that copies data from O365 to the newly created destination ADLS.",
-      "dependsOn": [
-        "[resourceId('Microsoft.DataLakeStore/accounts/', variables('destinationAdlsAccountName'))]"
-      ],
+      "comments": "Creates the ADF pipeline that copies data from O365 to the existing destination Azure Blob storage.",
       "location": "East US",
       "resources": [
-        {
-          "name": "[variables('integrationRuntimeName')]",
-          "type": "integrationRuntimes",
-          "apiVersion": "2017-09-01-preview",
-          "properties": {
-            "type": "Managed",
-            "typeProperties": {
-              "computeProperties": {
-                "location": "[resourceGroup().location]"
-              }
-            }
-          },
-          "dependsOn": [
-            "[variables('dataFactoryName')]"
-          ]
-        },
         {
           "type": "linkedservices",
           "name": "[variables('sourceLinkedServiceName')]",
@@ -108,42 +65,31 @@
               "office365tenantId": "[subscription().tenantId]",
               "PrivacyPolicyUri": "http://www.wkw.com/privacy",
               "TermsOfUseUri": "http://www.wkw.com/tos",
-              "servicePrincipalId": "[parameters('destinationServicePrincipalId')]",
+              "servicePrincipalId": "[parameters('sourceServicePrincipalId')]",
               "servicePrincipalKey": {
                 "type": "SecureString",
-                "value": "[parameters('destinationServicePrincipalKey')]"
+                "value": "[parameters('sourceServicePrincipalKey')]"
               },
-              "servicePrincipalTenantId": "[subscription().tenantId]",
-              "allowedGroups": "[parameters('allowedGroups')]"
+              "servicePrincipalTenantId": "[subscription().tenantId]"
             }
           }
         },
         {
           "type": "linkedservices",
           "name": "[variables('destinationLinkedServiceName')]",
-          "comments": "Creates the link to the newly created destination ADLS, using service principal supplied by the customer deploying this template.",
+          "comments": "Creates the link to the existing destination Azure Blob storage, using connectionString property which needs to be supplied by the parameter.",
           "dependsOn": [
-            "[variables('dataFactoryName')]",
-            "[variables('integrationRuntimeName')]"
+            "[variables('dataFactoryName')]"
           ],
           "apiVersion": "2017-09-01-preview",
           "properties": {
-            "type": "AzureDataLakeStore",
-            "description": "Destination Azure Data Lake Store linked service",
+            "type": "AzureStorage",
+            "description": "Destination Azure Blob Storage linked service",
             "typeProperties": {
-              "dataLakeStoreUri": "[concat('adl://', reference(resourceId('Microsoft.DataLakeStore/accounts', variables('destinationAdlsAccountName'))).endpoint)]",
-              "servicePrincipalId": "[parameters('destinationServicePrincipalId')]",
-              "servicePrincipalKey": {
-                "type": "SecureString",
-                "value": "[parameters('destinationServicePrincipalKey')]"
-              },
-              "tenant": "[subscription().tenantId]",
-              "resourceGroupName": "[resourceGroup().name]",
-              "subscriptionId": "[subscription().subscriptionId]",
-              "connectVia": {
-                "referenceName": "[variables('integrationRuntimeName')]",
-                "type": "IntegrationRuntimeReference"
-              }
+			  "connectionString": {
+				"type": "SecureString",
+				"value": "[parameters('destinationBlobConnectionString')]"
+			  }
             }
           }
         },
@@ -409,13 +355,13 @@
           "apiVersion": "2017-09-01-preview",
           "properties": {
             "published": false,
-            "type": "AzureDataLakeStoreFile",
+            "type": "AzureBlob",
             "linkedServiceName": {
               "referenceName": "[variables('destinationLinkedServiceName')]",
               "type": "LinkedServiceReference"
             },
             "typeProperties": {
-              "folderPath": "[variables('outputDataLakeStore').messagePath]"
+              "folderPath": "[variables('outputBlobStore').messagePath]"
             }
           }
         },
@@ -429,13 +375,13 @@
           "apiVersion": "2017-09-01-preview",
           "properties": {
             "published": false,
-            "type": "AzureDataLakeStoreFile",
+            "type": "AzureBlob",
             "linkedServiceName": {
               "referenceName": "[variables('destinationLinkedServiceName')]",
               "type": "LinkedServiceReference"
             },
             "typeProperties": {
-              "folderPath": "[variables('outputDataLakeStore').eventPath]"
+              "folderPath": "[variables('outputBlobStore').eventPath]"
             }
           }
         },
@@ -449,13 +395,13 @@
           "apiVersion": "2017-09-01-preview",
           "properties": {
             "published": false,
-            "type": "AzureDataLakeStoreFile",
+            "type": "AzureBlob",
             "linkedServiceName": {
               "referenceName": "[variables('destinationLinkedServiceName')]",
               "type": "LinkedServiceReference"
             },
             "typeProperties": {
-              "folderPath": "[variables('outputDataLakeStore').contactPath]"
+              "folderPath": "[variables('outputBlobStore').contactPath]"
             }
           }
         },
@@ -469,13 +415,13 @@
           "apiVersion": "2017-09-01-preview",
           "properties": {
             "published": false,
-            "type": "AzureDataLakeStoreFile",
+            "type": "AzureBlob",
             "linkedServiceName": {
               "referenceName": "[variables('destinationLinkedServiceName')]",
               "type": "LinkedServiceReference"
             },
             "typeProperties": {
-              "folderPath": "[variables('outputDataLakeStore').userPath]"
+              "folderPath": "[variables('outputBlobStore').userPath]"
             }
           }
         },
@@ -603,7 +549,7 @@
         },
         {
           "type": "triggers",
-          "name": "[variables('triggerName')]",
+          "name": "pipelineTrigger",
           "dependsOn": [
             "[variables('dataFactoryName')]",
             "[variables('sourceLinkedServiceName')]",
