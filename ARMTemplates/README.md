@@ -3,14 +3,12 @@ This tutorial should help you
 
 You perform the following steps in this tutorial:
 
-> [!div class="checklist"]
-> * Prepare the data store to store the watermark value.
+> * Create an application in your tenant
+> * Deploy an Azure Resource Group
 > * Create a data factory.
 > * Create linked services. 
-> * Create source, sink, and watermark datasets.
 > * Create a pipeline.
-> * Run the pipeline.
-> * Monitor the pipeline run. 
+> * Run the pipeline. 
 
 ## Prerequisites
 * **Azure PowerShell**. Follow the instructions in [Install and configure Azure PowerShell](/powershell/azure/install-azurerm-ps).
