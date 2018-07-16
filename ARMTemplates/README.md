@@ -1,4 +1,21 @@
-# Running samples
+# Run samples via Azure Powershell to copy Office 365 data
+This tutorial should help you 
+
+You perform the following steps in this tutorial:
+
+> [!div class="checklist"]
+> * Prepare the data store to store the watermark value.
+> * Create a data factory.
+> * Create linked services. 
+> * Create source, sink, and watermark datasets.
+> * Create a pipeline.
+> * Run the pipeline.
+> * Monitor the pipeline run. 
+
+## Prerequisites
+* **Azure PowerShell**. Follow the instructions in [Install and configure Azure PowerShell](/powershell/azure/install-azurerm-ps).
+
+## Running samples
 
 The samples here are for showcasing how to ingest data from Office 365.
 
