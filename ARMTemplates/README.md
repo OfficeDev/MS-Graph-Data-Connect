@@ -1,5 +1,5 @@
 # Run samples via Azure Powershell to copy Office 365 data
-This tutorial should help you 
+This tutorial should help you get started on how to run the samples provided in this directory. The samples here are for showcasing how to ingest data from Office 365. The instructions below help you experiment with these samples using [Azure ARM template](https://github.com/Azure/azure-quickstart-templates). 
 
 You perform the following steps in this tutorial:
 
@@ -13,18 +13,15 @@ You perform the following steps in this tutorial:
 ## Prerequisites
 * **Azure PowerShell**. Follow the instructions in [Install and configure Azure PowerShell](/powershell/azure/install-azurerm-ps).
 
-## Running samples
+## Definition
 
-The samples here are for showcasing how to ingest data from Office 365.
-
-The instructions below help you experiment with these samples using [Azure ARM template](https://github.com/Azure/azure-quickstart-templates).
 For any sample, you can take a look at the `.\*-sample\azuredeploy.json` file to understand what azure resources we are deploying.
 
 > **NOTE:** The samples here are not full managed app. When a customer decides to install your managed app from Azure marketplace, your app during installation, will perform steps similar to the below steps to provision resources in customer's Azure subscription. For a full managed app take a look at `ManagedApp` at root of this repo.
 
-## Deployment instructions
+## Deployment 
 
-#### Step 1
+### Step 1
 Fire below command in shell of your choice and follow the instructions to login to your azure subscription.
 
 ```powershell
@@ -33,7 +30,7 @@ Login-AzureRmAccount
 
 ----------
 
-#### Step 2
+### Step 2
 Fill in **all** the parameters in `.\*-sample\azuredeploy.parameters.json`. Refer `.\*-sample\azuredeploy.json` for description of the parameters.
 
 Below parameters are common across all samples and can be filled using the [GetAppInstallationParameters.ps1](https://github.com/OfficeDev/ManagedAccessMSGraph/blob/master/ManagedApp/Scripts/GetAppInstallationParameters.ps1) PowerShell script. 
@@ -44,7 +41,7 @@ Below parameters are common across all samples and can be filled using the [GetA
 - `destinationServicePrincipalKey` is the Authentication Key you generated for your service principal.
 - `destinationServicePrincipalAadId` is the Object Id of your service principal.
 
-#### Step 3
+### Step 3
 
 Finally, deploy the ARM template and create the ADF pipeline by running the deployment script.
 
@@ -53,3 +50,5 @@ Finally, deploy the ARM template and create the ADF pipeline by running the depl
 ```
 
 > **NOTE:** This will create all the resources in a resource group with the same name as the folder name of the sample (e.g. `ArtifactStagingDirectory`) For example, if you deploy `basic-sample` you'll find all the resource created in a resource group named `basic-sample`. If you make changes to `azuredeploy.json` and re-run the same command without changing the folder name, it will simply update the resources instead of creating new ones.
+
+## Next Steps
