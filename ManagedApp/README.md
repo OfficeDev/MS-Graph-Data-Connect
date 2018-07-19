@@ -1,13 +1,5 @@
 # Azure Managed Applications
 
-## Overview
-
-The Azure Managed App on Office 365 can be broken down into 3 components:
-
-- Data Ingestion from Office 365 via Managed access to Microsoft Graph in Microsoft Azure
-- Data processing/analytics to produce intelligent data
-- UX to surface the intelligent data
-
 We will work through a sample that covers all three components:
 
 1. We use Azure Data Factory (ADF) with copy activity to move data from Office 365 to your target ADLS instance.
