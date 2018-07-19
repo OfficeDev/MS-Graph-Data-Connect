@@ -5,26 +5,31 @@
 
 Managed Access to Microsoft Graph in Microsoft Azure brings Office 365 data and Azure resources to independent software vendors (ISVs). This system enables ISVs to build intelligent applications with Microsoft’s most valuable data, and best development tools. Office 365 customers will gain innovative or industry-specific applications that enhance their productivity while keeping full control over their data. 
 
-## How to Get Started 
-
-To get started, read through the documentation below starting with the onboarding process. For any questions/feedbacks please [contact us](docs/Contact-Us.md).
-
-> **Note:** If you would like to review the Project Euclid Overview Deck that was pitched to you during our introduction meeting, it can be found in the table of contents below. The deck contains key information around the architecture and data schemas of Project Euclid.
-
 ## Table of Contents
+1. [Getting Started](https://github.com/OfficeDev/ManagedAccessMSGraph/wiki/On-boarding)
+2. [Run ADF pipelines to copy Office365 data](https://github.com/OfficeDev/ManagedAccessMSGraph/wiki/Run-Azure-Data-Factory-pipelines-to-copy-Office-365-Data)
+    * [Prerequisites](https://github.com/OfficeDev/ManagedAccessMSGraph/wiki/Run-Azure-Data-Factory-pipelines-to-copy-Office-365-Data#prerequisites)
+    * [Linked Service Properties](https://github.com/OfficeDev/ManagedAccessMSGraph/wiki/Run-Azure-Data-Factory-pipelines-to-copy-Office-365-Data#linked-service-properties)
+    * [Data Set Properties](https://github.com/OfficeDev/ManagedAccessMSGraph/wiki/Run-Azure-Data-Factory-pipelines-to-copy-Office-365-Data#dataset-properties)
+    * [Samples](https://github.com/OfficeDev/ManagedAccessMSGraph/wiki/Run-Azure-Data-Factory-pipelines-to-copy-Office-365-Data#samples)
+3. [Publish an Azure Managed Application to copy Office 365 data](https://github.com/OfficeDev/ManagedAccessMSGraph/wiki/Publish-an-Azure-Managed-Application-to-copy-Office-365-data)
+    * [Service Catalog](https://github.com/OfficeDev/ManagedAccessMSGraph/wiki/Publish-an-Azure-Managed-Application-to-copy-Office-365-data#create-a-service-catalog-application-to-copy-office-365-data)
+4. [Capabilities](https://github.com/OfficeDev/ManagedAccessMSGraph/wiki/Capabilities)
+    * [Datasets](https://github.com/OfficeDev/ManagedAccessMSGraph/wiki/Capabilities#datasets)
+    * [ADF Sinks](https://github.com/OfficeDev/ManagedAccessMSGraph/wiki/Capabilities#adf-sinks)
+    * [User Selection](https://github.com/OfficeDev/ManagedAccessMSGraph/wiki/Capabilities#user-selection)
+    * [Filters](https://github.com/OfficeDev/ManagedAccessMSGraph/wiki/Capabilities#filters)
+    * [Data Regions](https://github.com/OfficeDev/ManagedAccessMSGraph/wiki/Capabilities#data-regions)
+## Quick Links
+* [Approve a data access request](https://github.com/OfficeDev/ManagedAccessMSGraph/wiki/Approving-a-data-access-request)
+* [Manage ADF piplines](https://github.com/OfficeDev/ManagedAccessMSGraph/wiki/Azure-Data-Factory-Quick-Links)
 
-[Onboarding Process](docs/Onboarding-Process.md)
+## Help
+* [FAQ](https://github.com/OfficeDev/ManagedAccessMSGraph/wiki/FAQ)  
+* [Troubleshooting](https://github.com/OfficeDev/ManagedAccessMSGraph/wiki/Troubleshooting)
+    * [Error Handling](https://github.com/OfficeDev/ManagedAccessMSGraph/wiki/Troubleshooting#errors)
+* [Contact us](https://github.com/OfficeDev/ManagedAccessMSGraph/wiki/Contact-Us)
 
-[Intro to Managed Access to Microsoft Graph in Microsoft Azure](docs/Intro-to-Euclid.md)
-
-
-[Create users and dummy interactions](SetUp)
-
-[Try the sample managed application](ManagedApp)
-
-[More Samples](ARMTemplates)
-
-[FAQ](https://github.com/OfficeDev/ManagedAccessMSGraph/blob/master/docs/FAQ.md)
 
 ## Contributing
 
