@@ -3,7 +3,7 @@
 
 ## Introduction 
 
-Managed Access to Microsoft Graph in Microsoft Azure brings Office 365 data and Azure resources to independent software vendors (ISVs). This system enables ISVs to build intelligent applications with Microsoft’s most valuable data, and best development tools. Office 365 customers will gain innovative or industry-specific applications that enhance their productivity while keeping full control over their data. 
+Managed Access to Microsoft Graph in Microsoft Azure brings Office 365 data and Azure resources to independent software vendors (ISVs). This system enables ISVs to build intelligent applications with Microsoft’s most valuable data, and best development tools. Office 365 customers will gain innovative or industry-specific applications that enhance their productivity while keeping full control over their data. For more information, see [Overview](https://github.com/OfficeDev/ManagedAccessMSGraph/wiki)
 
 ## Table of Contents
 1. [Getting Started](https://github.com/OfficeDev/ManagedAccessMSGraph/wiki/On-boarding)
