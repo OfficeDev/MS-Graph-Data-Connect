@@ -111,7 +111,6 @@ The data factory has couple of interesting resources of it's own.
 
 | Resource name | Description |
 |---------------|-------------|
-| `IntegrationRuntime` | Runtime ADF will use to execute copy activities |
 | `SourceLinkedService` | Creates the link to Office 365 which is used as the source of the data extraction. Using service principal supplied by the source ADLS owner. |
 | `DestinationLinkedService` | Creates the link to the newly created destination ADLS, using service principal supplied by the customer deploying this template. |
 | `*InputDataset` | You should change the structure in this resource to match the table and columns that you would like to extract. In this template we are trying to extract messages and events. For contacts and users refer [basic-sample](../ARMTemplates/basic-sample)|
