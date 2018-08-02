@@ -24,7 +24,6 @@
   "variables": {
     "dataFactoryName": "[concat('myadf', uniqueString(resourceGroup().id))]",
     "destinationAdlsAccountName": "[concat('myadls', uniqueString(resourceGroup().id))]",
-    "integrationRuntimeName": "[concat('myir', uniqueString(resourceGroup().id))]",
     "destinationSqlServerName": "[concat('mysqlserver', uniqueString(resourceGroup().id))]",
     "destinationSqlDbName": "[concat('mysqldb', uniqueString(resourceGroup().id))]",
     "sqlAdminLogin": "[concat('sqladmin', uniqueString(resourceGroup().id))]",
@@ -146,22 +145,6 @@
       "location": "East US",
       "resources": [
         {
-          "name": "[variables('integrationRuntimeName')]",
-          "type": "integrationRuntimes",
-          "apiVersion": "2017-09-01-preview",
-          "properties": {
-            "type": "Managed",
-            "typeProperties": {
-              "computeProperties": {
-                "location": "[resourceGroup().location]"
-              }
-            }
-          },
-          "dependsOn": [
-            "[variables('dataFactoryName')]"
-          ]
-        },
-        {
           "type": "linkedservices",
           "name": "[variables('sourceO365LinkedServiceName')]",
           "comments": "Creates the link to O365 which is used as the source of the data extraction. Using service principal supplied by the source ADLS owner.",
@@ -190,8 +173,7 @@
           "name": "[variables('destinationADLSLinkedServiceName')]",
           "comments": "Creates the link to the newly created destination ADLS, using service principal supplied by the customer deploying this template.",
           "dependsOn": [
-            "[variables('dataFactoryName')]",
-            "[variables('integrationRuntimeName')]"
+            "[variables('dataFactoryName')]"
           ],
           "apiVersion": "2017-09-01-preview",
           "properties": {
@@ -206,11 +188,7 @@
               },
               "tenant": "[subscription().tenantId]",
               "resourceGroupName": "[resourceGroup().name]",
-              "subscriptionId": "[subscription().subscriptionId]",
-              "connectVia": {
-                "referenceName": "[variables('integrationRuntimeName')]",
-                "type": "IntegrationRuntimeReference"
-              }
+              "subscriptionId": "[subscription().subscriptionId]"
             }
           }
         },
