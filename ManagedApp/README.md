@@ -66,9 +66,9 @@ For Office 365 LinkedService you need to provide an AAD application in your comp
 
 ### Step 3: Create the app template
 
-Create a template that defines the resources to deploy with the managed application (refer to [mainTemplate.json](mainTemplate.json)).
+Create a template that defines the resources to deploy with the managed application (refer to [mainTemplate.json](mainTemplate.json) and [serviceCatalogTemplate.json](serviceCatalogTemplate.json)).
 
-If you look at the **mainTemplate.json**, it consists of three main sections:
+If you look at the **mainTemplate.json** and **serviceCatalogTemplate.json**, they consist of three main sections:
 
 #### Parameters
 
@@ -101,6 +101,10 @@ Below are few of the resources that will be deployed as a part of the **mainTemp
 
 | Resource name | Description |
 |---------------|-------------|
+| `adlsEncryption` | This policy assignment resource enables adls encryption and is **only** needed in ARM templates for service catalog apps. **Do not include in managed app ARM templates.** See [serviceCatalogTemplate.json](serviceCatalogTemplate.json) |
+| `adlsAudit` | This policy assignment resource enables adls audit and is **only** needed in ARM templates for service catalog apps. **Do not include in managed app ARM templates.** See [serviceCatalogTemplate.json](serviceCatalogTemplate.json) |
+| `sqlEncryption` | This policy assignment resource enables sql encryption and is **only** needed in ARM templates for service catalog apps. **Do not include in managed app ARM templates.** See [serviceCatalogTemplate.json](serviceCatalogTemplate.json) |
+| `sqlAudit` | This policy assignment resource enables sql audit and is **only** needed in ARM templates for service catalog apps. **Do not include in managed app ARM templates.** See [serviceCatalogTemplate.json](serviceCatalogTemplate.json) |
 | `O365DataPlan` | This resource enables compliance monitoring for your app and is **mandatory** for managed apps. You shouldn't add it to ARM templates that you deploy directly without managed app. For e.g. sample ARM templates at [`/ARMTemplates`](../ARMTemplates) |
 | `AuditStorageAccount` | Storage account to store all audit logs |
 | `DestinationAdlsAccount` | Creates the destination Data Lake store in the customer's subscription used in the ADF pipeline for the data output. The account also creates `diagnosticSettings` with `AuditStorageAccount` as the store to collect `audit` and `requests` logs. |
