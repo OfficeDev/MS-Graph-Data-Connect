@@ -22,7 +22,7 @@ Required params: -ResourceGroupLocation
 #>
 Param(
     [string] [Parameter(Mandatory=$true)] $ResourceGroupLocation,
-    [string] [Parameter(Mandatory=$true)] $ArtifactStagingDirectory,
+    [string] $ArtifactStagingDirectory,
     [string] $ResourceGroupName,
     [string] $GroupId, #user group or application for managing the resources on behalf of the customer.
     [string] $StorageAccountName,
