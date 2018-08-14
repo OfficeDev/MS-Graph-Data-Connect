@@ -9,7 +9,7 @@ Use this script to create the managed app definition
 Will create a resource group and a storage account 
 Uploads the artifacts to the container that was created in the storage account
 Creates the Managed Application definition
-
+User needs to specify ArtifactStagingDirectory (local folder path from where app.zip will be uploaded) or PackageFileUri(URI value of the uploaded app.zip)
 
 .EXAMPLE
 .\DeployManagedApp.ps1 -ResourceGroupLocation "East US 2" -ArtifactStagingDirectory "E:\managedApp"
@@ -22,11 +22,11 @@ Required params: -ResourceGroupLocation
 #>
 Param(
     [string] [Parameter(Mandatory=$true)] $ResourceGroupLocation,
-    [string] $ArtifactStagingDirectory,
+    [string] $ArtifactStagingDirectory, #local folder path from where app.zip will be uploaded.
     [string] $ResourceGroupName,
     [string] $GroupId, #user group or application for managing the resources on behalf of the customer.
     [string] $StorageAccountName,
-    [string] $PackageFileUri
+    [string] $PackageFileUri #URI value of the uploaded app.zip.
 )
 
 $creds = Get-Credential
