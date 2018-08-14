@@ -135,10 +135,16 @@ The values of the parameters defined in **mainTemplate.json** are supplied throu
 3. Save the file.
 4. Create a new ZIP file named **app.zip** that contains **./ManagedApp/mainTemplate.json** and **./ManagedApp/createUiDefinition.json**.
 
-Use `scripts/DeployManagedApp.ps1` to deploy the managed app
+Use `scripts/DeployManagedApp.ps1` to deploy the managed app. Specify a value for **-ArtifactStagingDirectory** or for **-PackageFileUri**. **ArtifactStagingDirectory** is the local folder from where **app.zip** will be uplaoded. We can also upload the **app.zip** manually and take a note of the URL. This is the value for **PackageFileUri**.
 
 ```shell
-.\Scripts\DeployManagedApp.ps1 -ResourceGroupLocation "eastus2"
+.\Scripts\DeployManagedApp.ps1 -ResourceGroupLocation "eastus2" -ArtifactStagingDirectory "E:\managedApp"
+```
+
+**OR**
+
+```shell
+.\Scripts\DeployManagedApp.ps1 -ResourceGroupLocation "West Central US" -PackageFileUri "https://euclidsamplestorage.blob.core.windows.net/appcontainer/app.zip"
 ```
 
 The script automates the following steps:
