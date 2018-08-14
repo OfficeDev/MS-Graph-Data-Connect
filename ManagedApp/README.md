@@ -138,7 +138,7 @@ The values of the parameters defined in **mainTemplate.json** are supplied throu
 Use `scripts/DeployManagedApp.ps1` to deploy the managed app
 
 ```shell
-.\Scripts\DeployManagedApp.ps1 -ResourceGroupLocation "eastus2"
+.\Scripts\DeployManagedApp.ps1 -ResourceGroupLocation "eastus2" -ArtifactStagingDirectory "E:\managedApp"
 ```
 
 The script automates the following steps:
