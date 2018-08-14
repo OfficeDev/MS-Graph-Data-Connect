@@ -12,6 +12,7 @@ Creates the Managed Application definition
 
 
 .EXAMPLE
+.\DeployManagedApp.ps1 -ResourceGroupLocation "East US 2" -ArtifactStagingDirectory "E:\managedApp"
 .\DeployManagedApp.ps1 -ResourceGroupLocation "West Central US" -PackageFileUri "https://euclidsamplestorage.blob.core.windows.net/appcontainer/app.zip"
 .\DeployManagedApp.ps1 -ArtifactStagingDirectory "E:\share" -ResourceGroupLocation "West Central US" -StorageAccountName "SampleStorageAccount" -GroupId <group-id> -ResourceGroupName "sampleResourceGroup"
 
@@ -21,10 +22,10 @@ Required params: -ResourceGroupLocation
 #>
 Param(
     [string] [Parameter(Mandatory=$true)] $ResourceGroupLocation,
+    [string] [Parameter(Mandatory=$true)] $ArtifactStagingDirectory,
+    [string] $ResourceGroupName,
     [string] $GroupId, #user group or application for managing the resources on behalf of the customer.
     [string] $StorageAccountName,
-    [string] $ResourceGroupName,
-    [string] $ArtifactStagingDirectory,
     [string] $PackageFileUri
 )
 
@@ -54,10 +55,9 @@ if($PackageFileUri -eq "" -And $ArtifactStagingDirectory -ne ""){
                                             -Location $ResourceGroupLocation `
                                             -SkuName Standard_LRS `
                                             -Kind Storage `
-                                            -EnableEncryptionService Blob 
     }
 
-    $appStorageContainer = Get-AzureStorageContainer -Name "appcontainer" -Context $storageAccount.Context
+    $appStorageContainer = (Get-AzureStorageContainer -Context $storageAccount.Context | Where-Object {$_.Name -eq "appcontainer"})
 
     if ($appStorageContainer -eq $null) {
         Write-Host "Creating a new container in the storage account for uploading the artifacts..." -foregroundcolor "Yellow"
