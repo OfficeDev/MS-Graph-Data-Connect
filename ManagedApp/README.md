@@ -66,7 +66,7 @@ For Office 365 LinkedService you need to provide an AAD application in your comp
 
 ### Step 3: Create the app template
 
-Create an arm template that defines the resources to deploy with the managed application (refer to [mainTemplate.json](mainTemplate.json)).
+Create an ARM template that defines the resources to deploy with the managed application (refer to [mainTemplate.json](mainTemplate.json)).
 
 If you look at the **mainTemplate.json**, it consists of three main sections:
 
