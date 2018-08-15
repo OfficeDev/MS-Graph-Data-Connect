@@ -9,9 +9,10 @@ Use this script to create the managed app definition
 Will create a resource group and a storage account 
 Uploads the artifacts to the container that was created in the storage account
 Creates the Managed Application definition
-
+User needs to specify ArtifactStagingDirectory (local folder path from where app.zip will be uploaded) or PackageFileUri(URI value of the uploaded app.zip)
 
 .EXAMPLE
+.\DeployManagedApp.ps1 -ResourceGroupLocation "East US 2" -ArtifactStagingDirectory "E:\managedApp"
 .\DeployManagedApp.ps1 -ResourceGroupLocation "West Central US" -PackageFileUri "https://euclidsamplestorage.blob.core.windows.net/appcontainer/app.zip"
 .\DeployManagedApp.ps1 -ArtifactStagingDirectory "E:\share" -ResourceGroupLocation "West Central US" -StorageAccountName "SampleStorageAccount" -GroupId <group-id> -ResourceGroupName "sampleResourceGroup"
 
@@ -21,11 +22,11 @@ Required params: -ResourceGroupLocation
 #>
 Param(
     [string] [Parameter(Mandatory=$true)] $ResourceGroupLocation,
+    [string] $ArtifactStagingDirectory, #local folder path from where app.zip will be uploaded.
+    [string] $ResourceGroupName,
     [string] $GroupId, #user group or application for managing the resources on behalf of the customer.
     [string] $StorageAccountName,
-    [string] $ResourceGroupName,
-    [string] $ArtifactStagingDirectory,
-    [string] $PackageFileUri
+    [string] $PackageFileUri #URI value of the uploaded app.zip.
 )
 
 $creds = Get-Credential
@@ -54,10 +55,9 @@ if($PackageFileUri -eq "" -And $ArtifactStagingDirectory -ne ""){
                                             -Location $ResourceGroupLocation `
                                             -SkuName Standard_LRS `
                                             -Kind Storage `
-                                            -EnableEncryptionService Blob 
     }
 
-    $appStorageContainer = Get-AzureStorageContainer -Name "appcontainer" -Context $storageAccount.Context
+    $appStorageContainer = (Get-AzureStorageContainer -Context $storageAccount.Context | Where-Object {$_.Name -eq "appcontainer"})
 
     if ($appStorageContainer -eq $null) {
         Write-Host "Creating a new container in the storage account for uploading the artifacts..." -foregroundcolor "Yellow"
