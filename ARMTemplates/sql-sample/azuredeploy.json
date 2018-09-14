@@ -721,6 +721,15 @@
           }
         }
       ]
+    },
+    {
+      "type": "Microsoft.DataFactory/factories/triggers/status",
+      "name": "[concat(variables('dataFactoryName'), '/', variables('triggerName'), '/start')]",
+      "apiVersion": "2017-09-01-preview",
+      "dependsOn": [
+        "[concat('Microsoft.DataFactory/factories/', variables('dataFactoryName'), '/triggers/', variables('triggerName'))]"
+      ],
+      "properties": {}
     }
   ]
 }
