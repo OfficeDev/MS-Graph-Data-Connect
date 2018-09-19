@@ -98,13 +98,13 @@
             "type": "AzureBlobStorage",
             "description": "Destination Azure Blob Storage linked service",
             "typeProperties": {
-              "serviceEndpoint": "[concat('https://', [parameters('destinationBlobAccountName')], '.blob.core.windows.net/')]",
+              "serviceEndpoint": "[concat('https://', parameters('destinationBlobAccountName'), '.blob.core.windows.net/')]",
 			  "servicePrincipalId": "[parameters('destinationServicePrincipalId')]",
               "servicePrincipalKey": {
                 "type": "SecureString",
                 "value": "[parameters('destinationServicePrincipalKey')]"
 			  },
-              "tenant": "[subscription().tenantId"
+              "tenant": "[subscription().tenantId]"
             }
           }
         },
@@ -564,7 +564,7 @@
         },
         {
           "type": "triggers",
-          "name": "pipelineTrigger",
+          "name": "[variables('triggerName')]",
           "dependsOn": [
             "[variables('dataFactoryName')]",
             "[variables('sourceLinkedServiceName')]",
