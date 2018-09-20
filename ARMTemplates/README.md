@@ -11,7 +11,7 @@ You perform the following steps in this tutorial:
 > * Run the pipeline. 
 
 ## Prerequisites
-* **Azure PowerShell**. Follow the instructions in [Install and configure Azure PowerShell](/powershell/azure/install-azurerm-ps).
+* **Azure PowerShell**. Follow the instructions in [Install and configure Azure PowerShell](https://docs.microsoft.com/en-us/powershell/azure/install-azurerm-ps?view=azurermps-6.8.1).
 
 ## Definition
 
