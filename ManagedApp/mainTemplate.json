@@ -35,8 +35,6 @@
     "destinationAdlsAccountName": "[concat('myadls', uniqueString(resourceGroup().id))]",
     "auditStorageAccountName": "[concat('audit', uniqueString(resourceGroup().id))]",
     "auditStorageAccountSku": "Standard_LRS",
-    "o365dataPlanName": "[concat('mydataplan', uniqueString(resourceGroup().id))]",
-    "o365dataPlanSourceName": "Office365EnterpriseDataSecurityPackageV1",
     "sourceLinkedServiceName": "SourceO365LinkedService",
     "sourceLinkedServicePrincipalId": "<A valid SPN in app owner tenant>",
     "sourceLinkedServicePrincipalKey": "<SPN secret>",
@@ -73,25 +71,10 @@
   },
   "resources": [
     {
-      "type": "Microsoft.DataExchange/plans",
-      "name": "[variables('o365dataPlanName')]",
-      "apiVersion": "2018-03-01-preview",
-      "location": "[resourceGroup().location]",
-      "properties": {
-        "source": "[variables('o365dataPlanSourceName')]",
-        "managedApplicationEnrollment": {
-          "complianceMonitoring": "Enabled"
-        }
-      }
-    },
-    {
       "type": "Microsoft.Storage/storageAccounts",
       "name": "[variables('auditStorageAccountName')]",
       "apiVersion": "2016-01-01",
       "location": "[resourceGroup().location]",
-      "dependsOn": [
-        "[variables('o365dataPlanName')]"
-      ],
       "sku": {
         "name": "[variables('auditStorageAccountSku')]"
       },
