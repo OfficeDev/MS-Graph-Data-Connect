@@ -28,7 +28,7 @@ For reference: [Publish a managed application for internal consumption](https://
 
 ### Step 1: Package the web application
 
-Open the **./src/WhoKnowsWho.sln** solution in Visual Studio 2017. This solution contains the web application which will consume and process the data in the Azure Data Lake Store created by Project Euclid.
+Open the **./src/WhoKnowsWho.sln** solution in Visual Studio 2017. This solution contains the web application which will consume and process the data in the Azure Data Lake Store created by Project MSGraphDataConnect.
 
 #### Create the package
 
@@ -144,7 +144,7 @@ Use `scripts/DeployManagedApp.ps1` to deploy the managed app. Specify a value fo
 **OR**
 
 ```shell
-.\Scripts\DeployManagedApp.ps1 -ResourceGroupLocation "West Central US" -PackageFileUri "https://euclidsamplestorage.blob.core.windows.net/appcontainer/app.zip"
+.\Scripts\DeployManagedApp.ps1 -ResourceGroupLocation "West Central US" -PackageFileUri "https://samplestorage.blob.core.windows.net/appcontainer/app.zip"
 ```
 
 The script automates the following steps:

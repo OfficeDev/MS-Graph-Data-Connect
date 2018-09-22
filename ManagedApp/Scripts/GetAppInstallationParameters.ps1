@@ -3,7 +3,7 @@
 <#
 
 .SYNOPSIS
-Generates the sample euclid app parameters
+Generates the sample MS Graph Data Connect app parameters
 
 .DESCRIPTION
 Creates the destination and source azure active directory application
