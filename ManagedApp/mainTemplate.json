@@ -61,7 +61,7 @@
     "skuName": "F1",
     "aadInstance": "https://login.microsoftonline.com/",
     "artifacts": {
-      "webAppRemote": "https://euclidsamplestorage.blob.core.windows.net/webappcontainer/WhoKnowWho.zip"
+      "webAppRemote": "https://samplestorage.blob.core.windows.net/webappcontainer/WhoKnowWho.zip"
     },
     "outputDataLakeStore": {
       "path": "targetFolder",
@@ -164,7 +164,6 @@
             "type": "Office365",
             "description": "Source O365 linked service",
             "typeProperties": {
-              "flightingFeatures": "EnableDataVault",
               "office365tenantId": "[subscription().tenantId]",
               "PrivacyPolicyUri": "http://www.wkw.com/privacy",
               "TermsOfUseUri": "http://www.wkw.com/tos",

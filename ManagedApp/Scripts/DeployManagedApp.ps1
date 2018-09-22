@@ -13,7 +13,7 @@ User needs to specify ArtifactStagingDirectory (local folder path from where app
 
 .EXAMPLE
 .\DeployManagedApp.ps1 -ResourceGroupLocation "East US 2" -ArtifactStagingDirectory "E:\managedApp"
-.\DeployManagedApp.ps1 -ResourceGroupLocation "West Central US" -PackageFileUri "https://euclidsamplestorage.blob.core.windows.net/appcontainer/app.zip"
+.\DeployManagedApp.ps1 -ResourceGroupLocation "West Central US" -PackageFileUri "https://samplestorage.blob.core.windows.net/appcontainer/app.zip"
 .\DeployManagedApp.ps1 -ArtifactStagingDirectory "E:\share" -ResourceGroupLocation "West Central US" -StorageAccountName "SampleStorageAccount" -GroupId <group-id> -ResourceGroupName "sampleResourceGroup"
 
 .NOTES
@@ -92,18 +92,18 @@ if($GroupId -eq "") {
 $ownerID=(Get-AzureRmRoleDefinition -Name Owner).Id
 
 if($ResourceGroupName -eq "") {
-    $ResourceGroupName = "euclidorg"
+    $ResourceGroupName = "msgraphdataconnectorg"
 }
 
 Write-Host "Creating a new resource group for publishing the managed application definition..." -foregroundcolor "Yellow"
 $ManagedAppDefRG = New-AzureRmResourceGroup -Name $ResourceGroupName -Location $ResourceGroupLocation -Verbose -Force -ErrorAction Stop 
 
 Write-Host "Publishing the managed application definition..." -foregroundcolor "Yellow"
-New-AzureRmManagedApplicationDefinition -Name "EuclidSampleApp" `
+New-AzureRmManagedApplicationDefinition -Name "MSGraphDataConnectSampleApp" `
                                         -Location $ResourceGroupLocation `
                                         -ResourceGroupName $ResourceGroupName `
                                         -LockLevel None `
-                                        -DisplayName "Euclid Who Knows Whom Sample App" `
+                                        -DisplayName "MS Graph Data Connect Who Knows Whom Sample App" `
                                         -Description "Who Knows Whom in your company!" `
                                         -Authorization "$($GroupId):$($ownerID)" `
                                         -PackageFileUri $PackageFileUri
