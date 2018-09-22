@@ -1,35 +1,34 @@
-# Managed Access to Microsoft Graph in Microsoft Azure
+# Microsoft Graph Data Connect
 #### Using Office 365 data with Azure analytics to build intelligent applications 
 
 ## Introduction 
 
-Managed Access to Microsoft Graph in Microsoft Azure brings Office 365 data and Azure resources to independent software vendors (ISVs). This system enables ISVs to build intelligent applications with Microsoft’s most valuable data, and best development tools. Office 365 customers will gain innovative or industry-specific applications that enhance their productivity while keeping full control over their data. For more information, see [Overview](https://github.com/OfficeDev/ManagedAccessMSGraph/wiki)
+Microsoft Graph Data Connect brings Office 365 data and Azure resources to independent software vendors (ISVs). This system enables ISVs to build intelligent applications with Microsoft’s most valuable data, and best development tools. Office 365 customers will gain innovative or industry-specific applications that enhance their productivity while keeping full control over their data. For more information, see [Overview](https://github.com/OfficeDev/MS-Graph-Data-Connect/wiki)
 
 ## Table of Contents
-1. [Getting Started](https://github.com/OfficeDev/ManagedAccessMSGraph/wiki/On-boarding)
-2. [Run ADF pipelines to copy Office365 data](https://github.com/OfficeDev/ManagedAccessMSGraph/wiki/Run-Azure-Data-Factory-pipelines-to-copy-Office-365-Data)
-    * [Prerequisites](https://github.com/OfficeDev/ManagedAccessMSGraph/wiki/Run-Azure-Data-Factory-pipelines-to-copy-Office-365-Data#prerequisites)
-    * [Linked Service Properties](https://github.com/OfficeDev/ManagedAccessMSGraph/wiki/Run-Azure-Data-Factory-pipelines-to-copy-Office-365-Data#linked-service-properties)
-    * [Data Set Properties](https://github.com/OfficeDev/ManagedAccessMSGraph/wiki/Run-Azure-Data-Factory-pipelines-to-copy-Office-365-Data#dataset-properties)
-    * [Samples](https://github.com/OfficeDev/ManagedAccessMSGraph/wiki/Run-Azure-Data-Factory-pipelines-to-copy-Office-365-Data#samples)
-3. [Publish an Azure Managed Application to copy Office 365 data](https://github.com/OfficeDev/ManagedAccessMSGraph/wiki/Publish-an-Azure-Managed-Application-to-copy-Office-365-data)
-    * [Service Catalog](https://github.com/OfficeDev/ManagedAccessMSGraph/wiki/Publish-an-Azure-Managed-Application-to-copy-Office-365-data#create-a-service-catalog-application-to-copy-office-365-data)
-4. [Capabilities](https://github.com/OfficeDev/ManagedAccessMSGraph/wiki/Capabilities)
-    * [ADF Sinks](https://github.com/OfficeDev/ManagedAccessMSGraph/wiki/Capabilities#adf-sinks)
-    * [Compliance Policies](https://github.com/OfficeDev/ManagedAccessMSGraph/wiki/Capabilities#policies)
-    * [Data Regions](https://github.com/OfficeDev/ManagedAccessMSGraph/wiki/Capabilities#data-regions)
-    * [Datasets](https://github.com/OfficeDev/ManagedAccessMSGraph/wiki/Capabilities#datasets)
-    * [Filters](https://github.com/OfficeDev/ManagedAccessMSGraph/wiki/Capabilities#filters)
-    * [User Selection](https://github.com/OfficeDev/ManagedAccessMSGraph/wiki/Capabilities#user-selection)
+1. [Run ADF pipelines to copy Office365 data](https://github.com/OfficeDev/MS-Graph-Data-Connect/wiki/Run-Azure-Data-Factory-pipelines-to-copy-Office-365-Data)
+    * [Prerequisites](https://github.com/OfficeDev/MS-Graph-Data-Connect/wiki/Run-Azure-Data-Factory-pipelines-to-copy-Office-365-Data#prerequisites)
+    * [Linked Service Properties](https://github.com/OfficeDev/MS-Graph-Data-Connect/wiki/Run-Azure-Data-Factory-pipelines-to-copy-Office-365-Data#linked-service-properties)
+    * [Data Set Properties](https://github.com/OfficeDev/MS-Graph-Data-Connect/wiki/Run-Azure-Data-Factory-pipelines-to-copy-Office-365-Data#dataset-properties)
+    * [Samples](https://github.com/OfficeDev/MS-Graph-Data-Connect/wiki/Run-Azure-Data-Factory-pipelines-to-copy-Office-365-Data#samples)
+2. [Publish an Azure Managed Application to copy Office 365 data](https://github.com/OfficeDev/MS-Graph-Data-Connect/wiki/Publish-an-Azure-Managed-Application-to-copy-Office-365-data)
+    * [Service Catalog](https://github.com/OfficeDev/MS-Graph-Data-Connect/wiki/Publish-an-Azure-Managed-Application-to-copy-Office-365-data#create-a-service-catalog-application-to-copy-office-365-data)
+3. [Capabilities](https://github.com/OfficeDev/MS-Graph-Data-Connect/wiki/Capabilities)
+    * [ADF Sinks](https://github.com/OfficeDev/MS-Graph-Data-Connect/wiki/Capabilities#adf-sinks)
+    * [Compliance Policies](https://github.com/OfficeDev/MS-Graph-Data-Connect/wiki/Capabilities#policies)
+    * [Data Regions](https://github.com/OfficeDev/MS-Graph-Data-Connect/wiki/Capabilities#data-regions)
+    * [Datasets](https://github.com/OfficeDev/MS-Graph-Data-Connect/wiki/Capabilities#datasets)
+    * [Filters](https://github.com/OfficeDev/MS-Graph-Data-Connect/wiki/Capabilities#filters)
+    * [User Selection](https://github.com/OfficeDev/MS-Graph-Data-Connect/wiki/Capabilities#user-selection)
 ## Quick Links
-* [Approve a data access request](https://github.com/OfficeDev/ManagedAccessMSGraph/wiki/Approving-a-data-access-request)
-* [Manage ADF piplines](https://github.com/OfficeDev/ManagedAccessMSGraph/wiki/Azure-Data-Factory-Quick-Links)
+* [Approve a data access request](https://github.com/OfficeDev/MS-Graph-Data-Connect/wiki/Approving-a-data-access-request)
+* [Manage ADF piplines](https://github.com/OfficeDev/MS-Graph-Data-Connect/wiki/Azure-Data-Factory-Quick-Links)
 
 ## Help
-* [FAQ](https://github.com/OfficeDev/ManagedAccessMSGraph/wiki/FAQ)  
-* [Troubleshooting](https://github.com/OfficeDev/ManagedAccessMSGraph/wiki/Troubleshooting)
-    * [Error Handling](https://github.com/OfficeDev/ManagedAccessMSGraph/wiki/Troubleshooting#errors)
-* [Contact us](https://github.com/OfficeDev/ManagedAccessMSGraph/wiki/Contact-Us)
+* [FAQ](https://github.com/OfficeDev/MS-Graph-Data-Connect/wiki/FAQ)  
+* [Troubleshooting](https://github.com/OfficeDev/MS-Graph-Data-Connect/wiki/Troubleshooting)
+    * [Error Handling](https://github.com/OfficeDev/MS-Graph-Data-Connect/wiki/Troubleshooting#errors)
+* [Contact us](https://github.com/OfficeDev/MS-Graph-Data-Connect/wiki/Contact-Us)
 
 
 ## Contributing
