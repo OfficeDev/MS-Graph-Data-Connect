@@ -42,7 +42,7 @@ Microsoft has built a sample application called Who Knows Who (WKW) which uses t
 
 ### Marketplace
 
-Microsoft Graph Data Connect leverages the existing integration of Managed Applications with the [AppSource marketplace](https://appsource.microsoft.com). Microsoft AppSource helps enterprise users find and gauge line-of-business (LoB) and software-as-a-service (SaaS) apps from Microsoft and its partners. AppSource apps are built on top of a variety of Microsoft products and includes all their existing apps add-ins and content packages. All applications leveraging Managed Access to Microsoft Graph in Microsoft Azure resources can be purchased in the AppSource marketplace.
+Microsoft Graph Data Connect leverages the existing integration of Managed Applications with the [AppSource marketplace](https://appsource.microsoft.com). Microsoft AppSource helps enterprise users find and gauge line-of-business (LoB) and software-as-a-service (SaaS) apps from Microsoft and its partners. AppSource apps are built on top of a variety of Microsoft products and includes all their existing apps add-ins and content packages. All applications leveraging Managed Access to Microsoft Graph  data connect resources can be purchased in the AppSource marketplace.
 
 ### Application Installation
 
