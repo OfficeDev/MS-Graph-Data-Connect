@@ -44,6 +44,7 @@
     "waterMarkDatasetName": "WaterMarkDataSet",
     "pipelineName": "O365ToADLSPipeline",
     "destinationAdlsLocation": "East US 2",
+    "triggerName": "WaterMarkTrigger",
     "outputDataLakeStore": {
       "messagePath": "targetFolder/Message"
     }
@@ -385,7 +386,7 @@
         },
         {
           "type": "triggers",
-          "name": "WatermarkTrigger",
+          "name": "[variables('triggerName')]",
           "dependsOn": [
             "[variables('dataFactoryName')]",
             "[variables('sourceLinkedServiceName')]",
