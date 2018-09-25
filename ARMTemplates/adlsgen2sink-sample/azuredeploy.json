@@ -556,7 +556,7 @@
         },
         {
           "type": "triggers",
-          "name": "pipelineTrigger",
+          "name": "[variables('triggerName')]",
           "dependsOn": [
             "[variables('dataFactoryName')]",
             "[variables('sourceLinkedServiceName')]",

@@ -40,7 +40,8 @@
     "outputDataLakeStore": {
       "messagePath": "targetFolder/Message"
     },
-    "dbBackupURI": "{db backup uri}"
+    "dbBackupURI": "{db backup uri}",
+    "triggerName": "mytrigger"
   },
   "resources": [
     {
@@ -685,7 +686,7 @@
         },
         {
           "type": "triggers",
-          "name": "pipelineTrigger",
+          "name": "[variables('triggerName')]",
           "dependsOn": [
             "[variables('dataFactoryName')]",
             "[variables('sourceO365LinkedServiceName')]",

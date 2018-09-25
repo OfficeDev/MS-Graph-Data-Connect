@@ -637,7 +637,7 @@
                   "maxConcurrency": 3,
                   "retryPolicy": {
                       "count": 1,
-                      "intervalInSeconds": 30,
+                      "intervalInSeconds": 30
                   }
               },
               "pipeline":
@@ -663,6 +663,6 @@
           "[concat('Microsoft.DataFactory/factories/', variables('dataFactoryName'), '/triggers/', variables('triggerName'))]"
         ],
         "properties": {}
-      },
+      }
     ]
   }
