@@ -1,10 +1,10 @@
-# Overview: Managed Access to Microsoft Graph in Microsoft Azure - Developers
+# Overview: Microsoft Graph Data Connect - Developers
 
 *Using Office 365 data with Azure Analytics to build intelligent applications*
 
 ## Introduction
 
-Managed Access to Microsoft Graph in Microsoft Azure brings Office 365 data and Azure resources to developers through a core data pipeline. This enables them to easily build intelligent applications with Microsoft's most valuable data and best development tools, all within the Microsoft secure cloud. 
+Microsoft Graph data connect brings Office 365 data and Azure resources to developers through a core data pipeline. This enables them to easily build intelligent applications with Microsoft's most valuable data and best development tools, all within the Microsoft secure cloud.
 
 Productivity is the one topic that all businesses are interested in improving. With more than 120M active commercial users of Office 365 and $250B spent per year on business applications, there is tremendous opportunity building and selling products to make knowledge workers more productive.
 
@@ -14,7 +14,7 @@ Office 365 contains the richest data in the world about workers and their workpl
 
 ### Office 365 data
 
-Managed Access to Microsoft Graph in Microsoft Azure offers curated datasets from Office 365 entities accessed through Outlook, Teams and OneDrive. The initial set of data types include message content, meeting content, contact information and user data. The set of data types will continue to grow as development continues. The developer will be able to discover the variety of data types and datasets that are available during application development. Developers and end-customers' applications will have access to data incrementally and historically (13 months prior). For all daily incremental pipelines, Microsoft will support up to 15TB of data per day.
+Microsoft Graph data connect offers curated datasets from Office 365 entities accessed through Outlook, Teams and OneDrive. The initial set of data types include message content, meeting content, contact information and user data. The set of data types will continue to grow as development continues. The developer will be able to discover the variety of data types and datasets that are available during application development. Developers and end-customers' applications will have access to data incrementally and historically (13 months prior).
 
 ## Application development experience
 
@@ -42,7 +42,7 @@ Microsoft has built a sample application called Who Knows Who (WKW) which uses t
 
 ### Marketplace
 
-Managed Access to Microsoft Graph in Microsoft Azure leverages the existing integration of Managed Applications with the [AppSource marketplace](https://appsource.microsoft.com). Microsoft AppSource helps enterprise users find and gauge line-of-business (LoB) and software-as-a-service (SaaS) apps from Microsoft and its partners. AppSource apps are built on top of a variety of Microsoft products and includes all their existing apps add-ins and content packages. All applications leveraging Managed Access to Microsoft Graph in Microsoft Azure resources can be purchased in the AppSource marketplace.
+Microsoft Graph data connect leverages the existing integration of Managed Applications with the [AppSource marketplace](https://appsource.microsoft.com). Microsoft AppSource helps enterprise users find and gauge line-of-business (LoB) and software-as-a-service (SaaS) apps from Microsoft and its partners. AppSource apps are built on top of a variety of Microsoft products and includes all their existing apps add-ins and content packages. All applications leveraging Microsoft Graph data connect resources can be purchased in the AppSource marketplace.
 
 ### Application Installation
 
