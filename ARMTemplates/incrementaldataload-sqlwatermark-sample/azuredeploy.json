@@ -25,12 +25,6 @@
       "metadata": {
         "description": "Start time for the trigger."
       }
-    },
-    "triggerEndTime": {
-      "type": "string",
-      "metadata": {
-        "description": "End time for the trigger."
-      }
     }
   },
   "variables": {
@@ -402,7 +396,6 @@
               "frequency": "Hour",
               "interval": 24,
               "startTime": "[parameters('triggerStartTime')]",
-              "endTime": "[parameters('triggerEndTime')]",
               "delay": "00:00:01",
               "retryPolicy": {
                 "count": 2,

@@ -25,6 +25,12 @@
       "metadata": {
         "description": "The account key of destination ADLS Gen2 storage account."
       }
+    },
+    "triggerStartTime": {
+      "type": "string",
+      "metadata": {
+        "description": "Start time for the trigger."
+      }
     }
   },
   "variables": {
@@ -578,8 +584,7 @@
               "recurrence": {
                 "frequency": "Day",
                 "interval": 1,
-                "startTime": "2017-11-01T00:00:00Z",
-                "endTime": "2018-11-01T00:00:00Z",
+                "startTime": "[parameters('triggerStartTime')]",
                 "timeZone": "UTC"
               }
             },

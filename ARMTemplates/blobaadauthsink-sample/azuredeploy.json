@@ -32,6 +32,12 @@
         "description": "The key of the service principal that has access to the destination Azure Blob store."
       }
     },
+    "triggerStartTime": {
+      "type": "string",
+      "metadata": {
+        "description": "Start time for the trigger."
+      }
+    }
   },
   "variables": {
     "dataFactoryName": "[concat('myadf', uniqueString(resourceGroup().id))]",
@@ -586,8 +592,7 @@
               "recurrence": {
                 "frequency": "Day",
                 "interval": 1,
-                "startTime": "2017-11-01T00:00:00Z",
-                "endTime": "2018-11-01T00:00:00Z",
+                "startTime": "[parameters('triggerStartTime')]",
                 "timeZone": "UTC"
               }
             },
