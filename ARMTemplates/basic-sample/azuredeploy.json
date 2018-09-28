@@ -26,6 +26,12 @@
       "metadata": {
         "description": "The object ids of the groups of users to extract data from. List up to 10 groups."
       }
+    },
+    "triggerStartTime": {
+      "type": "string",
+      "metadata": {
+        "description": "Start time for the trigger."
+      }
     }
   },
   "variables": {
@@ -603,8 +609,7 @@
               "recurrence": {
                 "frequency": "Day",
                 "interval": 1,
-                "startTime": "2017-11-01T00:00:00Z",
-                "endTime": "2018-11-01T00:00:00Z",
+                "startTime": "[parameters('triggerStartTime')]",
                 "timeZone": "UTC"
               }
             },

@@ -19,6 +19,12 @@
       "metadata": {
         "description": "The key of the service principal that has access to the destination Data Lake store."
       }
+    },
+    "triggerStartTime": {
+      "type": "string",
+      "metadata": {
+        "description": "Start time for the trigger."
+      }
     }
   },
   "variables": {
@@ -705,8 +711,7 @@
               "recurrence": {
                 "frequency": "Day",
                 "interval": 1,
-                "startTime": "2017-11-01T00:00:00Z",
-                "endTime": "2018-11-01T00:00:00Z",
+                "startTime": "[parameters('triggerStartTime')]",
                 "timeZone": "UTC"
               }
             },

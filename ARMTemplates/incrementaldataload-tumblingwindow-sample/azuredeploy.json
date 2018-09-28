@@ -25,6 +25,13 @@
         "metadata": {
           "description": "The time when the trigger will first start to run the pipeline. Everything prior to this time will be backfilled."
         }
+      },
+      "backFillInterval": {
+        "type": "int",
+        "defaultValue": 30,
+        "metadata": {
+            "description": "The number of days to backfill on the first run."
+        }
       }
     },
     "variables": {
@@ -35,28 +42,20 @@
       "destinationLinkedServiceName": "DestinationADLSLinkedService",
       "inputEventDatasetName": "O365InputEventDataset",
       "inputMessageDatasetName": "O365InputMessageDataset",
-      "inputContactDatasetName": "O365InputContactDataset",
-      "inputUserDatasetName": "O365InputUserDataset",
       "outputEventDatasetName": "ADLSOutputEventDataset",
       "outputMessageDatasetName": "ADLSOutputMessageDataset",
-      "outputContactDatasetName": "ADLSOutputContactDataset",
-      "outputUserDatasetName": "ADLSOutputUserDataset",
       "pipelineName": "mypipeline",
       "triggerName": "mytrigger",
-      "backfillnumberofdays": 30,
       "isBackfill": "[concat('bool(equals(trigger().outputs.windowStartTime,''', parameters('triggerStartTime'),'''))')]",
-      "backfillDays": "[sub(0, variables('backfillnumberofdays'))]",
-      "backfillStart": "[concat('formatDateTime(adddays(trigger().outputs.windowStartTime,', variables('backfillDays'),', ''yyyy-MM-ddTHH:mm:ss.fffffffzzz''),''yyyy-MM-ddTHH:mm:ssZ'')')]",
-      "backfillEnd": "formatDateTime(adddays(trigger().outputs.windowStartTime, 0,'yyyy-MM-ddTHH:mm:ss.fffffffzzz'),'yyyy-MM-ddTHH:mm:ssZ')",
-      "incrementalStart": "formatDateTime(adddays(trigger().outputs.windowStartTime, -1,'yyyy-MM-ddTHH:mm:ss.fffffffzzz'),'yyyy-MM-ddTHH:mm:ssZ')",
-      "incrementalEnd": "formatDateTime(adddays(trigger().outputs.windowEndTime, -1,'yyyy-MM-ddTHH:mm:ss.fffffffzzz'))",
+      "backFillIntervalNegative": "[sub(0, parameters('backFillInterval'))]",
+      "backfillStart": "[concat('formatDateTime(adddays(trigger().outputs.windowStartTime,', variables('backFillIntervalNegative'),', ''yyyy-MM-ddTHH:mm:ss.fffffffzzz''),''yyyy-MM-ddTHH:mm:ssZ'')')]",
+      "incrementalStart": "formatDateTime(adddays(trigger().outputs.windowStartTime, 0,'yyyy-MM-ddTHH:mm:ss.fffffffzzz'),'yyyy-MM-ddTHH:mm:ssZ')",
       "windowStart": "[concat('@if(', variables('isBackfill'), ',',variables('backfillStart'), ',',variables('incrementalStart'),')')]",
-      "windowEnd": "@formatDateTime(adddays(trigger().outputs.windowEndTime, -1,'yyyy-MM-ddTHH:mm:ss.fffffffzzz'),'yyyy-MM-ddTHH:mm:ssZ')",	
+      "windowEnd": "@formatDateTime(adddays(trigger().outputs.windowEndTime, 0,'yyyy-MM-ddTHH:mm:ss.fffffffzzz'),'yyyy-MM-ddTHH:mm:ssZ')",
       "outputDataLakeStore": {
+        "path": "targetFolder",
         "messagePath": "targetFolder/Message",
-        "eventPath": "targetFolder/Event",
-        "contactPath": "targetFolder/Contact",
-        "userPath": "targetFolder/User"
+        "eventPath": "targetFolder/Event"
       }
     },
     "resources": [
@@ -125,536 +124,404 @@
               }
             }
           },
-          {
-            "type": "linkedservices",
-            "name": "[variables('destinationLinkedServiceName')]",
-            "comments": "Creates the link to the newly created destination ADLS, using service principal supplied by the customer deploying this template.",
-            "dependsOn": [
-              "[variables('dataFactoryName')]",
-              "[variables('integrationRuntimeName')]"
-            ],
-            "apiVersion": "2017-09-01-preview",
-            "properties": {
-              "type": "AzureDataLakeStore",
-              "description": "Destination Azure Data Lake Store linked service",
-              "typeProperties": {
-                "dataLakeStoreUri": "[concat('adl://', reference(resourceId('Microsoft.DataLakeStore/accounts', variables('destinationAdlsAccountName'))).endpoint)]",
-                "servicePrincipalId": "[parameters('destinationServicePrincipalId')]",
-                "servicePrincipalKey": {
-                  "type": "SecureString",
-                  "value": "[parameters('destinationServicePrincipalKey')]"
-                },
-                "tenant": "[subscription().tenantId]",
-                "resourceGroupName": "[resourceGroup().name]",
-                "subscriptionId": "[subscription().subscriptionId]",
-                "connectVia": {
-                  "referenceName": "[variables('integrationRuntimeName')]",
-                  "type": "IntegrationRuntimeReference"
-                }
-              }
-            }
-          },
-          {
-            "type": "datasets",
-            "name": "[variables('inputMessageDatasetName')]",
-            "dependsOn": [
-              "[variables('dataFactoryName')]",
-              "[variables('sourceLinkedServiceName')]"
-            ],
-            "apiVersion": "2017-09-01-preview",
-            "properties": {
-              "published": false,
-              "type": "Office365Table",
-              "linkedServiceName": {
-                "referenceName": "[variables('sourceLinkedServiceName')]",
-                "type": "LinkedServiceReference"
-              },
-              "structure": [
-                {
-                  "name": "Subject",
-                  "type": "string"
-                },
-                {
-                  "name": "HasAttachments",
-                  "type": "boolean"
-                },
-                {
-                  "name": "SentDateTime",
-                  "type": "DateTime"
-                },
-                {
-                  "name": "ReceivedDateTime",
-                  "type": "DateTime"
-                },
-                {
-                  "name": "Sender",
-                  "type": "string"
-                },
-                {
-                  "name": "From",
-                  "type": "string"
-                },
-                {
-                  "name": "ToRecipients",
-                  "type": "string"
-                },
-                {
-                  "name": "CcRecipients",
-                  "type": "string"
-                },
-                {
-                  "name": "BccRecipients",
-                  "type": "string"
-                },
-                {
-                  "name": "ConversationId",
-                  "type": "string"
-                }
+            {
+              "type": "linkedservices",
+              "name": "[variables('destinationLinkedServiceName')]",
+              "comments": "Creates the link to the newly created destination ADLS, using service principal supplied by the customer deploying this template.",
+              "dependsOn": [
+                "[variables('dataFactoryName')]"
               ],
-              "typeProperties": {
-                "tableName": "BasicDataSet_v0.Message_v0"
-              },
-              "external": true
-            }
-          },
-          {
-            "type": "datasets",
-            "name": "[variables('inputEventDatasetName')]",
-            "dependsOn": [
-              "[variables('dataFactoryName')]",
-              "[variables('sourceLinkedServiceName')]"
-            ],
-            "apiVersion": "2017-09-01-preview",
-            "properties": {
-              "published": false,
-              "type": "Office365Table",
-              "linkedServiceName": {
-                "referenceName": "[variables('sourceLinkedServiceName')]",
-                "type": "LinkedServiceReference"
-              },
-              "structure": [
-                {
-                  "name": "Subject",
-                  "type": "string"
-                },
-                {
-                  "name": "HasAttachments",
-                  "type": "boolean"
-                },
-                {
-                  "name": "End",
-                  "type": "string"
-                },
-                {
-                  "name": "Start",
-                  "type": "string"
-                },
-                {
-                  "name": "ResponseStatus",
-                  "type": "string"
-                },
-                {
-                  "name": "Organizer",
-                  "type": "string"
-                },
-                {
-                  "name": "Attendees",
-                  "type": "string"
-                },
-                {
-                  "name": "Importance",
-                  "type": "string"
-                },
-                {
-                  "name": "Sensitivity",
-                  "type": "string"
-                },
-                {
-                  "name": "Recurrence",
-                  "type": "string"
-                },
-                {
-                  "name": "WebLink",
-                  "type": "string"
+              "apiVersion": "2017-09-01-preview",
+              "properties": {
+                "type": "AzureDataLakeStore",
+                "description": "Destination Azure Data Lake Store linked service",
+                "typeProperties": {
+                  "dataLakeStoreUri": "[concat('adl://', reference(resourceId('Microsoft.DataLakeStore/accounts', variables('destinationAdlsAccountName'))).endpoint)]",
+                  "servicePrincipalId": "[parameters('destinationServicePrincipalId')]",
+                  "servicePrincipalKey": {
+                    "type": "SecureString",
+                    "value": "[parameters('destinationServicePrincipalKey')]"
+                  },
+                  "tenant": "[subscription().tenantId]",
+                  "resourceGroupName": "[resourceGroup().name]",
+                  "subscriptionId": "[subscription().subscriptionId]"
                 }
+              }
+            },
+            {
+              "type": "datasets",
+              "name": "[variables('inputMessageDatasetName')]",
+              "dependsOn": [
+                "[variables('dataFactoryName')]",
+                "[variables('sourceLinkedServiceName')]"
               ],
-              "typeProperties": {
-                "tableName": "BasicDataSet_v0.Event_v0"
-              },
-              "external": true
-            }
-          },
-          {
-            "type": "datasets",
-            "name": "[variables('inputContactDatasetName')]",
-            "dependsOn": [
-              "[variables('dataFactoryName')]",
-              "[variables('sourceLinkedServiceName')]"
-            ],
-            "apiVersion": "2017-09-01-preview",
-            "properties": {
-              "published": false,
-              "type": "Office365Table",
-              "linkedServiceName": {
-                "referenceName": "[variables('sourceLinkedServiceName')]",
-                "type": "LinkedServiceReference"
-              },
-              "structure": [
-                {
-                  "name": "DisplayName",
-                  "type": "string"
+              "apiVersion": "2017-09-01-preview",
+              "properties": {
+                "published": false,
+                "type": "Office365Table",
+                "linkedServiceName": {
+                  "referenceName": "[variables('sourceLinkedServiceName')]",
+                  "type": "LinkedServiceReference"
                 },
-                {
-                  "name": "OfficeLocation",
-                  "type": "string"
-                },
-                {
-                  "name": "Manager",
-                  "type": "string"
-                },
-                {
-                  "name": "Birthday",
-                  "type": "DateTime"
-                },
-                {
-                  "name": "EmailAddresses",
-                  "type": "string"
-                },
-                {
-                  "name": "JobTitle",
-                  "type": "string"
-                },
-                {
-                  "name": "HomePhones",
-                  "type": "string"
-                },
-                {
-                  "name": "HomeAddress",
-                  "type": "string"
-                },
-                {
-                  "name": "CreatedDateTime",
-                  "type": "DateTime"
-                },
-                {
-                  "name": "ChangeKey",
-                  "type": "string"
-                },
-                {
-                  "name": "ParentFolderId",
-                  "type": "string"
-                }
-              ],
-              "typeProperties": {
-                "tableName": "BasicDataSet_v0.Contact_v0"
-              },
-              "external": true
-            }
-          },
-          {
-            "type": "datasets",
-            "name": "[variables('inputUserDatasetName')]",
-            "dependsOn": [
-              "[variables('dataFactoryName')]",
-              "[variables('sourceLinkedServiceName')]"
-            ],
-            "apiVersion": "2017-09-01-preview",
-            "properties": {
-              "published": false,
-              "type": "Office365Table",
-              "linkedServiceName": {
-                "referenceName": "[variables('sourceLinkedServiceName')]",
-                "type": "LinkedServiceReference"
-              },
-              "structure": [
-                {
-                  "name": "Name",
-                  "type": "string"
-                },
-                {
-                  "name": "EmailAddresses",
-                  "type": "string"
-                },
-                {
-                  "name": "ExternalEmailAddress",
-                  "type": "string"
-                },
-                {
-                  "name": "Company",
-                  "type": "string"
-                },
-                {
-                  "name": "Department",
-                  "type": "string"
-                },
-                {
-                  "name": "Title",
-                  "type": "string"
-                },
-                {
-                  "name": "Phone",
-                  "type": "string"
-                },
-                {
-                  "name": "PostalCode",
-                  "type": "string"
-                }
-              ],
-              "typeProperties": {
-                "tableName": "BasicDataSet_v0.User_v0"
-              },
-              "external": true
-            }
-          },
-          {
-            "type": "datasets",
-            "name": "[variables('outputMessageDatasetName')]",
-            "dependsOn": [
-              "[variables('dataFactoryName')]",
-              "[variables('destinationLinkedServiceName')]"
-            ],
-            "apiVersion": "2017-09-01-preview",
-            "properties": {
-              "published": false,
-              "type": "AzureDataLakeStoreFile",
-              "linkedServiceName": {
-                "referenceName": "[variables('destinationLinkedServiceName')]",
-                "type": "LinkedServiceReference"
-              },
-              "typeProperties": {
-                "folderPath": "[variables('outputDataLakeStore').messagePath]"
-              }
-            }
-          },
-          {
-            "type": "datasets",
-            "name": "[variables('outputEventDatasetName')]",
-            "dependsOn": [
-              "[variables('dataFactoryName')]",
-              "[variables('destinationLinkedServiceName')]"
-            ],
-            "apiVersion": "2017-09-01-preview",
-            "properties": {
-              "published": false,
-              "type": "AzureDataLakeStoreFile",
-              "linkedServiceName": {
-                "referenceName": "[variables('destinationLinkedServiceName')]",
-                "type": "LinkedServiceReference"
-              },
-              "typeProperties": {
-                "folderPath": "[variables('outputDataLakeStore').eventPath]"
-              }
-            }
-          },
-          {
-            "type": "datasets",
-            "name": "[variables('outputContactDatasetName')]",
-            "dependsOn": [
-              "[variables('dataFactoryName')]",
-              "[variables('destinationLinkedServiceName')]"
-            ],
-            "apiVersion": "2017-09-01-preview",
-            "properties": {
-              "published": false,
-              "type": "AzureDataLakeStoreFile",
-              "linkedServiceName": {
-                "referenceName": "[variables('destinationLinkedServiceName')]",
-                "type": "LinkedServiceReference"
-              },
-              "typeProperties": {
-                "folderPath": "[variables('outputDataLakeStore').contactPath]"
-              }
-            }
-          },
-          {
-            "type": "datasets",
-            "name": "[variables('outputUserDatasetName')]",
-            "dependsOn": [
-              "[variables('dataFactoryName')]",
-              "[variables('destinationLinkedServiceName')]"
-            ],
-            "apiVersion": "2017-09-01-preview",
-            "properties": {
-              "published": false,
-              "type": "AzureDataLakeStoreFile",
-              "linkedServiceName": {
-                "referenceName": "[variables('destinationLinkedServiceName')]",
-                "type": "LinkedServiceReference"
-              },
-              "typeProperties": {
-                "folderPath": "[variables('outputDataLakeStore').userPath]"
-              }
-            }
-          },
-          {
-            "type": "pipelines",
-            "name": "[variables('pipelineName')]",
-            "dependsOn": [
-              "[variables('dataFactoryName')]",
-              "[variables('sourceLinkedServiceName')]",
-              "[variables('destinationLinkedServiceName')]",
-              "[variables('inputMessageDatasetName')]",
-              "[variables('outputMessageDatasetName')]",
-              "[variables('inputEventDatasetName')]",
-              "[variables('outputEventDatasetName')]",
-              "[variables('inputContactDatasetName')]",
-              "[variables('outputContactDatasetName')]",
-              "[variables('inputUserDatasetName')]",
-              "[variables('outputUserDatasetName')]"
-            ],
-            "apiVersion": "2017-09-01-preview",
-            "properties": {
-              "activities": [
-                {
-                  "name": "CopyMessageFromO365ToAzureDLS",
-                  "description": "Copy message data from O365 to Azure Data Lake Store",
-                  "type": "Copy",
-                  "inputs": [
-                    {
-                      "referenceName": "[variables('inputMessageDatasetName')]",
-                      "type": "DatasetReference"
-                    }
-                  ],
-                  "outputs": [
-                    {
-                      "referenceName": "[variables('outputMessageDatasetName')]",
-                      "type": "DatasetReference"
-                    }
-                  ],
-                  "typeProperties": {
-                    "source": {
-                      "type": "Office365Source"
-                    },
-                    "sink": {
-                      "type": "AzureDataLakeStoreSink"
-                    }
+                "structure": [
+                  {
+                    "name": "Subject",
+                    "type": "string"
+                  },
+                  {
+                    "name": "HasAttachments",
+                    "type": "boolean"
+                  },
+                  {
+                    "name": "SentDateTime",
+                    "type": "datetime"
+                  },
+                  {
+                    "name": "ReceivedDateTime",
+                    "type": "datetime"
+                  },
+                  {
+                    "name": "Sender",
+                    "type": "string"
+                  },
+                  {
+                    "name": "From",
+                    "type": "string"
+                  },
+                  {
+                    "name": "ToRecipients",
+                    "type": "string"
+                  },
+                  {
+                    "name": "CcRecipients",
+                    "type": "string"
+                  },
+                  {
+                    "name": "BccRecipients",
+                    "type": "string"
+                  },
+                  {
+                    "name": "ConversationId",
+                    "type": "string"
+                  }
+                ],
+                "typeProperties": {
+                  "tableName": "BasicDataSet_v0.Message_v0",
+                  "predicate": {
+                    "type": "Expression",
+                    "value": "SentDateTime > @{dataset().windowStart} AND SentDateTime  <= @{dataset().windowEnd}"
                   }
                 },
-                {
-                  "name": "CopyEventFromO365ToAzureDLS",
-                  "description": "Copy event data from O365 to Azure Data Lake Store",
-                  "type": "Copy",
-                  "inputs": [
-                    {
-                      "referenceName": "[variables('inputEventDatasetName')]",
-                      "type": "DatasetReference"
-                    }
-                  ],
-                  "outputs": [
-                    {
-                      "referenceName": "[variables('outputEventDatasetName')]",
-                      "type": "DatasetReference"
-                    }
-                  ],
-                  "typeProperties": {
-                    "source": {
-                      "type": "Office365Source"
-                    },
-                    "sink": {
-                      "type": "AzureDataLakeStoreSink"
-                    }
-                  }
-                },
-                {
-                  "name": "CopyContactFromO365ToAzureDLS",
-                  "description": "Copy contact data from O365 to Azure Data Lake Store",
-                  "type": "Copy",
-                  "inputs": [
-                    {
-                      "referenceName": "[variables('inputContactDatasetName')]",
-                      "type": "DatasetReference"
-                    }
-                  ],
-                  "outputs": [
-                    {
-                      "referenceName": "[variables('outputContactDatasetName')]",
-                      "type": "DatasetReference"
-                    }
-                  ],
-                  "typeProperties": {
-                    "source": {
-                      "type": "Office365Source"
-                    },
-                    "sink": {
-                      "type": "AzureDataLakeStoreSink"
-                    }
-                  }
-                },
-                {
-                  "name": "CopyUserFromO365ToAzureDLS",
-                  "description": "Copy user data from O365 to Azure Data Lake Store",
-                  "type": "Copy",
-                  "inputs": [
-                    {
-                      "referenceName": "[variables('inputUserDatasetName')]",
-                      "type": "DatasetReference"
-                    }
-                  ],
-                  "outputs": [
-                    {
-                      "referenceName": "[variables('outputUserDatasetName')]",
-                      "type": "DatasetReference"
-                    }
-                  ],
-                  "typeProperties": {
-                    "source": {
-                      "type": "Office365Source"
-                    },
-                    "sink": {
-                      "type": "AzureDataLakeStoreSink"
-                    }
+                "parameters": {
+                  "windowStart": {
+                    "type": "String"
+                  },
+                  "windowEnd": {
+                    "type": "String"
                   }
                 }
-              ]
-            }
-          },
-          {
-            "type": "triggers",
-            "name": "[variables('triggerName')]",
-            "dependsOn": [
-              "[variables('dataFactoryName')]",
-              "[variables('sourceLinkedServiceName')]",
-              "[variables('destinationLinkedServiceName')]",
-              "[variables('inputMessageDatasetName')]",
-              "[variables('outputMessageDatasetName')]",
-              "[variables('inputEventDatasetName')]",
-              "[variables('outputEventDatasetName')]",
-              "[variables('inputContactDatasetName')]",
-              "[variables('outputContactDatasetName')]",
-              "[variables('inputUserDatasetName')]",
-              "[variables('outputUserDatasetName')]",
-              "[variables('pipelineName')]"
-            ],
-            "apiVersion": "2017-09-01-preview",
-            "properties": {
-              "type": "TumblingWindowTrigger",
-              "runtimeState": "Started",
-              "typeProperties": {
+              }
+            },
+            {
+              "type": "datasets",
+              "name": "[variables('inputEventDatasetName')]",
+              "dependsOn": [
+                "[variables('dataFactoryName')]",
+                "[variables('sourceLinkedServiceName')]"
+              ],
+              "apiVersion": "2017-09-01-preview",
+              "properties": {
+                "published": false,
+                "type": "Office365Table",
+                "linkedServiceName": {
+                  "referenceName": "[variables('sourceLinkedServiceName')]",
+                  "type": "LinkedServiceReference"
+                },
+                "structure": [
+                  {
+                    "name": "Subject",
+                    "type": "string"
+                  },
+                  {
+                    "name": "HasAttachments",
+                    "type": "boolean"
+                  },
+                  {
+                    "name": "End",
+                    "type": "string"
+                  },
+                  {
+                    "name": "Start",
+                    "type": "string"
+                  },
+                  {
+                    "name": "ResponseStatus",
+                    "type": "string"
+                  },
+                  {
+                    "name": "Organizer",
+                    "type": "string"
+                  },
+                  {
+                    "name": "Attendees",
+                    "type": "string"
+                  },
+                  {
+                    "name": "Importance",
+                    "type": "string"
+                  },
+                  {
+                    "name": "Sensitivity",
+                    "type": "string"
+                  },
+                  {
+                    "name": "Recurrence",
+                    "type": "string"
+                  },
+                  {
+                    "name": "WebLink",
+                    "type": "string"
+                  }
+                ],
+                "typeProperties": {
+                  "tableName": "BasicDataSet_v0.Event_v0",
+                  "predicate": {
+                    "type": "Expression",
+                    "value": "CreatedDateTime >= @{dataset().windowStart} AND CreatedDateTime  < @{dataset().windowEnd}"
+                  }
+                },
+                "parameters": {
+                  "windowStart": {
+                    "type": "String"
+                  },
+                  "windowEnd": {
+                    "type": "String"
+                  }
+                }
+              }
+            },
+            {
+              "type": "datasets",
+              "name": "[variables('outputMessageDatasetName')]",
+              "dependsOn": [
+                "[variables('dataFactoryName')]",
+                "[variables('destinationLinkedServiceName')]"
+              ],
+              "apiVersion": "2017-09-01-preview",
+              "properties": {
+                "published": false,
+                "type": "AzureDataLakeStoreFile",
+                "linkedServiceName": {
+                  "referenceName": "[variables('destinationLinkedServiceName')]",
+                  "type": "LinkedServiceReference"
+                },
+                "typeProperties": {
+                  "format": {
+                    "type": "JsonFormat",
+                    "filePattern": "setOfObjects"
+                  },
+                  "folderPath": "[concat('@concat(''', variables('outputDataLakeStore').messagePath, '/'', formatDateTime(dataset().windowStart, ''yyyy-MM-dd-HH-mm-ss''), ''-'', formatDateTime(dataset().windowEnd, ''yyyy-MM-dd-HH-mm-ss''))')]"
+                },
+                "parameters": {
+                  "windowStart": {
+                    "type": "String"
+                  },
+                  "windowEnd": {
+                    "type": "String"
+                  }
+                }
+              }
+            },
+            {
+              "type": "datasets",
+              "name": "[variables('outputEventDatasetName')]",
+              "dependsOn": [
+                "[variables('dataFactoryName')]",
+                "[variables('destinationLinkedServiceName')]"
+              ],
+              "apiVersion": "2017-09-01-preview",
+              "properties": {
+                "published": false,
+                "type": "AzureDataLakeStoreFile",
+                "linkedServiceName": {
+                  "referenceName": "[variables('destinationLinkedServiceName')]",
+                  "type": "LinkedServiceReference"
+                },
+                "typeProperties": {
+                  "format": {
+                    "type": "JsonFormat",
+                    "filePattern": "setOfObjects"
+                  },
+                  "folderPath": "[concat('@concat(''', variables('outputDataLakeStore').eventPath, '/'', formatDateTime(dataset().windowStart, ''yyyy-MM-dd-HH-mm-ss''), ''-'', formatDateTime(dataset().windowEnd, ''yyyy-MM-dd-HH-mm-ss''))')]"
+                },
+                "parameters": {
+                  "windowStart": {
+                    "type": "String"
+                  },
+                  "windowEnd": {
+                    "type": "String"
+                  }
+                }
+              }
+            },
+            {
+              "type": "pipelines",
+              "name": "[variables('pipelineName')]",
+              "dependsOn": [
+                "[variables('dataFactoryName')]",
+                "[variables('sourceLinkedServiceName')]",
+                "[variables('destinationLinkedServiceName')]",
+                "[variables('inputMessageDatasetName')]",
+                "[variables('outputMessageDatasetName')]",
+                "[variables('inputEventDatasetName')]",
+                "[variables('outputEventDatasetName')]"
+              ],
+              "apiVersion": "2017-09-01-preview",
+              "properties": {
+                "parameters": {
+                  "windowStart": {
+                    "type": "String"
+                  },
+                  "windowEnd": {
+                    "type": "String"
+                  }
+                },
+                "activities": [
+                  {
+                    "name": "CopyMessageFromO365ToAzureDLS",
+                    "description": "Copy message data from O365 to Azure Data Lake Store",
+                    "type": "Copy",
+                    "inputs": [
+                      {
+                        "referenceName": "[variables('inputMessageDatasetName')]",
+                        "type": "DatasetReference",
+                        "parameters": {
+                          "windowStart": {
+                            "value": "@pipeline().parameters.windowStart",
+                            "type": "Expression"
+                          },
+                          "windowEnd": {
+                            "value": "@pipeline().parameters.windowEnd",
+                            "type": "Expression"
+                          }
+                        }
+                      }
+                    ],
+                    "outputs": [
+                      {
+                        "referenceName": "[variables('outputMessageDatasetName')]",
+                        "type": "DatasetReference",
+                        "parameters": {
+                          "windowStart": {
+                            "value": "@pipeline().parameters.windowStart",
+                            "type": "Expression"
+                          },
+                          "windowEnd": {
+                            "value": "@pipeline().parameters.windowEnd",
+                            "type": "Expression"
+                          }
+                        }
+                      }
+                    ],
+                    "typeProperties": {
+                      "source": {
+                        "type": "Office365Source"
+                      },
+                      "sink": {
+                        "type": "AzureDataLakeStoreSink"
+                      }
+                    }
+                  },
+                  {
+                    "name": "CopyEventFromO365ToAzureDLS",
+                    "description": "Copy event data from O365 to Azure Data Lake Store",
+                    "type": "Copy",
+                    "inputs": [
+                      {
+                        "referenceName": "[variables('inputEventDatasetName')]",
+                        "type": "DatasetReference",
+                        "parameters": {
+                          "windowStart": {
+                            "value": "@pipeline().parameters.windowStart",
+                            "type": "Expression"
+                          },
+                          "windowEnd": {
+                            "value": "@pipeline().parameters.windowEnd",
+                            "type": "Expression"
+                          }
+                        }
+                      }
+                    ],
+                    "outputs": [
+                      {
+                        "referenceName": "[variables('outputEventDatasetName')]",
+                        "type": "DatasetReference",
+                        "parameters": {
+                          "windowStart": {
+                            "value": "@pipeline().parameters.windowStart",
+                            "type": "Expression"
+                          },
+                          "windowEnd": {
+                            "value": "@pipeline().parameters.windowEnd",
+                            "type": "Expression"
+                          }
+                        }
+                      }
+                    ],
+                    "typeProperties": {
+                      "source": {
+                        "type": "Office365Source"
+                      },
+                      "sink": {
+                        "type": "AzureDataLakeStoreSink"
+                      }
+                    }
+                  }
+                ]
+              }
+            },
+            {
+              "type": "triggers",
+              "name": "[variables('triggerName')]",
+              "dependsOn": [
+                "[variables('dataFactoryName')]",
+                "[variables('sourceLinkedServiceName')]",
+                "[variables('destinationLinkedServiceName')]",
+                "[variables('inputMessageDatasetName')]",
+                "[variables('outputMessageDatasetName')]",
+                "[variables('inputEventDatasetName')]",
+                "[variables('outputEventDatasetName')]",
+                "[variables('pipelineName')]"
+              ],
+              "apiVersion": "2017-09-01-preview",
+              "properties": {
+                "type": "TumblingWindowTrigger",
+                "typeProperties": {
                   "frequency": "Hour",
                   "interval": 24,
                   "startTime": "[parameters('triggerStartTime')]",
-                  "delay": "00:01:00",
-                  "maxConcurrency": 3,
+                  "endTime": " ",
+                  "delay": "00:00:01",
                   "retryPolicy": {
-                      "count": 1,
-                      "intervalInSeconds": 30
-                  }
-              },
-              "pipeline":
-                {
+                    "count": 2,
+                    "intervalInSeconds": 30
+                  },
+                  "maxConcurrency": 1
+                },
+                "pipeline": {
                   "pipelineReference": {
                     "type": "PipelineReference",
                     "referenceName": "[variables('pipelineName')]"
                   },
                   "parameters": {
-                  "windowStart": "[variables('windowStart')]",
-                  "windowEnd": "[variables('windowEnd')]"
+                    "windowStart": "[variables('windowStart')]",
+                    "windowEnd": "[variables('windowEnd')]"
                   }
                 }
+              }
             }
-          }
-        ]
-      },
+          ]
+        },
       {
         "type": "Microsoft.DataFactory/factories/triggers/status",
         "name": "[concat(variables('dataFactoryName'), '/', variables('triggerName'), '/start')]",

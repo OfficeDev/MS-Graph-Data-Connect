@@ -28,6 +28,13 @@
       "metadata": {
         "description": "The time when the trigger will first start to run the pipeline. Everything prior to this time will be backfilled."
       }
+    },
+    "backFillInterval": {
+      "type": "int",
+      "defaultValue": 30,
+      "metadata": {
+          "description": "The number of days to backfill on the first run."
+      }
     }
   },
   "variables": {
@@ -47,15 +54,12 @@
     "pipelineName": "mypipeline",
     "triggerName": "mytrigger",
     "webSiteName": "[parameters('webSiteName')]",
-    "backfillnumberofdays": 30,
     "isBackfill": "[concat('bool(equals(trigger().outputs.windowStartTime,''', parameters('triggerStartTime'),'''))')]",
-    "backfillDays": "[sub(0, variables('backfillnumberofdays'))]",
-    "backfillStart": "[concat('formatDateTime(adddays(trigger().outputs.windowStartTime,', variables('backfillDays'),', ''yyyy-MM-ddTHH:mm:ss.fffffffzzz''),''yyyy-MM-ddTHH:mm:ssZ'')')]",
-    "backfillEnd": "formatDateTime(adddays(trigger().outputs.windowStartTime, 0,'yyyy-MM-ddTHH:mm:ss.fffffffzzz'),'yyyy-MM-ddTHH:mm:ssZ')",
-    "incrementalStart": "formatDateTime(adddays(trigger().outputs.windowStartTime, -1,'yyyy-MM-ddTHH:mm:ss.fffffffzzz'),'yyyy-MM-ddTHH:mm:ssZ')",
-    "incrementalEnd": "formatDateTime(adddays(trigger().outputs.windowEndTime, -1,'yyyy-MM-ddTHH:mm:ss.fffffffzzz'))",
+    "backFillIntervalNegative": "[sub(0, parameters('backFillInterval'))]",
+    "backfillStart": "[concat('formatDateTime(adddays(trigger().outputs.windowStartTime,', variables('backFillIntervalNegative'),', ''yyyy-MM-ddTHH:mm:ss.fffffffzzz''),''yyyy-MM-ddTHH:mm:ssZ'')')]",
+    "incrementalStart": "formatDateTime(adddays(trigger().outputs.windowStartTime, 0,'yyyy-MM-ddTHH:mm:ss.fffffffzzz'),'yyyy-MM-ddTHH:mm:ssZ')",
     "windowStart": "[concat('@if(', variables('isBackfill'), ',',variables('backfillStart'), ',',variables('incrementalStart'),')')]",
-    "windowEnd": "@formatDateTime(adddays(trigger().outputs.windowEndTime, -1,'yyyy-MM-ddTHH:mm:ss.fffffffzzz'),'yyyy-MM-ddTHH:mm:ssZ')",
+    "windowEnd": "@formatDateTime(adddays(trigger().outputs.windowEndTime, 0,'yyyy-MM-ddTHH:mm:ss.fffffffzzz'),'yyyy-MM-ddTHH:mm:ssZ')",
     "hostingPlanName": "Free",
     "skuCapacity": "1",
     "skuName": "F1",
