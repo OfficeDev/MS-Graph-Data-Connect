@@ -117,6 +117,11 @@ The data factory has couple of interesting resources of it's own.
 | `Pipeline` | The Copy activity pipeline that copies the data from source Office 365 to the destination ADLS. Sample [copy activity](https://docs.microsoft.com/en-us/azure/data-factory/load-azure-data-lake-store)|
 | `PipelineTriggers` | Contains settings to ensure the copy pipeline can be scheduled to run periodically. Sample: [tumbling window trigger](https://docs.microsoft.com/en-us/azure/data-factory/how-to-create-tumbling-window-trigger)|
 
+#### Enable tracking resources for your template
+
+Follow instructions at https://aka.ms/aboutinfluencedrevenuetracking to register unique GUID and update mainTemplate.json to enable tracking resources.
+This is a required step to avoid application package validation error during publishing.
+
 #### Optional properties
 
 In order to make your pipeline more relevant, see [capabilities](https://github.com/OfficeDev/MS-Graph-Data-Connect/wiki/Capabilities)  for [user selection](https://github.com/OfficeDev/MS-Graph-Data-Connect/wiki/Capabilities#user-selection), [filters](https://github.com/OfficeDev/MS-Graph-Data-Connect/wiki/Capabilities#filters), other [datasets](https://github.com/OfficeDev/MS-Graph-Data-Connect/wiki/Capabilities#datasets) and [data regions](https://github.com/OfficeDev/MS-Graph-Data-Connect/wiki/Capabilities#data-regions).
