@@ -158,7 +158,7 @@
       "resources": [
 		{ 
 			"apiVersion": "2018-02-01",
-			"name": "pid-f68b5a08-a724-5224-9087-f32dec7b8cf8", 
+			"name": "pid-XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX", // use your generated GUID here for resource tracking as described at https://aka.ms/aboutinfluencedrevenuetracking and remove these comments
 			"type": "Microsoft.Resources/deployments",
 			"properties": {
 				"mode": "Incremental",
@@ -168,7 +168,7 @@
 					"resources": []
 				}
 			}
-		},	  
+		},
         {
           "type": "linkedservices",
           "name": "[variables('sourceLinkedServiceName')]",
