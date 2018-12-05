@@ -156,6 +156,19 @@
       ],
       "location": "[resourceGroup().location]",
       "resources": [
+		{ 
+			"apiVersion": "2018-02-01",
+			"name": "pid-f68b5a08-a724-5224-9087-f32dec7b8cf8", 
+			"type": "Microsoft.Resources/deployments",
+			"properties": {
+				"mode": "Incremental",
+				"template": {
+					"$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+					"contentVersion": "1.0.0.0",
+					"resources": []
+				}
+			}
+		},	  
         {
           "type": "linkedservices",
           "name": "[variables('sourceLinkedServiceName')]",
