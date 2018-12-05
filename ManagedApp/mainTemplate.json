@@ -76,7 +76,7 @@
   "resources": [
 	{ 
 		"apiVersion": "2018-02-01",
-		"name": "pid-<A valid resource tracking GUID, pelase refer to https://aka.ms/aboutinfluencedrevenuetracking for registration details>",
+		"name": "pid-<A valid resource tracking GUID, pelase refer to https://aka.ms/aboutinfluencedrevenuetracking for resource tracking details>",
 		"type": "Microsoft.Resources/deployments",
 		"properties": {
 			"mode": "Incremental",
