@@ -120,7 +120,7 @@ The data factory has couple of interesting resources of it's own.
 #### Enable tracking resources for your template
 
 Follow instructions at https://aka.ms/aboutinfluencedrevenuetracking to register unique GUID and update mainTemplate.json to enable tracking resources.
-This is a required step to avoid application package validation error during publishing.
+This is a required step to avoid application package validation error during publishing and it is required for applications in the service catalog (internal organization consumption) and to the Azure marketplace (external consumption). 
 
 #### Optional properties
 
