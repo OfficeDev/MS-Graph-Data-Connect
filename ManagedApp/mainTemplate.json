@@ -31,7 +31,7 @@
     },
     "backFillInterval": {
       "type": "int",
-      "defaultValue": 270,
+      "defaultValue": 30,
       "metadata": {
           "description": "The number of days to backfill on the first run."
       }
