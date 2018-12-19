@@ -68,6 +68,12 @@
             "constraints": {
               "required": true
             }
+          },
+          {
+            "name": "allowedGroups",
+            "type": "Microsoft.Common.TextBox",
+            "label": "Groups to extract data from",
+            "toolTip": "The users in the group provided will have their data used in this application."
           }
         ]
       }
@@ -77,6 +83,7 @@
       "destinationServicePrincipalId": "[steps('adfSettings').destinationServicePrincipalId]",
       "destinationServicePrincipalKey": "[steps('adfSettings').destinationServicePrincipalKey]",
       "triggerStartTime": "[steps('adfSettings').triggerStartTime]",
+      "allowedGroups": "[steps('adfSettings').allowedGroups]",
       "webSiteName": "[steps('webAppSettings').webSiteName]"
     }
   }
