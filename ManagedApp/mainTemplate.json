@@ -31,9 +31,16 @@
     },
     "backFillInterval": {
       "type": "int",
-      "defaultValue": 30,
+      "defaultValue": 270,
       "metadata": {
           "description": "The number of days to backfill on the first run."
+      }
+    },
+    "allowedGroups": {
+      "type": "string",
+      "defaultValue": "",
+      "metadata": {
+        "description": "The object ids of the groups of users to extract data from. List up to 10 groups."
       }
     }
   },
@@ -43,9 +50,9 @@
     "auditStorageAccountName": "[concat('audit', uniqueString(resourceGroup().id))]",
     "auditStorageAccountSku": "Standard_LRS",
     "sourceLinkedServiceName": "SourceO365LinkedService",
-    "sourceLinkedServicePrincipalId": "<A valid SPN in app owner tenant>",
+    "sourceLinkedServicePrincipalId": "<A valid SPN in app owner's tenant>",
     "sourceLinkedServicePrincipalKey": "<SPN secret>",
-    "sourceLinkedServicePrincipalTenantId": "<App owner tenant id>",
+    "sourceLinkedServicePrincipalTenantId": "<App owner's tenant ID>",
     "destinationLinkedServiceName": "DestinationADLSLinkedService",
     "inputEventDatasetName": "O365InputEventDataset",
     "inputMessageDatasetName": "O365InputMessageDataset",
@@ -74,19 +81,6 @@
     }
   },
   "resources": [
-	{ 
-		"apiVersion": "2018-02-01",
-		"name": "pid-<A valid resource tracking GUID, pelase refer to https://aka.ms/aboutinfluencedrevenuetracking for resource tracking details>",
-		"type": "Microsoft.Resources/deployments",
-		"properties": {
-			"mode": "Incremental",
-			"template": {
-				"$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
-				"contentVersion": "1.0.0.0",
-				"resources": []
-			}
-		}
-	},  
     {
       "type": "Microsoft.Storage/storageAccounts",
       "name": "[variables('auditStorageAccountName')]",
@@ -189,7 +183,8 @@
                 "type": "SecureString",
                 "value": "[variables('sourceLinkedServicePrincipalKey')]"
               },
-              "servicePrincipalTenantId": "[variables('sourceLinkedServicePrincipalTenantId')]"
+              "servicePrincipalTenantId": "[variables('sourceLinkedServicePrincipalTenantId')]",
+              "allowedGroups": "[if(empty(parameters('allowedGroups')), json('null'), split(parameters('allowedGroups'),','))]"
             }
           }
         },
@@ -761,6 +756,19 @@
       },
       "properties": {
         "applicationId": "[variables('webSiteName')]"
+      }
+    },
+    {
+      "apiVersion": "2018-02-01",
+      "name": "pid-8ac71724-bc0f-5773-a386-020c47e097f8", 
+      "type": "Microsoft.Resources/deployments",
+      "properties": {
+          "mode": "Incremental",
+          "template": {
+              "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+              "contentVersion": "1.0.0.0",
+              "resources": []
+          }
       }
     }
   ]
