@@ -189,7 +189,8 @@
               }
             ],
             "typeProperties": {
-              "tableName": "BasicDataSet_v0.Message_v0"
+              "tableName": "BasicDataSet_v0.Message_v0",
+              "predicate": "ReceivedDateTime >= 2016-10-18T08:50:27Z AND ReceivedDateTime <= 2018-11-18T10:00:00Z"			
             },
             "external": true
           }
@@ -256,7 +257,8 @@
               }
             ],
             "typeProperties": {
-              "tableName": "BasicDataSet_v0.Event_v0"
+              "tableName": "BasicDataSet_v0.Event_v0",
+              "predicate": "CreatedDateTime >= 2016-10-18T08:50:27Z AND CreatedDateTime <= 2018-06-18T10:00:00Z"			  
             },
             "external": true
           }
@@ -323,7 +325,8 @@
               }
             ],
             "typeProperties": {
-              "tableName": "BasicDataSet_v0.Contact_v0"
+              "tableName": "BasicDataSet_v0.Contact_v0",
+              "predicate": "CreatedDateTime >= 2016-10-18T08:50:27Z AND CreatedDateTime <= 2018-06-18T10:00:00Z"			  
             },
             "external": true
           }

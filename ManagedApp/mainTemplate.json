@@ -273,7 +273,7 @@
               "tableName": "BasicDataSet_v0.Message_v0",
               "predicate": {
                 "type": "Expression",
-                "value": "SentDateTime > @{dataset().windowStart} AND SentDateTime  <= @{dataset().windowEnd}"
+                "value": "SentDateTime >= @{dataset().windowStart} AND SentDateTime <= @{dataset().windowEnd}"
               }
             },
             "parameters": {
@@ -351,7 +351,7 @@
               "tableName": "BasicDataSet_v0.Event_v0",
               "predicate": {
                 "type": "Expression",
-                "value": "CreatedDateTime >= @{dataset().windowStart} AND CreatedDateTime  < @{dataset().windowEnd}"
+                "value": "CreatedDateTime >= @{dataset().windowStart} AND CreatedDateTime <= @{dataset().windowEnd}"
               }
             },
             "parameters": {
