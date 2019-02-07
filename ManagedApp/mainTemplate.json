@@ -273,7 +273,7 @@
               "tableName": "BasicDataSet_v0.Message_v0",
               "predicate": {
                 "type": "Expression",
-                "value": "SentDateTime >= @{dataset().windowStart} AND SentDateTime <= @{dataset().windowEnd}"
+                "value": "ReceivedDateTime >= @{dataset().windowStart} AND ReceivedDateTime <= @{dataset().windowEnd}"
               }
             },
             "parameters": {

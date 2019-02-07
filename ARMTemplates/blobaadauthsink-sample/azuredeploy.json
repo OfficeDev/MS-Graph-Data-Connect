@@ -241,7 +241,7 @@
             ],
             "typeProperties": {
               "tableName": "BasicDataSet_v0.Event_v0",
-              "predicate": "LastModifiedDateTime >= 2016-10-18T08:50:27Z AND LastModifiedDateTime <= 2018-12-18T10:00:00Z"			  
+              "predicate": "CreatedDateTime >= 2016-10-18T08:50:27Z AND CreatedDateTime <= 2018-12-18T10:00:00Z"			  
             },
             "external": true
           }
