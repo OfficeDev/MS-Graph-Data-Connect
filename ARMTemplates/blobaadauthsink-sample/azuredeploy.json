@@ -308,8 +308,7 @@
               }
             ],
             "typeProperties": {
-              "tableName": "BasicDataSet_v0.Contact_v0",
-              "predicate": "CreatedDateTime >= 2016-10-18T08:50:27Z AND CreatedDateTime <= 2018-06-18T10:00:00Z"			  
+              "tableName": "BasicDataSet_v0.Contact_v0"			  
             },
             "external": true
           }
