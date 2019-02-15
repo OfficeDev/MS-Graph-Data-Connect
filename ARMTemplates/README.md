@@ -43,6 +43,8 @@ Below parameters are common across all samples and can be filled using the [GetA
 - `destinationServicePrincipalKey` is the Authentication Key you generated for your service principal.
 - `destinationServicePrincipalAadId` is the Object Id of your service principal.
 
+> **NOTE:** If you are using Azure Storage as the destination sink, please refer to this documentation on how to properly configure your SPN: https://docs.microsoft.com/en-us/azure/storage/common/storage-auth-aad-rbac?toc=%2fazure%2fstorage%2fblobs%2ftoc.json
+
 ### Step 3
 
 Finally, deploy the ARM template and create the ADF pipeline by running the deployment script.
@@ -53,4 +55,3 @@ Finally, deploy the ARM template and create the ADF pipeline by running the depl
 
 > **NOTE:** This will create all the resources in a resource group with the same name as the folder name of the sample (e.g. `ArtifactStagingDirectory`) For example, if you deploy `basic-sample` you'll find all the resource created in a resource group named `basic-sample`. If you make changes to `azuredeploy.json` and re-run the same command without changing the folder name, it will simply update the resources instead of creating new ones.
 
-## Next Steps
