@@ -1,3 +1,18 @@
+---
+topic: sample
+products:
+- Office 365
+languages:
+- C#
+extensions:
+  contentType: samples
+  technologies:
+  - Microsoft Graph
+  services:
+  - Office 365
+  - Microsoft Graph data connect
+  createdDate: 2/6/2018 9:50:48 AM
+---
 # Microsoft Graph data connect
 #### Using Office 365 data with Azure analytics to build intelligent applications 
 
