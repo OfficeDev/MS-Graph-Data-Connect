@@ -193,10 +193,9 @@
             ],
             "typeProperties": {
               "tableName": "BasicDataSet_v0.Message_v0",
-              "predicate": {
-                "type": "Expression",
-                "value": "ReceivedDateTime >= @{dataset().windowStart} AND ReceivedDateTime <= @{dataset().windowEnd}"
-              }
+              "dateFilterColumn": "ReceivedDateTime", 
+              "startTime": "@{dataset().windowStart}",
+              "endTime": "@{dataset().windowEnd}"
             },
             "parameters": {
               "windowStart": {
