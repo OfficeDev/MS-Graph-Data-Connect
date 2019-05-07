@@ -207,9 +207,9 @@
                 ],
                 "typeProperties": {
                   "tableName": "BasicDataSet_v0.Message_v0",
-				  "dateFilterColumn": "ReceivedDateTime", 
-				  "startTime": "@{dataset().windowStart}",
-				  "endTime": "@{dataset().windowEnd}"
+                  "dateFilterColumn": "ReceivedDateTime", 
+                  "startTime": "@{dataset().windowStart}",
+                  "endTime": "@{dataset().windowEnd}"
                 },
                 "parameters": {
                   "windowStart": {
@@ -284,7 +284,7 @@
                 ],
                 "typeProperties": {
                   "tableName": "BasicDataSet_v0.Event_v0",
-			      "dateFilterColumn": "CreatedDateTime", 
+                  "dateFilterColumn": "CreatedDateTime", 
                   "startTime": "@{dataset().windowStart}",
                   "endTime": "@{dataset().windowEnd}"
                 },
