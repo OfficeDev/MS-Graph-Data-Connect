@@ -19,18 +19,18 @@ To complete the conversion, a few resources must be created in your Azure enviro
 
 ## Use our Azure Data Factory template to convert Office 365 data into the Common Data Model format
 We have made available an Azure Data Factory template which streamlines the transformation of Office 365 data into the Common Data Model using Microsoft Graph data connect. To do so, navigate to the [Azure Data Factory experience](https://datafactoryv2.azure.com/) and select the factory you created. On the resulting screen, create a new Pipeline from template and search for "Open Data Initiative." Select the resulting template from the search: 
-![Azure Data Factory template]()
+![Azure Data Factory template](https://github.com/OfficeDev/MS-Graph-Data-Connect/blob/master/Common-Data-Model/images/template.PNG)
 Within the template, you'll need to create a few linked service entities using the Azure resources provisioned earlier. 
 
 ### Create the ADLSg2 linked service
 To create the linked service to access the ADLSg2 account, select the drop down under AzureDataLakeStorageGen2 and create a new linked service. In the resulting blade, ensure you have set the Authentication Method to Service Principal and the Account Selection method as from an Azure subscription. Select the Azure subscription and account created earlier, as well as use the application ID and key noted earlier that has access to the account then click create. This linked service will be used later on in the HDI cluster linked configuration as well.
-![ADLSg2 linked service configuration]()
+![ADLSg2 linked service configuration](https://github.com/OfficeDev/MS-Graph-Data-Connect/blob/master/Common-Data-Model/images/ADLSg2LS.PNG)
 
 ### Create the Office 365 data linked service
 To create the linked service to allow Microsoft Graph data connect to move data into your Azure storage account, select any of the drop downs under the Office 365 tables and create a new linked service. In the resulting blade, provide the application ID and key noted earlier and select create. This linked service will automatically be used for all of the other Office 365 tables as well. 
-![Office 365 linked service configuration]()
+![Office 365 linked service configuration](https://github.com/OfficeDev/MS-Graph-Data-Connect/blob/master/Common-Data-Model/images/O365LS.PNG)
 
 ### Create the HDI cluster linked service
 To create the linked service connected to your HDI cluster, select the drop down under HDInsightCluster and create a new linked service. In the resulting blade, ensure Account Selection is From Azure Subscription and select the subscription containing your HDI cluster and ADLSg2 account. Select the HDI cluster you created and select ADLS Gen 2 for Azure Storage linked service. Ensure the ADLSg2 linked service created previously is selected and for file system use the file system which contains the PySpark script (jsontocdm). Enter the admin credentials to access the HDI cluster and click create
-![HDI cluster linked service configuration]() 
+![HDI cluster linked service configuration](https://github.com/OfficeDev/MS-Graph-Data-Connect/blob/master/Common-Data-Model/images/HDILS.PNG) 
 
