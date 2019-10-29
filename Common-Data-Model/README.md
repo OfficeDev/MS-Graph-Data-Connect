@@ -14,7 +14,7 @@ To complete the conversion, a few resources must be created in your Azure enviro
   - A file system to store the Office 365 data outputted by Microsoft Graph data connect in JSON format (called json)
   - A file system to store the outputted CDM entities after the conversion is complete (called cdm)
   - A file system to store the PySpark script and other required resources (called jsontocdm). Upload the [jsontocdm.py script](https://github.com/OfficeDev/MS-Graph-Data-Connect/blob/master/Common-Data-Model/src/jsontocdm.py) to this filesystem
-    * This file system requires archives, files, jars, and pyFiles sub file systems to be created as well. In the jars sub file system, upload the [spark-cdm-assembly-0.2.jar](https://github.com/OfficeDev/MS-Graph-Data-Connect/blob/master/Common-Data-Model/src/spark-cdm-assembly-0.2.jar). 
+    * This file system requires archives, files, jars, and pyFiles sub file systems to be created as well, as Azure Data Factory requires this structure when using HDI Spark activities. In the jars sub file system, upload the [spark-cdm-assembly-0.2.jar](https://github.com/OfficeDev/MS-Graph-Data-Connect/blob/master/Common-Data-Model/src/spark-cdm-assembly-0.2.jar). 
 * An Azure HDInsight cluster (HDI cluster) to execute the PySpark converstion script on your Office 365 data. Follow the [Use Azure Data Lake Storage Gen2 with Azure HDInsight clusters](https://docs.microsoft.com/en-us/azure/hdinsight/hdinsight-hadoop-use-data-lake-storage-gen2) steps to create the cluster. Note the username and password for the admin user, as it will be needed later in the walkthrough.
 * An Azure Data Factory resource to facilitate the movement of Office 365 data into the Common Data Model. Create an Azure Data Factory by navigating to the [Azure portal](https://portal.azure.com/) and search for Data Factories. 
 
@@ -56,11 +56,11 @@ The template creates a pipeline with four copy activities, one for each data typ
 * ScriptFileSystem - The file system in the ADLSg2 account containing the PySpark script (jsontocdm for this walkthrough)
 * PyScriptName - The name of the PySpark script (jsontocdm.py for this walkthrough)
 * CdmDataFileSystem - The file system in the ADLSg2 account which will contain the CDM entities (cdm for this walkthrough)
-* CdmModelName - hardcoded to O365-data
-* MessageDatasetFolder - hardcoded to message
-* EventDatasetFolder - hardcoded to event
-* UserDatasetFolder - hardcoded to user
-* ManagerDatasetFolder - hardcoded to manager
+* CdmModelName - Sub-directory in the CdmDataFileSystem for the CDM enitities; default to O365-data
+* MessageDatasetFolder - Sub-directory in the OfficeDataFileSystem for the messages in JSON; default to message
+* EventDatasetFolder - Sub-directory in the OfficeDataFileSystem for events in JSON; default to event
+* UserDatasetFolder - Sub-directory in the OfficeDataFileSystem for user data in JSON; default to user
+* ManagerDatasetFolder - Sub-directory in the OfficeDataFileSystem for manager user data in JSON; default to manager
 
 ![Pipeline run parameters](https://github.com/OfficeDev/MS-Graph-Data-Connect/blob/master/Common-Data-Model/images/PipelineRunParameters.PNG)
 
