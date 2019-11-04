@@ -20,6 +20,42 @@
         "description": "The key of the service principal that has access to the destination Data Lake store."
       }
     },
+    "destinationAdlsGen2AccountName": {
+      "type": "string",
+      "metadata": {
+        "description": "The name for the ADLS gen2 account name where the data will be copied to."
+      }
+    },
+    "destinationAdlsGen2AccountKey": {
+      "type": "string",
+      "metadata": {
+        "description": "The access key for the ADLS gen2 account where the data will be copied to."
+      }
+    },
+    "userAssignedManagedIdentityName": {
+      "type": "string",
+      "metadata": {
+        "description": "The user assigned managed identity name that the HDI cluster will use to access the storage account."
+      }
+    },
+    "userAssignedManagedIdentityClientId": {
+      "type": "string",
+      "metadata": {
+        "description": "The user assigned managed identity client id that the HDI cluster will use to access the storage account."
+      }
+    },
+    "userAssignedManagedIdentityObjectId": {
+      "type": "string",
+      "metadata": {
+        "description": "The user assigned managed identity object id that the HDI cluster will use to access the storage account."
+      }
+    },
+     "hdiClusterPassword": {
+      "type": "string",
+      "metadata": {
+        "description": "The password for the admin account on the HDI cluster. The password must be at least 10 characters in length and must contain at least one digit, one non-alphanumeric character, and one upper or lower case letter."
+      }
+    },
     "webSiteName": {
       "type": "string"
     },
@@ -46,21 +82,30 @@
   },
   "variables": {
     "dataFactoryName": "[concat('myadf', uniqueString(resourceGroup().id))]",
-    "destinationAdlsAccountName": "[concat('myadls', uniqueString(resourceGroup().id))]",
-    "auditStorageAccountName": "[concat('audit', uniqueString(resourceGroup().id))]",
-    "auditStorageAccountSku": "Standard_LRS",
+    "dataFactoryId": "[concat('Microsoft.DataFactory/factories/', variables('dataFactoryName'))]",
+    "destinationAdlsGen2URL": "[concat('https://', parameters('destinationAdlsGen2AccountName'), '.dfs.core.windows.net')]",
+    "destinationAdlsGen2ConnectionString": "[concat('DefaultEndpointsProtocol=https;AccountName=', parameters('destinationAdlsGen2AccountName'), ';AccountKey=', parameters('destinationAdlsGen2AccountKey'), ';EndpointSuffix=core.windows.net')]",
     "sourceLinkedServiceName": "SourceO365LinkedService",
-    "sourceLinkedServicePrincipalId": "<A valid SPN in app owner's tenant>",
-    "sourceLinkedServicePrincipalKey": "<SPN secret>",
-    "sourceLinkedServicePrincipalTenantId": "<App owner's tenant ID>",
-    "destinationLinkedServiceName": "DestinationADLSLinkedService",
+    "sourceLinkedServicePrincipalId": "2bc40e89-fbed-40ca-825b-a77765999773",
+    "sourceLinkedServicePrincipalKey": "Ey.?KGc-OsRXeXG=dRQyCoe70jyaz6w5",
+    "sourceLinkedServicePrincipalTenantId": "3b8d63b8-70b9-4b8c-9099-44ef5521f3ab",
+    "destinationLinkedServiceName": "DestinationLinkedService",
     "inputEventDatasetName": "O365InputEventDataset",
     "inputMessageDatasetName": "O365InputMessageDataset",
-    "outputEventDatasetName": "ADLSOutputEventDataset",
-    "outputMessageDatasetName": "ADLSOutputMessageDataset",
+    "outputEventDatasetName": "O365OutputEventDataset",
+    "outputMessageDatasetName": "O365OutputMessageDataset",
     "pipelineName": "mypipeline",
     "triggerName": "mytrigger",
     "webSiteName": "[parameters('webSiteName')]",
+    "hdiClusterName": "myhdicluster",
+    "hdiClusterLinkedServiceName": "HDIClusterLinkedService",
+    "userAssignedManagedIdentitiesResourceId": "[concat('/subscriptions/', subscription().subscriptionId, '/resourcegroups/', resourceGroup().name, '/providers/microsoft.managedidentity/userassignedidentities/', parameters('userAssignedManagedIdentityName'))]",
+    "hdiClusterStorageAccountName": "[concat(parameters('destinationAdlsGen2AccountName'), '.dfs.core.windows.net')]",
+    "hdiClusterStorageAccountFileSystem": "[concat('cluster-', variables('hdiClusterName'))]",
+    "hdiClusterStorageAccountResourceId": "[concat('/subscriptions/', subscription().subscriptionId, '/resourcegroups/', resourceGroup().name, '/providers/microsoft.storage/storageaccounts/', parameters('destinationAdlsGen2AccountName'))]",
+    "hdiClusterUri": "[concat('https://', variables('hdiClusterName'), '.azurehdinsight.net')]",
+    "pySparkScriptContainer": "scripts",
+    "pySparkScriptName": "wkwScoreCompute.py",
     "isBackfill": "[concat('bool(equals(trigger().outputs.windowStartTime,''', parameters('triggerStartTime'),'''))')]",
     "backFillIntervalNegative": "[sub(0, parameters('backFillInterval'))]",
     "backfillStart": "[concat('formatDateTime(adddays(trigger().outputs.windowStartTime,', variables('backFillIntervalNegative'),', ''yyyy-MM-ddTHH:mm:ss.fffffffzzz''),''yyyy-MM-ddTHH:mm:ssZ'')')]",
@@ -75,511 +120,463 @@
       "webAppRemote": "https://samplestorage.blob.core.windows.net/webappcontainer/WhoKnowWho.zip"
     },
     "outputDataLakeStore": {
-      "path": "targetFolder",
-      "messagePath": "targetFolder/Message",
-      "eventPath": "targetFolder/Event"
-    }
+      "containerName": "data",
+      "messagePath": "message",
+      "eventPath": "event"
+    },
+    "destinationMessageAdlsGen2URL": "[concat('abfss://', variables('outputDataLakeStore').containerName, '@', parameters('destinationAdlsGen2AccountName'), '.dfs.core.windows.net/', variables('outputDataLakeStore').messagePath)]"
   },
   "resources": [
     {
-      "type": "Microsoft.Storage/storageAccounts",
-      "name": "[variables('auditStorageAccountName')]",
-      "apiVersion": "2016-01-01",
+      "apiVersion": "2015-03-01-preview",
+      "name": "[variables('hdiClusterName')]",
+      "type": "Microsoft.HDInsight/clusters",
       "location": "[resourceGroup().location]",
-      "sku": {
-        "name": "[variables('auditStorageAccountSku')]"
-      },
-      "kind": "Storage",
-      "properties": {}
-    },
-    {
-      "type": "Microsoft.DataLakeStore/accounts",
-      "name": "[variables('destinationAdlsAccountName')]",
-      "comments": "Creates the destination Data Lake store in the customer's subscription used in the ADF pipeline for the data output.",
-      "location": "[resourceGroup().location]",
-      "dependsOn": [
-        "[variables('auditStorageAccountName')]"
-      ],
-      "apiVersion": "2016-11-01",
+      "dependsOn": [],
       "properties": {
-        "initialUser": "[parameters('destinationServicePrincipalAadId')]",
-        "newTier": "Consumption",
-        "encryptionState": "Enabled",
-        "encryptionConfig": {
-          "type": "ServiceManaged"
-        }
-      },
-      "resources": [
-        {
-          "type": "providers/diagnosticSettings",
-          "name": "Microsoft.Insights/current",
-          "dependsOn": [
-            "[concat('Microsoft.DataLakeStore/accounts/', variables('destinationAdlsAccountName'))]",
-            "[concat('Microsoft.Storage/storageAccounts/', variables('auditStorageAccountName'))]"
-          ],
-          "apiVersion": "2017-05-01-preview",
-          "properties": {
-            "name": "current",
-            "storageAccountId": "[resourceId('Microsoft.Storage/storageAccounts', variables('auditStorageAccountName'))]",
-            "logs": [
-              {
-                "category": "Audit",
-                "enabled": true,
-                "retentionPolicy": {
-                  "days": 180,
-                  "enabled": true
+        "clusterVersion": "3.6",
+        "osType": "Linux",
+        "tier": "Standard",
+        "clusterDefinition": {
+          "kind": "SPARK",
+          "componentVersion": {
+            "Spark": "2.3"
+          },
+          "configurations": {
+            "gateway": {
+              "restAuthCredential.isEnabled": true,
+              "restAuthCredential.username": "admin",
+              "restAuthCredential.password": "[parameters('hdiClusterPassword')]"
+            }
+          }
+        },
+        "storageProfile": {
+          "storageaccounts": [
+            {
+              "name": "[variables('hdiClusterStorageAccountName')]",
+              "isDefault": true,
+              "fileSystem": "[variables('hdiClusterStorageAccountFileSystem')]",
+              "resourceId": "[variables('hdiClusterStorageAccountResourceId')]",
+              "msiResourceId": "[variables('userAssignedManagedIdentitiesResourceId')]"
+            }
+          ]
+        },
+        "computeProfile": {
+          "roles": [
+            {
+              "autoscale": null,
+              "name": "headnode",
+              "minInstanceCount": 1,
+              "targetInstanceCount": 2,
+              "hardwareProfile": {
+                "vmSize": "Standard_D12_V2"
+              },
+              "osProfile": {
+                "linuxOperatingSystemProfile": {
+                  "username": "sshuser",
+                  "password": "[parameters('hdiClusterPassword')]"
                 }
               },
-              {
-                "category": "Requests",
-                "enabled": true,
-                "retentionPolicy": {
-                  "days": 180,
-                  "enabled": true
+              "virtualNetworkProfile": null,
+              "scriptActions": [],
+              "dataDisksGroups": null
+            },
+            {
+              "autoscale": null,
+              "name": "workernode",
+              "targetInstanceCount": 4,
+              "hardwareProfile": {
+                "vmSize": "Standard_D13_V2"
+              },
+              "osProfile": {
+                "linuxOperatingSystemProfile": {
+                  "username": "sshuser",
+                  "password": "[parameters('hdiClusterPassword')]"
                 }
-              }
-            ],
-            "metrics": [
-              {
-                "category": "AllMetrics",
-                "enabled": true,
-                "retentionPolicy": {
-                  "enabled": true,
-                  "days": 30
-                }
-              }
-            ]
-          }
+              },
+              "virtualNetworkProfile": null,
+              "scriptActions": [],
+              "dataDisksGroups": null
+            }
+          ]
         }
-      ]
+      },
+      "identity": {
+        "type": "UserAssigned",
+        "userAssignedIdentities": {
+          "[variables('userAssignedManagedIdentitiesResourceId')]": {}
+        }
+      }
     },
     {
       "name": "[variables('dataFactoryName')]",
       "apiVersion": "2017-09-01-preview",
       "type": "Microsoft.DataFactory/factories",
       "comments": "Creates the ADF pipeline that copies data from O365 to the newly created destination ADLS.",
-      "dependsOn": [
-        "[resourceId('Microsoft.DataLakeStore/accounts/', variables('destinationAdlsAccountName'))]"
-      ],
+      "dependsOn": [],
       "location": "[resourceGroup().location]",
       "resources": [
         {
-          "type": "linkedservices",
-          "name": "[variables('sourceLinkedServiceName')]",
-          "comments": "Creates the link to O365 which is used as the source of the data extraction. Using service principal supplied by the source ADLS owner.",
-          "dependsOn": [
-            "[variables('dataFactoryName')]"
-          ],
-          "apiVersion": "2017-09-01-preview",
+          "name": "[concat(variables('dataFactoryName'), '/', variables('sourceLinkedServiceName'))]",
+          "type": "Microsoft.DataFactory/factories/linkedServices",
+          "apiVersion": "2018-06-01",
           "properties": {
+            "annotations": [],
             "type": "Office365",
-            "description": "Source O365 linked service",
             "typeProperties": {
-              "office365tenantId": "[subscription().tenantId]",
-              "PrivacyPolicyUri": "http://www.wkw.com/privacy",
-              "TermsOfUseUri": "http://www.wkw.com/tos",
+              "office365TenantId": "[subscription().tenantId]",
+              "servicePrincipalTenantId": "[variables('sourceLinkedServicePrincipalTenantId')]",
               "servicePrincipalId": "[variables('sourceLinkedServicePrincipalId')]",
               "servicePrincipalKey": {
                 "type": "SecureString",
                 "value": "[variables('sourceLinkedServicePrincipalKey')]"
-              },
-              "servicePrincipalTenantId": "[variables('sourceLinkedServicePrincipalTenantId')]",
-              "allowedGroups": "[if(empty(parameters('allowedGroups')), json('null'), split(parameters('allowedGroups'),','))]"
+              }
             }
-          }
+          },
+          "dependsOn": ["[variables('dataFactoryId')]"]
         },
         {
-          "type": "linkedservices",
-          "name": "[variables('destinationLinkedServiceName')]",
-          "comments": "Creates the link to the newly created destination ADLS, using service principal supplied by the customer deploying this template.",
-          "dependsOn": [
-            "[variables('dataFactoryName')]"
-          ],
-          "apiVersion": "2017-09-01-preview",
+          "name": "[concat(variables('dataFactoryName'), '/', variables('destinationLinkedServiceName'))]",
+          "type": "Microsoft.DataFactory/factories/linkedServices",
+          "apiVersion": "2018-06-01",
           "properties": {
-            "type": "AzureDataLakeStore",
-            "description": "Destination Azure Data Lake Store linked service",
+              "annotations": [],
+              "type": "AzureBlobFS",
+              "typeProperties": {
+                  "url": "[variables('destinationAdlsGen2URL')]",
+                  "tenant": "[subscription().tenantId]",
+                  "servicePrincipalId": "[parameters('destinationServicePrincipalId')]",
+                  "servicePrincipalKey": {
+                      "type": "SecureString",
+                      "value": "[parameters('destinationServicePrincipalKey')]"
+                  }
+              }
+          },
+          "dependsOn": ["[variables('dataFactoryId')]"]
+        },
+        {
+            "name": "[concat(variables('dataFactoryName'), '/', concat(variables('destinationLinkedServiceName'), 'blob'))]",
+            "type": "Microsoft.DataFactory/factories/linkedServices",
+            "apiVersion": "2018-06-01",
+            "properties": {
+                "annotations": [],
+                "type": "AzureBlobStorage",
+                "typeProperties": {
+                    "connectionString": "[variables('destinationAdlsGen2ConnectionString')]"
+                }
+            },
+            "dependsOn": ["[variables('dataFactoryId')]"]
+        },
+        {
+          "name": "[concat(variables('dataFactoryName'), '/', variables('inputMessageDatasetName'))]",
+          "type": "Microsoft.DataFactory/factories/datasets",
+          "apiVersion": "2018-06-01",
+          "properties": {
+            "linkedServiceName": {
+              "referenceName": "[variables('sourceLinkedServiceName')]",
+              "type": "LinkedServiceReference"
+            },
+            "annotations": [],
+            "type": "Office365Table",
+            "schema": [],
             "typeProperties": {
-              "dataLakeStoreUri": "[concat('adl://', reference(resourceId('Microsoft.DataLakeStore/accounts', variables('destinationAdlsAccountName'))).endpoint)]",
-              "servicePrincipalId": "[parameters('destinationServicePrincipalId')]",
-              "servicePrincipalKey": {
+              "tableName": "BasicDataSet_v0.Message_v1"
+            }
+          },
+          "dependsOn": [
+            "[variables('dataFactoryId')]",
+            "[concat(variables('dataFactoryId'), '/linkedServices/', variables('sourceLinkedServiceName'))]"
+          ]
+        },
+        {
+          "name": "[concat(variables('dataFactoryName'), '/', variables('outputMessageDatasetName'))]",
+          "type": "Microsoft.DataFactory/factories/datasets",
+          "apiVersion": "2018-06-01",
+          "properties": {
+            "linkedServiceName": {
+              "referenceName": "[variables('destinationLinkedServiceName')]",
+              "type": "LinkedServiceReference"
+            },
+            "annotations": [],
+            "type": "Binary",
+            "typeProperties": {
+              "location": {
+                "type": "AzureBlobFSLocation",
+                "folderPath": "[concat(variables('outputDataLakeStore').containerName, '/', variables('outputDataLakeStore').messagePath)]"
+              }
+            }
+          },
+          "dependsOn": [
+            "[variables('dataFactoryId')]",
+            "[concat(variables('dataFactoryId'), '/linkedServices/', variables('destinationLinkedServiceName'))]"
+          ]
+        },
+        {
+          "name": "[concat(variables('dataFactoryName'), '/', variables('hdiClusterLinkedServiceName'))]",
+          "type": "Microsoft.DataFactory/factories/linkedServices",
+          "apiVersion": "2018-06-01",
+          "properties": {
+            "annotations": [],
+            "type": "HDInsight",
+            "typeProperties": {
+              "clusterUri": "[variables('hdiClusterUri')]",
+              "userName": "admin",
+              "password": {
                 "type": "SecureString",
-                "value": "[parameters('destinationServicePrincipalKey')]"
+                "value": "[parameters('hdiClusterPassword')]"
               },
-              "tenant": "[subscription().tenantId]",
-              "resourceGroupName": "[resourceGroup().name]",
-              "subscriptionId": "[subscription().subscriptionId]"
-            }
-          }
-        },
-        {
-          "type": "datasets",
-          "name": "[variables('inputMessageDatasetName')]",
-          "dependsOn": [
-            "[variables('dataFactoryName')]",
-            "[variables('sourceLinkedServiceName')]"
-          ],
-          "apiVersion": "2017-09-01-preview",
-          "properties": {
-            "published": false,
-            "type": "Office365Table",
-            "linkedServiceName": {
-              "referenceName": "[variables('sourceLinkedServiceName')]",
-              "type": "LinkedServiceReference"
-            },
-            "structure": [
-              {
-                "name": "Subject",
-                "type": "string"
-              },
-              {
-                "name": "HasAttachments",
-                "type": "boolean"
-              },
-              {
-                "name": "SentDateTime",
-                "type": "datetime"
-              },
-              {
-                "name": "ReceivedDateTime",
-                "type": "datetime"
-              },
-              {
-                "name": "Sender",
-                "type": "string"
-              },
-              {
-                "name": "From",
-                "type": "string"
-              },
-              {
-                "name": "ToRecipients",
-                "type": "string"
-              },
-              {
-                "name": "CcRecipients",
-                "type": "string"
-              },
-              {
-                "name": "BccRecipients",
-                "type": "string"
-              },
-              {
-                "name": "ConversationId",
-                "type": "string"
-              }
-            ],
-            "typeProperties": {
-              "tableName": "BasicDataSet_v0.Message_v0",
-              "dateFilterColumn": "ReceivedDateTime", 
-              "startTime": "@{dataset().windowStart}",
-              "endTime": "@{dataset().windowEnd}"
-            },
-            "parameters": {
-              "windowStart": {
-                "type": "String"
-              },
-              "windowEnd": {
-                "type": "String"
+              "isEspEnabled": false,
+              "fileSystem": "[variables('hdiClusterStorageAccountFileSystem')]",
+              "linkedServiceName": {
+                "referenceName": "[variables('destinationLinkedServiceName')]",
+                "type": "LinkedServiceReference"
               }
             }
-          }
+          },
+          "dependsOn": [
+            "[variables('dataFactoryId')]",
+            "[concat(variables('dataFactoryId'), '/linkedServices/', variables('destinationLinkedServiceName'))]"
+          ]
         },
         {
-          "type": "datasets",
-          "name": "[variables('inputEventDatasetName')]",
-          "dependsOn": [
-            "[variables('dataFactoryName')]",
-            "[variables('sourceLinkedServiceName')]"
-          ],
-          "apiVersion": "2017-09-01-preview",
+          "name": "[concat(variables('dataFactoryName'), '/', variables('pipelineName'))]",
+          "type": "Microsoft.DataFactory/factories/pipelines",
+          "apiVersion": "2018-06-01",
           "properties": {
-            "published": false,
-            "type": "Office365Table",
-            "linkedServiceName": {
-              "referenceName": "[variables('sourceLinkedServiceName')]",
-              "type": "LinkedServiceReference"
-            },
-            "structure": [
-              {
-                "name": "Subject",
-                "type": "string"
-              },
-              {
-                "name": "HasAttachments",
-                "type": "boolean"
-              },
-              {
-                "name": "End",
-                "type": "string"
-              },
-              {
-                "name": "Start",
-                "type": "string"
-              },
-              {
-                "name": "ResponseStatus",
-                "type": "string"
-              },
-              {
-                "name": "Organizer",
-                "type": "string"
-              },
-              {
-                "name": "Attendees",
-                "type": "string"
-              },
-              {
-                "name": "Importance",
-                "type": "string"
-              },
-              {
-                "name": "Sensitivity",
-                "type": "string"
-              },
-              {
-                "name": "Recurrence",
-                "type": "string"
-              },
-              {
-                "name": "WebLink",
-                "type": "string"
-              }
-            ],
-            "typeProperties": {
-              "tableName": "BasicDataSet_v0.Event_v0",
-              "dateFilterColumn": "CreatedDateTime", 
-              "startTime": "@{dataset().windowStart}",
-              "endTime": "@{dataset().windowEnd}"
-            },
-            "parameters": {
-              "windowStart": {
-                "type": "String"
-              },
-              "windowEnd": {
-                "type": "String"
-              }
-            }
-          }
-        },
-        {
-          "type": "datasets",
-          "name": "[variables('outputMessageDatasetName')]",
-          "dependsOn": [
-            "[variables('dataFactoryName')]",
-            "[variables('destinationLinkedServiceName')]"
-          ],
-          "apiVersion": "2017-09-01-preview",
-          "properties": {
-            "published": false,
-            "type": "AzureDataLakeStoreFile",
-            "linkedServiceName": {
-              "referenceName": "[variables('destinationLinkedServiceName')]",
-              "type": "LinkedServiceReference"
-            },
-            "typeProperties": {
-              "format": {
-                "type": "JsonFormat",
-                "filePattern": "setOfObjects"
-              },
-              "folderPath": "[concat('@concat(''', variables('outputDataLakeStore').messagePath, '/'', formatDateTime(dataset().windowStart, ''yyyy-MM-dd-HH-mm-ss''), ''-'', formatDateTime(dataset().windowEnd, ''yyyy-MM-dd-HH-mm-ss''))')]"
-            },
-            "parameters": {
-              "windowStart": {
-                "type": "String"
-              },
-              "windowEnd": {
-                "type": "String"
-              }
-            }
-          }
-        },
-        {
-          "type": "datasets",
-          "name": "[variables('outputEventDatasetName')]",
-          "dependsOn": [
-            "[variables('dataFactoryName')]",
-            "[variables('destinationLinkedServiceName')]"
-          ],
-          "apiVersion": "2017-09-01-preview",
-          "properties": {
-            "published": false,
-            "type": "AzureDataLakeStoreFile",
-            "linkedServiceName": {
-              "referenceName": "[variables('destinationLinkedServiceName')]",
-              "type": "LinkedServiceReference"
-            },
-            "typeProperties": {
-              "format": {
-                "type": "JsonFormat",
-                "filePattern": "setOfObjects"
-              },
-              "folderPath": "[concat('@concat(''', variables('outputDataLakeStore').eventPath, '/'', formatDateTime(dataset().windowStart, ''yyyy-MM-dd-HH-mm-ss''), ''-'', formatDateTime(dataset().windowEnd, ''yyyy-MM-dd-HH-mm-ss''))')]"
-            },
-            "parameters": {
-              "windowStart": {
-                "type": "String"
-              },
-              "windowEnd": {
-                "type": "String"
-              }
-            }
-          }
-        },
-        {
-          "type": "pipelines",
-          "name": "[variables('pipelineName')]",
-          "dependsOn": [
-            "[variables('dataFactoryName')]",
-            "[variables('sourceLinkedServiceName')]",
-            "[variables('destinationLinkedServiceName')]",
-            "[variables('inputMessageDatasetName')]",
-            "[variables('outputMessageDatasetName')]",
-            "[variables('inputEventDatasetName')]",
-            "[variables('outputEventDatasetName')]"
-          ],
-          "apiVersion": "2017-09-01-preview",
-          "properties": {
-            "parameters": {
-              "windowStart": {
-                "type": "String"
-              },
-              "windowEnd": {
-                "type": "String"
-              }
-            },
             "activities": [
               {
-                "name": "CopyMessageFromO365ToAzureDLS",
-                "description": "Copy message data from O365 to Azure Data Lake Store",
+                "name": "CopyO365Emails",
                 "type": "Copy",
+                "dependsOn": [],
+                "policy": {
+                  "timeout": "7.00:00:00",
+                  "retry": 0,
+                  "retryIntervalInSeconds": 30,
+                  "secureOutput": false,
+                  "secureInput": false
+                },
+                "userProperties": [],
+                "typeProperties": {
+                  "source": {
+                    "type": "Office365Source",
+                    "dateFilterColumn": "receivedDateTime",
+                    "startTime": {
+                      "value": "@pipeline().parameters.windowStart",
+                      "type": "Expression"
+                    },
+                    "endTime": {
+                      "value": "@pipeline().parameters.windowEnd",
+                      "type": "Expression"
+                    },
+                    "userScopeFilterUri": "",
+                    "outputColumns": [
+                      {
+                        "name": "receivedDateTime"
+                      },
+                      {
+                        "name": "sentDateTime"
+                      },
+                      {
+                        "name": "hasAttachments"
+                      },
+                      {
+                        "name": "internetMessageId"
+                      },
+                      {
+                        "name": "subject"
+                      },
+                      {
+                        "name": "importance"
+                      },
+                      {
+                        "name": "parentFolderId"
+                      },
+                      {
+                        "name": "sender"
+                      },
+                      {
+                        "name": "from"
+                      },
+                      {
+                        "name": "toRecipients"
+                      },
+                      {
+                        "name": "ccRecipients"
+                      },
+                      {
+                        "name": "bccRecipients"
+                      },
+                      {
+                        "name": "replyTo"
+                      },
+                      {
+                        "name": "conversationId"
+                      },
+                      {
+                        "name": "uniqueBody"
+                      },
+                      {
+                        "name": "isDeliveryReceiptRequested"
+                      },
+                      {
+                        "name": "isReadReceiptRequested"
+                      },
+                      {
+                        "name": "isRead"
+                      },
+                      {
+                        "name": "isDraft"
+                      },
+                      {
+                        "name": "webLink"
+                      },
+                      {
+                        "name": "createdDateTime"
+                      },
+                      {
+                        "name": "lastModifiedDateTime"
+                      },
+                      {
+                        "name": "changeKey"
+                      },
+                      {
+                        "name": "categories"
+                      },
+                      {
+                        "name": "id"
+                      },
+                      {
+                        "name": "attachments"
+                      },
+                      {
+                        "name": "inferenceClassification"
+                      },
+                      {
+                        "name": "flag"
+                      },
+                      {
+                        "name": "body"
+                      },
+                      {
+                        "name": "bodyPreview"
+                      },
+                      {
+                        "name": "internetMessageHeaders"
+                      }
+                    ]
+                  },
+                  "sink": {
+                    "type": "BinarySink",
+                    "storeSettings": {
+                      "type": "AzureBlobFSWriteSettings"
+                    }
+                  },
+                  "enableStaging": false
+                },
                 "inputs": [
                   {
                     "referenceName": "[variables('inputMessageDatasetName')]",
                     "type": "DatasetReference",
-                    "parameters": {
-                      "windowStart": {
-                        "value": "@pipeline().parameters.windowStart",
-                        "type": "Expression"
-                      },
-                      "windowEnd": {
-                        "value": "@pipeline().parameters.windowEnd",
-                        "type": "Expression"
-                      }
-                    }
+                    "parameters": {}
                   }
                 ],
                 "outputs": [
                   {
                     "referenceName": "[variables('outputMessageDatasetName')]",
                     "type": "DatasetReference",
-                    "parameters": {
-                      "windowStart": {
-                        "value": "@pipeline().parameters.windowStart",
-                        "type": "Expression"
-                      },
-                      "windowEnd": {
-                        "value": "@pipeline().parameters.windowEnd",
-                        "type": "Expression"
-                      }
-                    }
+                    "parameters": {}
                   }
-                ],
-                "typeProperties": {
-                  "source": {
-                    "type": "Office365Source"
-                  },
-                  "sink": {
-                    "type": "AzureDataLakeStoreSink"
-                  }
-                }
+                ]
               },
               {
-                "name": "CopyEventFromO365ToAzureDLS",
-                "description": "Copy event data from O365 to Azure Data Lake Store",
-                "type": "Copy",
-                "inputs": [
+                "name": "WKWScoreCompute",
+                "type": "HDInsightSpark",
+                "dependsOn": [
                   {
-                    "referenceName": "[variables('inputEventDatasetName')]",
-                    "type": "DatasetReference",
-                    "parameters": {
-                      "windowStart": {
-                        "value": "@pipeline().parameters.windowStart",
-                        "type": "Expression"
-                      },
-                      "windowEnd": {
-                        "value": "@pipeline().parameters.windowEnd",
-                        "type": "Expression"
-                      }
-                    }
+                    "activity": "CopyO365Emails",
+                    "dependencyConditions": [
+                      "Succeeded"
+                    ]
                   }
                 ],
-                "outputs": [
-                  {
-                    "referenceName": "[variables('outputEventDatasetName')]",
-                    "type": "DatasetReference",
-                    "parameters": {
-                      "windowStart": {
-                        "value": "@pipeline().parameters.windowStart",
-                        "type": "Expression"
-                      },
-                      "windowEnd": {
-                        "value": "@pipeline().parameters.windowEnd",
-                        "type": "Expression"
-                      }
-                    }
-                  }
-                ],
+                "policy": {
+                  "timeout": "7.00:00:00",
+                  "retry": 0,
+                  "retryIntervalInSeconds": 30,
+                  "secureOutput": false,
+                  "secureInput": false
+                },
+                "userProperties": [],
                 "typeProperties": {
-                  "source": {
-                    "type": "Office365Source"
-                  },
-                  "sink": {
-                    "type": "AzureDataLakeStoreSink"
+                  "rootPath": "[variables('pySparkScriptContainer')]",
+                  "entryFilePath": "[variables('pySparkScriptName')]",
+                  "arguments": [
+                    "[variables('destinationMessageAdlsGen2URL')]"
+                  ],
+                  "sparkJobLinkedService": {
+                    "referenceName": "[concat(variables('destinationLinkedServiceName'), 'blob')]",
+                    "type": "LinkedServiceReference"
                   }
+                },
+                "linkedServiceName": {
+                  "referenceName": "[variables('hdiClusterLinkedServiceName')]",
+                  "type": "LinkedServiceReference"
                 }
               }
-            ]
-          }
+            ],
+            "parameters": {
+              "windowStart": {
+                "type": "string"
+              },
+              "windowEnd": {
+                "type": "string"
+              }
+            },
+            "annotations": []
+          },
+          "dependsOn": [
+            "[variables('dataFactoryId')]",
+            "[concat(variables('dataFactoryId'), '/datasets/', variables('inputMessageDatasetName'))]",
+            "[concat(variables('dataFactoryId'), '/datasets/', variables('outputMessageDatasetName'))]",
+            "[concat(variables('dataFactoryId'), '/linkedServices/', variables('destinationLinkedServiceName'), 'blob')]",
+            "[concat(variables('dataFactoryId'), '/linkedServices/', variables('hdiClusterLinkedServiceName'))]"
+          ]
         },
         {
-          "type": "triggers",
-          "name": "[variables('triggerName')]",
-          "dependsOn": [
-            "[variables('dataFactoryName')]",
-            "[variables('sourceLinkedServiceName')]",
-            "[variables('destinationLinkedServiceName')]",
-            "[variables('inputMessageDatasetName')]",
-            "[variables('outputMessageDatasetName')]",
-            "[variables('inputEventDatasetName')]",
-            "[variables('outputEventDatasetName')]",
-            "[variables('pipelineName')]"
-          ],
-          "apiVersion": "2017-09-01-preview",
+          "name": "[concat(variables('dataFactoryName'), '/', variables('triggerName'))]",
+          "type": "Microsoft.DataFactory/factories/triggers",
+          "apiVersion": "2018-06-01",
           "properties": {
+            "annotations": [],
+            "runtimeState": "Started",
+            "pipeline": {
+              "pipelineReference": {
+                "referenceName": "[variables('pipelineName')]",
+                "type": "PipelineReference"
+              },
+              "parameters": {
+                "windowStart": "[variables('windowStart')]",
+                "windowEnd": "[variables('windowEnd')]"
+              }
+            },
             "type": "TumblingWindowTrigger",
             "typeProperties": {
               "frequency": "Hour",
               "interval": 24,
               "startTime": "[parameters('triggerStartTime')]",
               "delay": "00:00:01",
+              "maxConcurrency": 10,
               "retryPolicy": {
                 "count": 2,
                 "intervalInSeconds": 30
               },
-              "maxConcurrency": 10
-            },
-            "pipeline": {
-              "pipelineReference": {
-                "type": "PipelineReference",
-                "referenceName": "[variables('pipelineName')]"
-              },
-              "parameters": {
-                "windowStart": "[variables('windowStart')]",
-                "windowEnd": "[variables('windowEnd')]"
-              }
+              "dependsOn": []
             }
-          }
+          },
+          "dependsOn": [
+            "[variables('dataFactoryId')]",
+            "[concat(variables('dataFactoryId'), '/pipelines/', variables('pipelineName'))]"
+          ]
         }
       ]
     },
@@ -588,7 +585,7 @@
       "name": "[concat(variables('dataFactoryName'), '/', variables('triggerName'), '/start')]",
       "apiVersion": "2017-09-01-preview",
       "dependsOn": [
-        "[concat('Microsoft.DataFactory/factories/', variables('dataFactoryName'), '/triggers/', variables('triggerName'))]"
+      "[concat(variables('dataFactoryId'), '/triggers/', variables('triggerName'))]"
       ],
       "properties": {}
     },
@@ -669,7 +666,7 @@
             "arm:PipelineName": "[variables('pipelineName')]",
             "arm:ClientSecret": "[parameters('destinationServicePrincipalKey')]",
             "arm:AccountName": "[variables('destinationAdlsAccountName')]",
-            "arm:Path": "[variables('outputDataLakeStore').path]"
+            "arm:Path": "[variables('outputDataLakeStore').containerName]"
           }
         }
       ]
