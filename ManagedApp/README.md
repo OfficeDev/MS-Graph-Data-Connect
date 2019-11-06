@@ -8,7 +8,8 @@ We will work through a sample that covers all three components:
 Before we begin exploring the sample application, here are a few resources to get you started with the involved technologies:
 
 - [Azure Data Factory](https://docs.microsoft.com/en-us/azure/data-factory/)
-- [Azure Data Lake Analytics](https://docs.microsoft.com/en-us/azure/data-lake-analytics/)
+- [Azure Data Lake Storage Gen2](https://docs.microsoft.com/en-us/azure/storage/blobs/data-lake-storage-introduction)
+- [Azure HDInsight](https://docs.microsoft.com/en-us/azure/hdinsight/)
 - [Azure ARM Templates](https://azure.microsoft.com/en-us/resources/templates/)
 - [Azure ARM Template Samples](https://github.com/Azure/azure-quickstart-templates)
 - [Azure Managed App](https://docs.microsoft.com/en-us/azure/managed-applications/)
@@ -42,11 +43,9 @@ This should generate a **WhoKnowWho.zip** file in the `ManagedApp` directory, un
 
 In this step we'll create a storage account and upload the **WhoKnowsWho.zip** file as a blob. This will allow us to include the web application as part of the Azure managed application we'll create later.
 
-1. Follow the steps in [Create a storage account](https://docs.microsoft.com/en-us/azure/storage/common/storage-quickstart-create-account?tabs=portal) to create a general-purpose storage account.
+1. Follow the steps in [Create an Azure Data Lake Storage Gen2 storage account](https://docs.microsoft.com/en-us/azure/storage/blobs/data-lake-storage-quickstart-create-account?toc=%2fazure%2fstorage%2fblobs%2ftoc.json) to create a general-purpose storage account.
 
-2. Follow the steps in the [Create a container](https://docs.microsoft.com/en-us/azure/storage/blobs/storage-quickstart-blobs-portal#create-a-container) section and the [Upload a block blob](https://docs.microsoft.com/en-us/azure/storage/blobs/storage-quickstart-blobs-portal#upload-a-block-blob) section of [Quickstart: Upload, download, and list blobs using the Azure portal](https://docs.microsoft.com/en-us/azure/storage/blobs/storage-quickstart-blobs-portal) to upload **WhoKnowWho.zip**.
-
-   > **Note:** Be sure to select **Blob (anonymous read access for blobs only)** in the **Public access level** dropdown when creating the container.
+2. Follow the steps in the [Create a container](https://docs.microsoft.com/en-us/azure/storage/blobs/data-lake-storage-explorer#create-a-container) section and the [Upload blobs to the directory](https://docs.microsoft.com/en-us/azure/storage/blobs/data-lake-storage-explorer#upload-blobs-to-the-directory) to upload **WhoKnowWho.zip**.
 
 3. Take a note of the **WhoKnowWho.zip** blob **URL** value.
 
@@ -80,6 +79,12 @@ Contains the list of parameters whose values will be provided by the user.
 | `DestinationServicePrincipalAadId` | The Azure Active Directory ID of the service principal to be granted access to the destination Data Lake store |
 | `DestinationServicePrincipalId` | The app ID of the service principal that has access to the destination Data Lake store |
 | `DestinationServicePrincipalKey` | The app secret of the service principal that has access to the destination Data Lake store |
+| `DestinationAdlsGen2AccountName` | The name for the ADLS gen2 account name where the data will be copied to |
+| `DestinationAdlsGen2AccountKey` | The access key for the ADLS gen2 account where the data will be copied to |
+| `UserAssignedManagedIdentityName` | The user assigned managed identity name that the HDI cluster will use to access the storage account |
+| `userAssignedManagedIdentityClientId` | The user assigned managed identity client id that the HDI cluster will use to access the storage account |
+| `UserAssignedManagedIdentityObjectId` | The user assigned managed identity object id that the HDI cluster will use to access the storage account |
+| `HdiClusterPassword` | The password for the admin account on the HDI cluster. The password must be at least 10 characters in length and must contain at least one digit, one non-alphanumeric character, and one upper or lower case letter |
 | `TriggerStartTime` | UTC date in `YYYY-MM-ddT00:00:00Z` format |
 
 
@@ -139,7 +144,7 @@ The values of the parameters defined in **mainTemplate.json** are supplied throu
 3. Save the file.
 4. Create a new ZIP file named **app.zip** that contains **./ManagedApp/mainTemplate.json** and **./ManagedApp/createUiDefinition.json**.
 
-Use `scripts/DeployManagedApp.ps1` to deploy the managed app. Specify a value for **-ArtifactStagingDirectory** or for **-PackageFileUri**. **ArtifactStagingDirectory** is the local folder from where **app.zip** will be uplaoded. **PackageFileUri** is the URL value of the uploaded **app.zip** (if **app.zip** is already uploaded via the script or manually).
+Use `scripts/DeployManagedApp.ps1` to deploy the managed app. Specify a value for **-ArtifactStagingDirectory** or for **-PackageFileUri**. **ArtifactStagingDirectory** is the local folder from where **app.zip** will be uploaded. **PackageFileUri** is the URL value of the uploaded **app.zip** (if **app.zip** is already uploaded via the script or manually).
 
 ```shell
 .\Scripts\DeployManagedApp.ps1 -ResourceGroupLocation "eastus2" -ArtifactStagingDirectory "E:\managedApp"
