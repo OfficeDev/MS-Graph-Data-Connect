@@ -665,8 +665,11 @@
             "arm:DataFactoryName": "[variables('dataFactoryName')]",
             "arm:PipelineName": "[variables('pipelineName')]",
             "arm:ClientSecret": "[parameters('destinationServicePrincipalKey')]",
-            "arm:AccountName": "[variables('destinationAdlsAccountName')]",
-            "arm:Path": "[variables('outputDataLakeStore').containerName]"
+            "arm:AccountName": "[parameters('destinationAdlsGen2AccountName')]",
+            "arm:Path": "[variables('outputDataLakeStore').containerName]",
+            "arm:ConnectionString": "[variables('destinationAdlsGen2ConnectionString')]",
+            "arm:ContainerName": "[variables('outputDataLakeStore').containerName]",
+            "arm:FilePath": "[concat(variables('outputDataLakeStore').messagePath, '/WkwScores')]"
           }
         }
       ]

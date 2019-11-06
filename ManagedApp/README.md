@@ -82,7 +82,7 @@ Contains the list of parameters whose values will be provided by the user.
 | `DestinationAdlsGen2AccountName` | The name for the ADLS gen2 account name where the data will be copied to |
 | `DestinationAdlsGen2AccountKey` | The access key for the ADLS gen2 account where the data will be copied to |
 | `UserAssignedManagedIdentityName` | The user assigned managed identity name that the HDI cluster will use to access the storage account |
-| `userAssignedManagedIdentityClientId` | The user assigned managed identity client id that the HDI cluster will use to access the storage account |
+| `UserAssignedManagedIdentityClientId` | The user assigned managed identity client id that the HDI cluster will use to access the storage account |
 | `UserAssignedManagedIdentityObjectId` | The user assigned managed identity object id that the HDI cluster will use to access the storage account |
 | `HdiClusterPassword` | The password for the admin account on the HDI cluster. The password must be at least 10 characters in length and must contain at least one digit, one non-alphanumeric character, and one upper or lower case letter |
 | `TriggerStartTime` | UTC date in `YYYY-MM-ddT00:00:00Z` format |
@@ -106,10 +106,9 @@ Below are few of the resources that will be deployed as a part of the **mainTemp
 
 | Resource name | Description |
 |---------------|-------------|
-| `AuditStorageAccount` | Storage account to store all audit logs |
-| `DestinationAdlsAccount` | Creates the destination Data Lake store in the customer's subscription used in the ADF pipeline for the data output. The account also creates `diagnosticSettings` with `AuditStorageAccount` as the store to collect `audit` and `requests` logs. |
-| `DataFactory` | Creates the ADF pipeline that copies data from Office 365 to the newly created destination ADLS (`DestinationAdlsAccount` that was created above) |
-| `WebApp` | Creates the web app that uses data stored in the newly created destination ADLS. Sample: [web app](https://github.com/Azure/azure-managedapp-samples/tree/master/samples/201-managed-web-app)|
+| `HDICluster` | HDInsight Spark cluster that will be used to do the WhoKnowsWho calculations for the web application to use. |
+| `DataFactory` | Creates the ADF pipeline that copies data from Office 365 to the provided ADLS gen2 account (user provided) and performs the score compute calculations for the WhoKnowsWho web application |
+| `WebApp` | Creates the web application that uses data calculated in the destination ADLS gen2 account |
 
 The data factory has couple of interesting resources of it's own.
 
@@ -117,9 +116,9 @@ The data factory has couple of interesting resources of it's own.
 |---------------|-------------|
 | `SourceLinkedService` | Creates the link to Office 365 which is used as the source of the data extraction. Using service principal supplied by the source ADLS owner. |
 | `DestinationLinkedService` | Creates the link to the newly created destination ADLS, using service principal supplied by the customer deploying this template. |
-| `*InputDataset` | You should change the structure in this resource to match the table and columns that you would like to extract. In this template we are trying to extract messages and events. For contacts and users refer [basic-sample](../ARMTemplates/basic-sample)|
+| `*InputDataset` | In this template we are trying to extract messages. For contacts and users refer [basic-sample](../ARMTemplates/basic-sample)|
 | `*OutputDataset` | Corresponds to the `DestinationAdlsAccount` where we wanted the data to be copied to. |
-| `Pipeline` | The Copy activity pipeline that copies the data from source Office 365 to the destination ADLS. Sample [copy activity](https://docs.microsoft.com/en-us/azure/data-factory/load-azure-data-lake-store)|
+| `Pipeline` | The Copy activity pipeline that copies the data from source Office 365 to the destination ADLS and then computes the WhoKnowsWho calculations. Sample [copy activity](https://docs.microsoft.com/en-us/azure/data-factory/load-azure-data-lake-store)|
 | `PipelineTriggers` | Contains settings to ensure the copy pipeline can be scheduled to run periodically. Sample: [tumbling window trigger](https://docs.microsoft.com/en-us/azure/data-factory/how-to-create-tumbling-window-trigger)|
 
 #### Enable tracking resources for your template

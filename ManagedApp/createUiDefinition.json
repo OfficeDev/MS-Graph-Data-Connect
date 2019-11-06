@@ -37,7 +37,7 @@
             "name": "destinationServicePrincipalAadId",
             "type": "Microsoft.Common.TextBox",
             "label": "Destination ADLS service principal AAD Id",
-            "toolTip": "The AAD Id of the service principal to be granted access to the destination Data Lake store",
+            "toolTip": "The AAD Id of the service principal to be granted access to the destination Data Lake store. This app need to be granted Storage Blob Data Owner role on the ADLS gen2 account.",
             "constraints": {
               "required": true
             }
@@ -46,7 +46,7 @@
             "name": "destinationServicePrincipalId",
             "type": "Microsoft.Common.TextBox",
             "label": "Destination ADLS service principal Id",
-            "toolTip": "The app Id of the service principal that has access to the destination Data Lake store",
+            "toolTip": "The app Id of the service principal that has access to the destination Data Lake store. This app need to be granted Storage Blob Data Owner role on the ADLS gen2 account.",
             "constraints": {
               "required": true
             }
@@ -56,6 +56,60 @@
             "type": "Microsoft.Common.TextBox",
             "label": "Destination ADLS service principal key",
             "toolTip": "The app secret of the service principal that has access to the destination Data Lake store. If the secret expires, the app will stop.",
+            "constraints": {
+              "required": true
+            }
+          },
+          {
+            "name": "destinationAdlsGen2AccountName",
+            "type": "Microsoft.Common.TextBox",
+            "label": "Destination ADLS gen2 account name",
+            "toolTip": "The name for the ADLS gen2 account name where the data will be copied to.",
+            "constraints": {
+              "required": true
+            }
+          },
+          {
+            "name": "destinationAdlsGen2AccountKey",
+            "type": "Microsoft.Common.TextBox",
+            "label": "Destination ADLS gen2 account key",
+            "toolTip": "The access key for the ADLS gen2 account where the data will be copied to.",
+            "constraints": {
+              "required": true
+            }
+          },
+          {
+            "name": "userAssignedManagedIdentityName",
+            "type": "Microsoft.Common.TextBox",
+            "label": "User assigned managed identity name that the HDI cluster will use to access the ADLS gen2 account",
+            "toolTip": "The user assigned managed identity name that the HDI cluster will use to access the storage account. This managed identity need to be granted Storage Blob Data Owner role on the ADLS gen2 account.",
+            "constraints": {
+              "required": true
+            }
+          },
+          {
+            "name": "userAssignedManagedIdentityClientId",
+            "type": "Microsoft.Common.TextBox",
+            "label": "User assigned managed identity client id that the HDI cluster will use to access the ADLS gen2 account",
+            "toolTip": "The user assigned managed identity client id that the HDI cluster will use to access the storage account. This managed identity need to be granted Storage Blob Data Owner role on the ADLS gen2 account.",
+            "constraints": {
+              "required": true
+            }
+          },
+          {
+            "name": "userAssignedManagedIdentityObjectId",
+            "type": "Microsoft.Common.TextBox",
+            "label": "User assigned managed identity object id that the HDI cluster will use to access the ADLS gen2 account",
+            "toolTip": "The user assigned managed identity object id that the HDI cluster will use to access the storage account. This managed identity need to be granted Storage Blob Data Owner role on the ADLS gen2 account.",
+            "constraints": {
+              "required": true
+            }
+          },
+          {
+            "name": "hdiClusterPassword",
+            "type": "Microsoft.Common.TextBox",
+            "label": "HDInsight cluster password",
+            "toolTip": "The password for the admin account on the HDI cluster. The password must be at least 10 characters in length and must contain at least one digit, one non-alphanumeric character, and one upper or lower case letter.",
             "constraints": {
               "required": true
             }
@@ -82,6 +136,12 @@
       "destinationServicePrincipalAadId": "[steps('adfSettings').destinationServicePrincipalAadId]",
       "destinationServicePrincipalId": "[steps('adfSettings').destinationServicePrincipalId]",
       "destinationServicePrincipalKey": "[steps('adfSettings').destinationServicePrincipalKey]",
+      "destinationAdlsGen2AccountName": "[steps('adfSettings').destinationAdlsGen2AccountName]",
+      "destinationAdlsGen2AccountKey": "[steps('adfSettings').destinationAdlsGen2AccountKey]",
+      "userAssignedManagedIdentityName": "[steps('adfSettings').userAssignedManagedIdentityName]",
+      "userAssignedManagedIdentityClientId": "[steps('adfSettings').userAssignedManagedIdentityClientId]",
+      "userAssignedManagedIdentityObjectId": "[steps('adfSettings').userAssignedManagedIdentityObjectId]",
+      "hdiClusterPassword": "[steps('adfSettings').hdiClusterPassword]",
       "triggerStartTime": "[steps('adfSettings').triggerStartTime]",
       "allowedGroups": "[steps('adfSettings').allowedGroups]",
       "webSiteName": "[steps('webAppSettings').webSiteName]"
