@@ -8,7 +8,8 @@ We will work through a sample that covers all three components:
 Before we begin exploring the sample application, here are a few resources to get you started with the involved technologies:
 
 - [Azure Data Factory](https://docs.microsoft.com/en-us/azure/data-factory/)
-- [Azure Data Lake Analytics](https://docs.microsoft.com/en-us/azure/data-lake-analytics/)
+- [Azure Data Lake Storage Gen2](https://docs.microsoft.com/en-us/azure/storage/blobs/data-lake-storage-introduction)
+- [Azure HDInsight](https://docs.microsoft.com/en-us/azure/hdinsight/)
 - [Azure ARM Templates](https://azure.microsoft.com/en-us/resources/templates/)
 - [Azure ARM Template Samples](https://github.com/Azure/azure-quickstart-templates)
 - [Azure Managed App](https://docs.microsoft.com/en-us/azure/managed-applications/)
@@ -42,11 +43,9 @@ This should generate a **WhoKnowWho.zip** file in the `ManagedApp` directory, un
 
 In this step we'll create a storage account and upload the **WhoKnowsWho.zip** file as a blob. This will allow us to include the web application as part of the Azure managed application we'll create later.
 
-1. Follow the steps in [Create a storage account](https://docs.microsoft.com/en-us/azure/storage/common/storage-quickstart-create-account?tabs=portal) to create a general-purpose storage account.
+1. Follow the steps in [Create an Azure Data Lake Storage Gen2 storage account](https://docs.microsoft.com/en-us/azure/storage/blobs/data-lake-storage-quickstart-create-account?toc=%2fazure%2fstorage%2fblobs%2ftoc.json) to create a general-purpose storage account.
 
-2. Follow the steps in the [Create a container](https://docs.microsoft.com/en-us/azure/storage/blobs/storage-quickstart-blobs-portal#create-a-container) section and the [Upload a block blob](https://docs.microsoft.com/en-us/azure/storage/blobs/storage-quickstart-blobs-portal#upload-a-block-blob) section of [Quickstart: Upload, download, and list blobs using the Azure portal](https://docs.microsoft.com/en-us/azure/storage/blobs/storage-quickstart-blobs-portal) to upload **WhoKnowWho.zip**.
-
-   > **Note:** Be sure to select **Blob (anonymous read access for blobs only)** in the **Public access level** dropdown when creating the container.
+2. Follow the steps in the [Create a container](https://docs.microsoft.com/en-us/azure/storage/blobs/data-lake-storage-explorer#create-a-container) section and the [Upload blobs to the directory](https://docs.microsoft.com/en-us/azure/storage/blobs/data-lake-storage-explorer#upload-blobs-to-the-directory) to upload **WhoKnowWho.zip**.
 
 3. Take a note of the **WhoKnowWho.zip** blob **URL** value.
 
@@ -80,6 +79,12 @@ Contains the list of parameters whose values will be provided by the user.
 | `DestinationServicePrincipalAadId` | The Azure Active Directory ID of the service principal to be granted access to the destination Data Lake store |
 | `DestinationServicePrincipalId` | The app ID of the service principal that has access to the destination Data Lake store |
 | `DestinationServicePrincipalKey` | The app secret of the service principal that has access to the destination Data Lake store |
+| `DestinationAdlsGen2AccountName` | The name for the ADLS gen2 account name where the data will be copied to |
+| `DestinationAdlsGen2AccountKey` | The access key for the ADLS gen2 account where the data will be copied to |
+| `UserAssignedManagedIdentityName` | The user assigned managed identity name that the HDI cluster will use to access the storage account |
+| `UserAssignedManagedIdentityClientId` | The user assigned managed identity client id that the HDI cluster will use to access the storage account |
+| `UserAssignedManagedIdentityObjectId` | The user assigned managed identity object id that the HDI cluster will use to access the storage account |
+| `HdiClusterPassword` | The password for the admin account on the HDI cluster. The password must be at least 10 characters in length and must contain at least one digit, one non-alphanumeric character, and one upper or lower case letter |
 | `TriggerStartTime` | UTC date in `YYYY-MM-ddT00:00:00Z` format |
 
 
@@ -101,10 +106,9 @@ Below are few of the resources that will be deployed as a part of the **mainTemp
 
 | Resource name | Description |
 |---------------|-------------|
-| `AuditStorageAccount` | Storage account to store all audit logs |
-| `DestinationAdlsAccount` | Creates the destination Data Lake store in the customer's subscription used in the ADF pipeline for the data output. The account also creates `diagnosticSettings` with `AuditStorageAccount` as the store to collect `audit` and `requests` logs. |
-| `DataFactory` | Creates the ADF pipeline that copies data from Office 365 to the newly created destination ADLS (`DestinationAdlsAccount` that was created above) |
-| `WebApp` | Creates the web app that uses data stored in the newly created destination ADLS. Sample: [web app](https://github.com/Azure/azure-managedapp-samples/tree/master/samples/201-managed-web-app)|
+| `HDICluster` | HDInsight Spark cluster that will be used to do the WhoKnowsWho calculations for the web application to use. |
+| `DataFactory` | Creates the ADF pipeline that copies data from Office 365 to the provided ADLS gen2 account (user provided) and performs the score compute calculations for the WhoKnowsWho web application |
+| `WebApp` | Creates the web application that uses data calculated in the destination ADLS gen2 account |
 
 The data factory has couple of interesting resources of it's own.
 
@@ -112,9 +116,9 @@ The data factory has couple of interesting resources of it's own.
 |---------------|-------------|
 | `SourceLinkedService` | Creates the link to Office 365 which is used as the source of the data extraction. Using service principal supplied by the source ADLS owner. |
 | `DestinationLinkedService` | Creates the link to the newly created destination ADLS, using service principal supplied by the customer deploying this template. |
-| `*InputDataset` | You should change the structure in this resource to match the table and columns that you would like to extract. In this template we are trying to extract messages and events. For contacts and users refer [basic-sample](../ARMTemplates/basic-sample)|
+| `*InputDataset` | In this template we are trying to extract messages. For contacts and users refer [basic-sample](../ARMTemplates/basic-sample)|
 | `*OutputDataset` | Corresponds to the `DestinationAdlsAccount` where we wanted the data to be copied to. |
-| `Pipeline` | The Copy activity pipeline that copies the data from source Office 365 to the destination ADLS. Sample [copy activity](https://docs.microsoft.com/en-us/azure/data-factory/load-azure-data-lake-store)|
+| `Pipeline` | The Copy activity pipeline that copies the data from source Office 365 to the destination ADLS and then computes the WhoKnowsWho calculations. Sample [copy activity](https://docs.microsoft.com/en-us/azure/data-factory/load-azure-data-lake-store)|
 | `PipelineTriggers` | Contains settings to ensure the copy pipeline can be scheduled to run periodically. Sample: [tumbling window trigger](https://docs.microsoft.com/en-us/azure/data-factory/how-to-create-tumbling-window-trigger)|
 
 #### Enable tracking resources for your template
@@ -139,7 +143,7 @@ The values of the parameters defined in **mainTemplate.json** are supplied throu
 3. Save the file.
 4. Create a new ZIP file named **app.zip** that contains **./ManagedApp/mainTemplate.json** and **./ManagedApp/createUiDefinition.json**.
 
-Use `scripts/DeployManagedApp.ps1` to deploy the managed app. Specify a value for **-ArtifactStagingDirectory** or for **-PackageFileUri**. **ArtifactStagingDirectory** is the local folder from where **app.zip** will be uplaoded. **PackageFileUri** is the URL value of the uploaded **app.zip** (if **app.zip** is already uploaded via the script or manually).
+Use `scripts/DeployManagedApp.ps1` to deploy the managed app. Specify a value for **-ArtifactStagingDirectory** or for **-PackageFileUri**. **ArtifactStagingDirectory** is the local folder from where **app.zip** will be uploaded. **PackageFileUri** is the URL value of the uploaded **app.zip** (if **app.zip** is already uploaded via the script or manually).
 
 ```shell
 .\Scripts\DeployManagedApp.ps1 -ResourceGroupLocation "eastus2" -ArtifactStagingDirectory "E:\managedApp"

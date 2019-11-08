@@ -13,6 +13,9 @@ using Microsoft.Azure.Management.DataLake.Store;
 using Microsoft.Azure.Management.DataLake.Store.Models;
 using Microsoft.Rest.Azure.Authentication;
 using Microsoft.VisualBasic.FileIO;
+using Microsoft.WindowsAzure.Storage;
+using Microsoft.WindowsAzure.Storage.Blob;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Quartz;
 
@@ -72,6 +75,11 @@ namespace WhoKnowWho.Models
         static private readonly int startHour = int.Parse(ConfigurationManager.AppSettings["cache:RefreshHourOfDayUtc"]);
         static private readonly int interval = int.Parse(ConfigurationManager.AppSettings["cache:RefreshIntervalHours"]);
 
+        // Parameters for the ADLS gen2 account that holds the Wkw calculations
+        static private readonly string connectionString = ConfigurationManager.AppSettings["arm:ConnectionString"];
+        static private readonly string containerName = ConfigurationManager.AppSettings["arm:ContainerName"];
+        static private readonly string filePath = ConfigurationManager.AppSettings["arm:FilePath"];
+
         /// <summary>
         /// Initialize the cache by performing the initial data population and setting up the scheduler.
         /// </summary>
@@ -119,14 +127,7 @@ namespace WhoKnowWho.Models
             Dictionary<string, int> userComboPlusScore = new Dictionary<string, int>();
             Dictionary<string, List<UserScore>> wkwScores = new Dictionary<string, List<UserScore>>();
 
-            messagesList = ContactMap.GetMessages();
-            if(messagesList == null || messagesList.Count == 0)
-            {
-                return;
-            }
-
-            userComboPlusScore = ContactMap.ComputeUserComboScore(messagesList);
-            wkwScores = ContactMap.WhoKnowsWhoScoreMap(userComboPlusScore);
+            wkwScores = GetWkwScores(connectionString, containerName, filePath);
 
             if (wkwScores.Count() == 0)
             {
@@ -409,6 +410,38 @@ namespace WhoKnowWho.Models
             }
 
             return messagesList;
+        }
+
+        private static Dictionary<string, List<UserScore>> GetWkwScores(string connectionString, string containerName, string filePath)
+        {
+            var wkwScores = new Dictionary<string, List<UserScore>>();
+
+            CloudStorageAccount storageAccount = CloudStorageAccount.Parse(connectionString);
+            CloudBlobClient blobClient = storageAccount.CreateCloudBlobClient();
+            CloudBlobContainer container = blobClient.GetContainerReference(containerName);
+            CloudBlobDirectory directory = container.GetDirectoryReference(filePath);
+            List<IListBlobItem> blobs = directory.ListBlobs().ToList();
+
+            foreach (var blob in blobs)
+            {
+                if (blob.GetType() == typeof(CloudBlockBlob))
+                {
+                    CloudBlockBlob blockBlob = (CloudBlockBlob) blob;
+                    using (var reader = new StreamReader(blockBlob.OpenRead()))
+                    {
+                        string line;
+                        while ((line = reader.ReadLine()) != null)
+                        {
+                            JObject obj = JObject.Parse(line);
+                            string user = obj.SelectToken("User")?.ToString();
+                            List<UserScore> scores = JsonConvert.DeserializeObject<List<UserScore>>(obj.SelectToken("WkwScore")?.ToString());
+                            wkwScores[user] = scores;
+                        }
+                    }
+                }
+            }
+
+            return wkwScores;
         }
     }
 }
