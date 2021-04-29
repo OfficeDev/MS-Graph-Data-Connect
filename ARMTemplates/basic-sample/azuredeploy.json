@@ -21,10 +21,9 @@
       }
     },
     "allowedGroups": {
-      "type": "array",
-      "defaultValue": [],
+      "type": "string",
       "metadata": {
-        "description": "The object ids of the groups of users to extract data from. List up to 10 groups."
+        "description": "The object ids of the groups of users to extract data from. List up to 10 groups separated by commas."
       }
     },
     "triggerStartTime": {
@@ -103,7 +102,7 @@
                 "value": "[parameters('destinationServicePrincipalKey')]"
               },
               "servicePrincipalTenantId": "[subscription().tenantId]",
-              "allowedGroups": "[parameters('allowedGroups')]"
+              "allowedGroups": "[if(equals(parameters('allowedGroups'), ''), json('null'), split(parameters('allowedGroups'),','))]"
             }
           }
         },
