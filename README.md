@@ -3,6 +3,7 @@ page_type: sample
 products:
 - office-365
 - ms-graph
+description: Microsoft Graph data connect brings Office 365 data and Azure resources to independent software vendors (ISVs). This sample shows you how to use Office 365 data with Azure analytics to build intelligent applications.
 languages:
 - csharp
 extensions:
